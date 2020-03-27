@@ -8,6 +8,6 @@
 
 ## 참여회원
 
-* ERA
+* ERA (grollcake@gmail.com)
 * NewMiracle
-* Unknown
+* Unknown (kyung2687)
