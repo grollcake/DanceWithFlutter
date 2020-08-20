@@ -29,7 +29,6 @@
   | VSCode         | 다재다능한 개발툴                         | https://code.visualstudio.com/download |
 | Fork           | Git GUI 툴                                | https://git-fork.com/                  |
   | Typora         | 마크다운 에디터                           | https://typora.io/                     |
-  | 뭔가 더 있어   |                                           |                                        |
   
   
 
@@ -50,4 +49,9 @@
 9. (옵션) 에뮬레이터 가속 설정: https://developer.android.com/studio/run/emulator-acceleration
 10. Android Studio 플러그인 설치: flutter Enhancement Suite (Pub package 설치 지원)
 
+### 오늘의 숙제
+
+* 환경 구성 마무리하고 샘플 App(카운터) 기동해보기
+* 샘플 App을 포함한 DanceWithFlutter를 github에 push
+* 코딩쉐프의 순한맛 강좌: https://www.youtube.com/playlist?list=PLQt_pzi-LLfpcRFhWMywTePfZ2aPapvyl
 
