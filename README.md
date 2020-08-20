@@ -10,4 +10,4 @@
 
 * ERA (grollcake@gmail.com)
 * NewMiracle
-* Unknown (kyung2687)
+* DeveloperUnknown (kyung2687)
