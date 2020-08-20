@@ -1,4 +1,6 @@
-# Flutter 학습 공간
+# Dance w/ Flutter
+
+모바일App 개발 전문가가 되기 위해 Flutter를 공부한다.
 
 참여 회원별 디렉토리에 각자의 프로젝트를 업로드한다.
 
@@ -6,6 +8,6 @@
 
 ## 참여회원
 
-* ERA
+* ERA (grollcake@gmail.com)
 * NewMiracle
-* Unknown
+* Unknown (kyung2687)
