@@ -75,5 +75,5 @@
   - 스스로 개발하면서 어려웠던점 8.24(월)에 서로 공유하기
   - 마이너스 버튼 추가한 app은 별도 폴더로 생성하여 올리기
     예시) D:\flutter-dev\DanceWithFlutter\NewMiracle\flutter_app_homework_0821
-* flutter로 만들어 보고 싶은 앱 소개하기ㅈ
+* flutter로 만들어 보고 싶은 앱 소개하기
   
