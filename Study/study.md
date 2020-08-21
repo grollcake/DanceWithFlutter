@@ -63,13 +63,13 @@
 ### Flutter로 만들어진 app 둘러보기
 
 1. flutter clock app 확인
-2. flutter showcase siet 확인 
+2. flutter showcase site 확인 
    https://flutter.dev/showcase
 3. flutter로 만들어진 Reflectly app 확인    
    
 ### 오늘의 숙제
-* 코딩쉐프의 순한맛 강좌 완강: https://www.youtube.com/playlist?list=PLQt_pzi-LLfpcRFhWMywTePfZ2aPapvyl
-* 코딩쉐프의 매운맛 강좌 완강:https://www.youtube.com/watch?v=StvbitxUKSo&list=PLQt_pzi-LLfoOpp3b-pnnLXgYpiFEftLB&index=1
+* 코딩쉐프의 순한맛 강좌 완강하기 : https://www.youtube.com/playlist?list=PLQt_pzi-LLfpcRFhWMywTePfZ2aPapvyl
+* 코딩쉐프의 매운맛 강좌 완강하기 : https://www.youtube.com/watch?v=StvbitxUKSo&list=PLQt_pzi-LLfoOpp3b-pnnLXgYpiFEftLB&index=1
 * flutter sample app 직접 처음 부터 끝까지 코딩하기
   - sample app의 더하기 버튼 외에 마이너스 버튼만들기
   - 스스로 개발하면서 어려웠던점 8.24(월)에 서로 공유하기
