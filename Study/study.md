@@ -50,4 +50,30 @@
 9. (옵션) 에뮬레이터 가속 설정: https://developer.android.com/studio/run/emulator-acceleration
 10. Android Studio 플러그인 설치: flutter Enhancement Suite (Pub package 설치 지원)
 
+### 오늘의 숙제
+* 환경 구성 마무리하고 샘플 App(카운터) 기동해보기
+* 샘플 App을 포함한 DanceWithFlutter를 github에 push
+* 코딩쉐프의 순한맛 강좌: https://www.youtube.com/playlist?list=PLQt_pzi-LLfpcRFhWMywTePfZ2aPapvyl
 
+
+
+
+## 2020-08-21: flutter app 둘러보기
+
+### Flutter로 만들어진 app 둘러보기
+
+1. flutter clock app 확인
+2. flutter showcase site 확인 
+   https://flutter.dev/showcase
+3. flutter로 만들어진 Reflectly app 확인    
+   
+### 오늘의 숙제
+* 코딩쉐프의 순한맛 강좌 완강하기 : https://www.youtube.com/playlist?list=PLQt_pzi-LLfpcRFhWMywTePfZ2aPapvyl
+* 코딩쉐프의 매운맛 강좌 완강하기 : https://www.youtube.com/watch?v=StvbitxUKSo&list=PLQt_pzi-LLfoOpp3b-pnnLXgYpiFEftLB&index=1
+* flutter sample app 직접 처음 부터 끝까지 코딩하기
+  - sample app의 더하기 버튼 외에 마이너스 버튼만들기
+  - 스스로 개발하면서 어려웠던점 8.24(월)에 서로 공유하기
+  - 마이너스 버튼 추가한 app은 별도 폴더로 생성하여 올리기
+    예시) D:\flutter-dev\DanceWithFlutter\NewMiracle\flutter_app_homework_0821
+* flutter로 만들어 보고 싶은 앱 소개하기
+  
