@@ -69,12 +69,12 @@ class DisplayCounter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle _numberStyle;
+    TextStyle _numberStyle = TextStyle(fontSize: 42.0);
     if (displayNumber >= 0) {
-      _numberStyle = TextStyle(fontSize: 42.0, color: Colors.black);
+      _numberStyle = _numberStyle.apply(color: Colors.black);
     }
     else {
-      _numberStyle = TextStyle(fontSize: 42.0, color: Colors.red);
+      _numberStyle = _numberStyle.apply(color: Colors.redAccent);
     }
 
     return Center(
