@@ -23,3 +23,19 @@
 
 
 ![](EXCERCISES.assets/simpleCounterApp.png)
+
+
+
+## stream_builder
+
+StreamBuilder를 이용한 타이머 앱
+
+### 학습한 내용
+
+* StreamBuilder의 사용법
+* Stopwatch 클래스
+* Timer, Duration 클래스
+
+### Screen
+
+![SimpleTimer](EXCERCISES.assets/SimpleTimer.png)
