@@ -39,3 +39,11 @@ StreamBuilder를 이용한 타이머 앱
 ### Screen
 
 ![SimpleTimer](EXCERCISES.assets/SimpleTimer.png)
+
+## Calculator
+
+학습한 내용: Row, Calc, Expanded, OutlineButton, function parameter
+
+### screenshot
+
+![calculator](EXCERCISES.assets/calculator.png)
