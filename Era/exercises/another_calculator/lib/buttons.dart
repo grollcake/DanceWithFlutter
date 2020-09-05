@@ -11,7 +11,7 @@ class CalcButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(5.0),
       child: FlatButton(
         onPressed: this.callBack,
         child: Text(this.btnText, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: this.color)),

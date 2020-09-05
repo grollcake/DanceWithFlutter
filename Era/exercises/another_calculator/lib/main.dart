@@ -21,7 +21,30 @@ class Calculator extends StatefulWidget {
 }
 
 class _CalculatorState extends State<Calculator> {
+  GlobalKey _keyButtonsContainer = GlobalKey();
+  Size _buttonContainerSize;
+  double _ratio = 1.0;
+
   final List<String> _buttons = ['C', 'DEL', '%', '/', '7', '8', '9', 'X', '4', '5', '6', '+', '1', '2', '3', '-', '0', '.', 'ANS', '='];
+
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((Duration duration){
+      _getSizes();
+    });
+    super.initState();
+  }
+
+  _getSizes() {
+    final RenderBox renderBox = _keyButtonsContainer.currentContext.findRenderObject();
+    _buttonContainerSize = renderBox.size;
+    print("Size of Button container is $_buttonContainerSize");
+    setState(() {
+      _ratio = _buttonContainerSize.width / _buttonContainerSize.height * (5/4);
+      print(_ratio);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,33 +55,49 @@ class _CalculatorState extends State<Calculator> {
           padding: EdgeInsets.all(15.0),
           child: Column(
             children: <Widget>[
-              Container(
-                height: 20,
-                color: Colors.blue[200],
+              Expanded(
+                flex: 1,
+                child: Container(
+                  color: Colors.blue[200],
+                ),
               ),
               Expanded(
+                flex: 2,
                 child: Container(
-                  alignment: Alignment.bottomCenter,
+                  key: _keyButtonsContainer,
+//                  color: Colors.white,
+//                  alignment: Alignment.bottomCenter,
                   child: GridView.builder(
                     itemCount: _buttons.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-                    itemBuilder: (context, idx) {
-                      Color btnColor, txtColor;
-                      if (idx == 0) {
-                        btnColor = Colors.green[400];
-                        txtColor = Colors.white;
-                      } else if (idx == 1) {
-                        btnColor = Colors.red[400];
-                        txtColor = Colors.white;
-                      } else if (isOperator(_buttons[idx])) {
-                        btnColor = Colors.deepPurple[400];
-                        txtColor = Colors.white;
-                      } else {
-                        btnColor = Colors.deepPurple[50];
-                        txtColor = Colors.black54;
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        childAspectRatio: _ratio,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        Color txtColor, bgColor;
+                        if (index==0) {
+                          txtColor = Colors.white;
+                          bgColor = Colors.green;
+                        }
+                        else if (index == 1) {
+                          txtColor = Colors.white;
+                          bgColor = Colors.red;
+                        }
+                        else if (isOperator(_buttons[index])) {
+                          txtColor = Colors.white;
+                          bgColor = Colors.deepPurple;
+                        }
+                        else {
+                          txtColor = Colors.deepPurple;
+                          bgColor = Colors.deepPurple[50];
+                        }
+                        return CalcButton(
+                          color: txtColor,
+                          bgcolor: bgColor,
+                          btnText: _buttons[index],
+                          callBack: (){},
+                        );
                       }
-                      return CalcButton(btnText: _buttons[idx], bgcolor: btnColor, color: txtColor, callBack: () {});
-                    },
                   ),
                 ),
               )
