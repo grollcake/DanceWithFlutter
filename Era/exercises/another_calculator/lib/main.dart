@@ -57,9 +57,21 @@ class _CalculatorState extends State<Calculator> {
             children: <Widget>[
               Expanded(
                 flex: 1,
-                child: Container(
-                  color: Colors.blue[200],
-                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text('your input',
+                            style: TextStyle(fontSize: 24, color: Colors.deepPurple[400]),
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.bottomRight,
+                        child: Text('Answer', style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold, color: Colors.deepPurple))),
+                  ],
+                )
               ),
               Expanded(
                 flex: 2,
