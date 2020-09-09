@@ -36,6 +36,8 @@ class _MyHomeState extends State<MyHome> {
   }
 
   _search() async {
+    _debounce?.cancel();
+    
     if(_controller.text.trim() == null || _controller.text.length == 0) {
       _streamController.add(null);
       return;
@@ -48,80 +50,85 @@ class _MyHomeState extends State<MyHome> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("dic app"),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(48),
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(left: 12, bottom: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: Colors.white
-                  ),
-                  child: TextFormField(
-                    onChanged: (String x) {
-                      if(_debounce ?.isActive ?? false) _debounce.cancel();
-                      _debounce = Timer(Duration(microseconds: 1000), () {
-                        _search();
-                      });
-                    },
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: "Input word for search",
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(left: 24),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("dic app"),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(48),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 12, bottom: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      color: Colors.white
+                    ),
+                    child: TextFormField(
+                      onChanged: (String x) {
+                        if(_debounce ?.isActive ?? false) _debounce.cancel();
+                        _debounce = Timer(Duration(microseconds: 2000), () {
+                          _search();
+                        });
+                      },
+                      controller: _controller,
+                      decoration: InputDecoration(
+                        hintText: "Input word for search",
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(left: 24),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              IconButton(
-                icon: Icon(Icons.search, color: Colors.white,),
-                onPressed: _search,
-              ),
-            ],
+                IconButton(
+                  icon: Icon(Icons.search, color: Colors.white,),
+                  onPressed: _search,
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: StreamBuilder(
-          stream: _stream,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if(snapshot.data == null) {
-              return Center(child: Text('Input Word'));
-            } else if(snapshot.data == "not found") {
-              return Center(child: Text('not fount'));
-            } else if(snapshot.data == "waiting") {
-              return Center(child: CircularProgressIndicator());
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data["definitions"].length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListBody(
-                    children: [
-                      Container(
-                        color: Colors.grey[300],
-                        child: ListTile(
-                          leading: snapshot.data["definitions"][index]["image_url"] == null ? null : CircleAvatar(
-                            backgroundImage: NetworkImage(snapshot.data["definitions"][index]["image_url"]),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: StreamBuilder(
+            stream: _stream,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if(snapshot.data == null) {
+                return Center(child: Text('Input Word'));
+              } else if(snapshot.data == "not found") {
+                return Center(child: Text('not fount'));
+              } else if(snapshot.data == "waiting") {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                return ListView.builder(
+                  itemCount: snapshot.data["definitions"].length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListBody(
+                      children: [
+                        Container(
+                          color: Colors.grey[300],
+                          child: ListTile(
+                            leading: snapshot.data["definitions"][index]["image_url"] == null ? null : CircleAvatar(
+                              backgroundImage: NetworkImage(snapshot.data["definitions"][index]["image_url"]),
+                            ),
+                            title: Text(_controller.text.trim() + "" +snapshot.data["definitions"][index]["type"]+ ""),
                           ),
-                          title: Text(_controller.text.trim() + "" +snapshot.data["definitions"][index]["type"]+ ""),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(snapshot.data["definitions"][index]["definition"]),
-                      ),
-                    ],
-                  );
-                },
-              );
-            } 
-          },
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(snapshot.data["definitions"][index]["definition"]),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } 
+            },
+          ),
         ),
       ),
     );
