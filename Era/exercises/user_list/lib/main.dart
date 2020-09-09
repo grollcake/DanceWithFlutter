@@ -77,7 +77,7 @@ class _UserListAppState extends State<UserListApp> {
     print('fetchUrl: $fetchUrl, status: ${res.statusCode}');
 
     if (res.statusCode != 200) {
-      _sc.sink.add(FetchStatus.error);
+      _sc.add(FetchStatus.error);
       _isFetching = false;
       return;
     }
@@ -90,8 +90,8 @@ class _UserListAppState extends State<UserListApp> {
       _usermodels.add(userModel);
     }
 
-    _sc.sink.add(FetchStatus.done);
-    _counter.sink.add(_usermodels.length);
+    _sc.add(FetchStatus.done);
+    _counter.add(_usermodels.length);
     print('total count: ${_usermodels.length}');
     _isFetching = false;
   }
