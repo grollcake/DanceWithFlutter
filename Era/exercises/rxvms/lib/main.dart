@@ -23,10 +23,21 @@ class RxVMSApp extends StatefulWidget {
 
 class _RxVMSAppState extends State<RxVMSApp> {
   UserManager userManager;
+  ScrollController _scrollController;
 
   @override
   void initState() {
-    userManager = UserManager();
+    userManager = UserManager()..getUsers();
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      final _scrollThreshold = 50.0;
+      final maxScroll = _scrollController.position.maxScrollExtent;
+      final currentScroll = _scrollController.position.pixels;
+      if (maxScroll - currentScroll <= _scrollThreshold) {
+        print('Bottom of list');
+        userManager.getUsers();
+      }
+    });
     super.initState();
   }
 
@@ -43,20 +54,22 @@ class _RxVMSAppState extends State<RxVMSApp> {
         title: Text('RxVMS'),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {},
+          icon: Icon(Icons.cloud_download),
+          onPressed: () => userManager.getUsers(),
         ),
         actions: [
           Container(
             // color: Colors.teal,
             padding: EdgeInsets.only(right: 10.0),
             child: Chip(
-              label: StreamBuilder<int>(
-                  stream: userManager.userCounter,
+              // label: Text('0'),
+              label: StreamBuilder<List<User>>(
+                  stream: userManager.userList,
                   builder: (context, snapshot) {
-                    String count = (snapshot.data ?? 0).toString();
+                    String count = (snapshot.data?.length ?? 0).toString();
                     return Text(count, style: TextStyle(color: Colors.white));
-                  }),
+                  },
+              ),
               elevation: 0.0,
               backgroundColor: Colors.redAccent,
             ),
@@ -68,9 +81,10 @@ class _RxVMSAppState extends State<RxVMSApp> {
   }
 
   Widget userListPage() {
-    return StreamBuilder(
-      stream: userManager.getUserList,
+    return StreamBuilder<List<User>>(
+      stream: userManager.userList,
       builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+        print('connectionState: ${snapshot.connectionState}  data: ${snapshot.data?.length}');
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.waiting:
@@ -79,21 +93,30 @@ class _RxVMSAppState extends State<RxVMSApp> {
           case ConnectionState.active:
           case ConnectionState.done:
             return ListView.separated(
-                itemCount: snapshot.data.length,
+              controller: _scrollController,
+                itemCount: snapshot.data.length + (userManager.isFetching ? 1:0),
                 separatorBuilder: (BuildContext context, int index) => Divider(),
                 itemBuilder: (BuildContext context, int index) {
-                  User user = snapshot.data[index];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.picture),
-                    ),
-                    title: Text(user.name),
-                    subtitle: Text(user.email),
-                    trailing: IconButton(
-                      icon: Icon(Icons.arrow_forward_ios),
-                      onPressed: () {},
-                    ),
-                  );
+                  if (index == snapshot.data.length) {
+                    return Center(
+                      child: SizedBox(
+                        width: 20.0,
+                        height: 20.0,
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                  else {
+                    User user = snapshot.data[index];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(user.picture),
+                      ),
+                      title: Text(user.name),
+                      subtitle: Text(user.email),
+                      trailing: Text('#${index + 1}', style: TextStyle(fontStyle: FontStyle.italic)),
+                    );
+                  }
                 });
         }
         return null;

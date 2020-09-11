@@ -4,9 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:rxvms/model/user.dart';
 
 class UserService {
-  static String _url = 'https://randomuser.me/api/?page=1&results=10&seed=Era';
+  static int page = 0;
+  static String _url = 'https://randomuser.me/api/?page={PAGE}&results=10&seed=Era';
 
   static Future<List<User>> fetchUsers() async {
+    String url = _url.replaceAll('{PAGE}', (++page).toString());
+    print('fetching from $url');
     http.Response res  = await http.get(_url);
     List results = json.decode(res.body)['results'];
     List<User> users = results.map((result) => User.fromJson(result)).toList();
