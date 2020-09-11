@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rxvms/manager/user_manager.dart';
-
 import 'model/user.dart';
 
 void main() => runApp(MyApp());
