@@ -29,7 +29,7 @@ class _RxVMSAppState extends State<RxVMSApp> {
     userManager = UserManager()..getUsers();
     _scrollController = ScrollController();
     _scrollController.addListener(() {
-      final _scrollThreshold = 50.0;
+      final _scrollThreshold = 1000.0;
       final maxScroll = _scrollController.position.maxScrollExtent;
       final currentScroll = _scrollController.position.pixels;
       if (maxScroll - currentScroll <= _scrollThreshold) {
