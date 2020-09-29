@@ -12,7 +12,11 @@ class LoginPage extends StatelessWidget {
               onPressed: () {
                 print('menu pressed');
               }),
-          actions: [IconButton(icon: Icon(Icons.search), onPressed: () => print('search pressed'))],
+          actions: [
+            IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () => print('search pressed'))
+          ],
         ),
         body: LoginBody());
   }
@@ -71,13 +75,13 @@ class _LoginBodyState extends State<LoginBody> {
                   children: [
                     TextField(
                       controller: _txt1,
-                      decoration: InputDecoration(labelText: 'Enter "dice'),
+                      decoration: InputDecoration(labelText: '아이디는 "dice'),
                       keyboardType: TextInputType.emailAddress,
                     ),
                     SizedBox(height: 20.0),
                     TextField(
                       controller: _txt2,
-                      decoration: InputDecoration(labelText: 'Enter "1234'),
+                      decoration: InputDecoration(labelText: '기본 패스워드는 "1234'),
                       keyboardType: TextInputType.number,
                       obscureText: true,
                     ),
@@ -88,7 +92,8 @@ class _LoginBodyState extends State<LoginBody> {
               FlatButton(
                 color: Colors.amberAccent,
                 onPressed: () => _loginBtnAction(context),
-                child: Icon(Icons.arrow_forward, size: 20.0, color: Colors.white),
+                child:
+                    Icon(Icons.arrow_forward, size: 20.0, color: Colors.white),
               ),
             ],
           ),
