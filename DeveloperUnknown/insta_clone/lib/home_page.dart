@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'feed_widget.dart';
 
 class HomePage extends StatelessWidget {
+  final FirebaseUser user;
+
+  HomePage(this.user);
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -42,15 +46,15 @@ class HomePage extends StatelessWidget {
                           width: 80,
                           height: 80,
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2017/09/21/19/12/france-2773030_1280.jpg'),
+                            backgroundImage: NetworkImage(user.photoUrl),
                           ),
                         ),
                         SizedBox(height:16),
                         Text(
-                          'test@test.com',
+                          user.email,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text('test 유저'),
+                        Text(user.displayName),
                         SizedBox(height:16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
