@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'loading_page.dart';
@@ -13,6 +14,19 @@ class RootPage extends StatelessWidget {
   }
 
   Widget _handleCurrentScreen() {
-    return LoginPage();
+    return StreamBuilder(
+      stream: FirebaseAuth.instance.onAuthStateChanged,
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if(snapshot.connectionState == ConnectionState.waiting){
+                return LoadingPage();
+            }else{
+              if(snapshot.hasData){
+                return TabPage(snapshot.data);
+              }
+              return LoginPage();
+            }
+      },
+
+    );
   }
 }
