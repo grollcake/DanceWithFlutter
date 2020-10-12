@@ -1,4 +1,4 @@
-package com.example.chapter10;
+package net.solchan.instagram;
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity;
