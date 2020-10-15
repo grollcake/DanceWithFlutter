@@ -6,6 +6,9 @@ import 'account_page.dart';
 import 'home_page.dart';
 
 class TabPage extends StatefulWidget {
+  final User user;
+  TabPage({this.user});
+
 //  final FirebaseUser user;
 
 //  TabPage(this.user);
