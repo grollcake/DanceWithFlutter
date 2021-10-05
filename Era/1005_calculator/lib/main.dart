@@ -175,6 +175,8 @@ class BuildCalcButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(this.toString());
+
     isOperator(String s) => ['%', '/', 'X', '+', '-', '='].contains(s);
 
     Color bgColor = Colors.deepPurple[50]!;
