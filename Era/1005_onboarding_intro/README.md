@@ -1,16 +1,34 @@
 # onboarding_intro
 
-A new Flutter project.
+앱 인트로페이지 암기코딩
 
-## Getting Started
+## 결과물
 
-This project is a starting point for a Flutter application.
+ ![onboarding](onboarding.apng)
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Youtube
+
+[Flutter UI Tutorial | App Intro With Indicators Application UI/UX Design](https://www.youtube.com/watch?v=d_hQoKomfdE)
+
+
+
+## Lesson learned
+
+* PageView.builder, Stack
+* List.generated, ...(Spread 연산자)
+
+
+
+## Sinppets
+
+* AppBar를 투명하게 만들고 본문이 AppBar뒤로 확장되도록 하기
+```dart
+AppBar(
+  backgroundColor: Colors.transparent,
+  elevation: 0,
+  extendBodyBehindAppBar: true,
+)
+```
+

@@ -1,3 +1,4 @@
+import 'package:calculator/screens/homescreen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(CalculatorApp());
@@ -13,7 +14,7 @@ class CalculatorApp extends StatelessWidget {
         primarySwatch: Colors.amber
       ),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: CalcScreen(),
     );
   }
 }
