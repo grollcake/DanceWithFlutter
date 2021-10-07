@@ -1,16 +1,66 @@
-# habit_app_onboarding
+# Habit app onboarding intro
 
-A new Flutter project.
+앱 인트로페이지 실습
 
-## Getting Started
+## 미리보기
 
-This project is a starting point for a Flutter application.
+ ![preview](preview.apng)
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Youtube
+
+[Flutter Onboarding Screen Tutorial | Habit App | speed code](https://youtu.be/iVFPKW1WTVQ)
+
+
+
+## Lesson learned
+
+* SharedPreferences 읽기/쓰기
+* FutureBuilder
+* 안드로이드 상단 상태바 보이기/숨기기
+* 반응형 레이아웃
+
+
+
+## Sinppets
+
+* 안드로이드 상단 상태바 보이기/숨기기
+```dart
+SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);  // 숨기기
+SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]); // 보이기
+```
+
+* 앱 내부 로컬스토리지 접근: `shared_preferences` 패키지 사용
+
+```dart
+// bool 형태의 'ONBOARDING_COMPLETE' 상태값 읽기
+Future<bool> _seenOnboarding() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool status = prefs.getBool('ONBOARDING_COMPLETE') ?? false;
+  await Future.delayed(Duration(seconds: 3));
+  return status;
+}
+```
+
+* 로컬 스토리지 상태값에 따른 초기화면
+
+```dart
+home: FutureBuilder(
+    future: _seenOnboarding(),
+    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        print(snapshot.connectionState);
+        switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+                return SplashScreen();
+            case ConnectionState.done:
+                return (snapshot.data ?? false) ? MainPage() : OnboardingScreen();
+            default:
+                return Container();
+        }
+    },
+),
+```
+
+  
