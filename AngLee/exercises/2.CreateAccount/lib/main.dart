@@ -1,44 +1,45 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-void main() => runApp(const CreateAccount());
+void main() => runApp(const PasswordValidation());
 
-class CreateAccount extends StatelessWidget {
-  const CreateAccount({Key? key}) : super(key: key);
+class PasswordValidation extends StatelessWidget {
+  const PasswordValidation({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CreateAccount',
-      theme: ThemeData(primarySwatch: Colors.amber),
+      title: 'PASSWORD VALIDATION',
       debugShowCheckedModeBanner: false,
-      home: const Home(),
+      theme: ThemeData(primarySwatch: Colors.lime),
+      home: const HomePage(),
     );
   }
 }
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeState extends State<Home> {
-  bool _visible = true;
-  bool _isEightPassword = false;
+class _HomePageState extends State<HomePage> {
+  bool _visible = false;
+  bool _isEightNumber = false;
   bool _hasNumber = false;
 
-  void _onChangePassword(String password) {
-    var numReg = RegExp(r'[0-9]');
+  void _onChagePassword(String password) {
     setState(() {
-      _isEightPassword = false;
-      if (password.length >= 8) {
-        _isEightPassword = true;
-      }
+      var regExp = RegExp(r'[0-9]');
+
+      _isEightNumber = false;
       _hasNumber = false;
-      if (numReg.hasMatch(password)) {
+
+      if (password.length >= 8) {
+        _isEightNumber = true;
+      }
+
+      if (regExp.hasMatch(password)) {
         _hasNumber = true;
       }
     });
@@ -48,33 +49,34 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Account'),
-        centerTitle: true,
-        elevation: 0,
-      ),
+          title: const Text(
+            '계정 만들기',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          elevation: 0),
       body: Container(
-        color: Colors.white,
+        color: Colors.white38,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Set a Password',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              '비밀번호를 설정',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 14),
             Text(
-              '하단의 제약사항에 따라 비번을 생성하시오',
-              style: TextStyle(fontSize: 15),
+              '아래 조건을 만족하는 강력한 비밀번호를 생성하세요',
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black45),
             ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
             TextField(
-              onChanged: (password) => _onChangePassword(password),
               obscureText: !_visible,
+              onChanged: (password) => _onChagePassword(password),
               decoration: InputDecoration(
                   suffixIcon: IconButton(
                     icon: _visible
@@ -88,76 +90,72 @@ class _HomeState extends State<Home> {
                   ),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
-                      borderRadius: BorderRadius.circular(10)),
-                  hintText: 'input your password',
+                      borderRadius: BorderRadius.circular(14)),
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.amber),
-                      borderRadius: BorderRadius.circular(10))),
+                      borderSide: BorderSide(color: Colors.black),
+                      borderRadius: BorderRadius.circular(14)),
+                  hintText: '비밀번호 설정',
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 20)),
             ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
             Row(
               children: [
                 AnimatedContainer(
                   duration: Duration(milliseconds: 500),
-                  width: 20,
-                  height: 20,
+                  width: 24,
+                  height: 24,
                   decoration: BoxDecoration(
-                      color:
-                          _isEightPassword ? Colors.amber : Colors.transparent,
-                      border: _isEightPassword
-                          ? Border.all(color: Colors.amber)
+                      color: _isEightNumber ? Colors.green : Colors.transparent,
+                      border: _isEightNumber
+                          ? Border.all(color: Colors.transparent)
                           : Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Icon(
+                      borderRadius: BorderRadius.circular(14)),
+                  child: Center(
+                      child: Icon(
                     Icons.check,
-                    color: Colors.white,
-                    size: 14,
-                  ),
+                    color: Colors.white38,
+                    size: 16,
+                  )),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text('비번은 8글자 이상이어야 함')
+                SizedBox(width: 10),
+                Text('비밀번호를 8자 이상으로 설정해주세요.')
               ],
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             Row(
               children: [
                 AnimatedContainer(
                   duration: Duration(milliseconds: 500),
-                  width: 20,
-                  height: 20,
+                  width: 24,
+                  height: 24,
                   decoration: BoxDecoration(
-                      color: _hasNumber ? Colors.amber : Colors.transparent,
+                      color: _hasNumber ? Colors.green : Colors.transparent,
                       border: _hasNumber
-                          ? Border.all(color: Colors.amber)
+                          ? Border.all(color: Colors.transparent)
                           : Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Icon(
+                      borderRadius: BorderRadius.circular(14)),
+                  child: Center(
+                      child: Icon(
                     Icons.check,
-                    color: Colors.white,
-                    size: 14,
-                  ),
+                    color: Colors.white38,
+                    size: 16,
+                  )),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text('숫자 하나는 들어가야함')
+                SizedBox(width: 10),
+                Text('숫자 하나를 포함해 주세요.')
               ],
             ),
-            SizedBox(
-              height: 50,
-            ),
+            SizedBox(height: 30,),
             MaterialButton(
-              height: 40,
-              minWidth: double.infinity,
               onPressed: () {},
-              child: Text('CREATE ACCOUNT'),
-              color: Colors.amber,
+              minWidth: double.infinity,
+              height: 50,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5)
+              ),
+              color: Colors.lime,
+              child: Text('계정 생성', style: TextStyle(color: Colors.black, fontSize: 18),),
             )
           ],
         ),
