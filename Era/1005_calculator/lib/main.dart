@@ -1,3 +1,4 @@
+import 'package:calculator/widgets/build_result.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
@@ -21,7 +22,7 @@ class CalculatorApp extends StatefulWidget {
 
 class _CalculatorAppState extends State<CalculatorApp> {
   String _query = '';
-  String _result = '0';
+  double _result = 0.0;
 
   final List<String> _btnTexts = [
     'C',
@@ -59,7 +60,7 @@ class _CalculatorAppState extends State<CalculatorApp> {
     } else if (btn == '=') {
       // 결과 계산
       if (_query.isEmpty) {
-        _result = '0';
+        _result = 0.0;
       } else {
         String eval = _query;
         if (!_query.endsWith('=')) _query += '=';
@@ -67,11 +68,11 @@ class _CalculatorAppState extends State<CalculatorApp> {
         Expression exp = p.parse(eval.replaceAll('X', '*'));
         // ContextModel cm = ContextModel();
         double r = exp.evaluate(EvaluationType.REAL, ContextModel());
-        _result = r.toString();
+        _result = r;
       }
     } else if (['%', '/', 'X', '+', '-'].contains(btn)) {
       if (_query.endsWith('=')) {
-        _query = _result + btn;
+        _query = _result.toString() + btn;
       } else {
         _query += btn;
       }
@@ -105,22 +106,18 @@ class _CalculatorAppState extends State<CalculatorApp> {
                         padding: EdgeInsets.all(10),
                         child: Text(
                           _query,
-                          style: TextStyle(fontSize: 20, color: Colors.deepPurple),
+                          style: TextStyle(fontFamily: 'AlarmClock', fontSize: 20, color: Colors.deepPurple),
                         ),
                       ),
                       const SizedBox(height: 10),
                       Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.deepPurple[50],
                         ),
-                        child: Text(
-                          _result,
-                          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.deepPurple),
-                          textAlign: TextAlign.right,
-                        ),
+                        child: BuildResult(result: _result),
                       )
                     ],
                   ),
