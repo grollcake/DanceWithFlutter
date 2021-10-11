@@ -44,13 +44,20 @@ class _MyHomePageState extends State<MyHomePage> {
       _date = DateTime(_date.year, _date.month, 1);
 
       var startDay = _date.weekday;
-      var maxDay = DateTime(_date.year, _date.month-1, 0).day;
+      var maxDay = DateTime(_date.year, _date.month+1, 0).day;
 
       if(startDay == 7){
         startDay = 0;
       }
 
       int needAddDay = 0;
+
+      print('year ${_date.year} month ${_date.month} day ${_date.day}');
+
+      print(_date.year);
+      print(_date.month);
+      print(startDay);
+      print(maxDay);
 
       for (var i = 1; i < startDay + maxDay + 1; i++) {
         var dateInfo = DateInfo();
