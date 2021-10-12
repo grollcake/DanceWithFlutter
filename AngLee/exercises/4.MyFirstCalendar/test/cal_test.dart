@@ -2,17 +2,41 @@ void main(){
 
   // 오늘 날짜 객체 설정
   var date = DateTime.now();
-  date = DateTime(date.year, date.month, 1);
+  date = DateTime(2021, 10, 1);
+  var maxDay = DateTime(date.year, date.month+1, 0).day;
 
-  print('month ' + date.month.toString());
+  print('year ${date.year} month ${date.month} day ${date.day} maxDay ${maxDay}');
 
-  var thisYear = date.year;
-  var thisMonth = date.month;
-  var startDay = date.weekday;
-  var maxDay = DateTime(thisYear, thisMonth, 0).day;
+  date = DateTime(2021, 11, 1);
+  maxDay = DateTime(date.year, date.month+1, 0).day;
 
-  print(startDay);
-  print(date.day);
+  print('year ${date.year} month ${date.month} day ${date.day} maxDay ${maxDay}');
+
+  date = DateTime(2021, 12, 1);
+  maxDay = DateTime(date.year, date.month+1, 0).day;
+
+  print('year ${date.year} month ${date.month} day ${date.day} maxDay ${maxDay}');
+
+  date = DateTime(2022, 1, 1);
+  maxDay = DateTime(date.year, date.month+1, 0).day;
+
+  print('year ${date.year} month ${date.month} day ${date.day} maxDay ${maxDay}');
+
+  date = DateTime(2022, 2, 1);
+  maxDay = DateTime(date.year, date.month+1, 0).day;
+
+  print('year ${date.year} month ${date.month} day ${date.day} maxDay ${maxDay}');
+
+  date = DateTime(2022, 3, 1);
+  maxDay = DateTime(date.year, date.month+1, 0).day;
+
+  print('year ${date.year} month ${date.month} day ${date.day} maxDay ${maxDay}');
+
+  date = DateTime(2022, 4, 1);
+  maxDay = DateTime(date.year, date.month+1, 0).day;
+
+  print('year ${date.year} month ${date.month} day ${date.day} maxDay ${maxDay}');
+
 
 }
 

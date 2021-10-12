@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_first_calendar/components/calendar/calender_child_view.dart';
+
+import 'model/date_info.dart';
 
 void main() {
   runApp(const MyApp());
@@ -188,53 +191,11 @@ class _MyHomePageState extends State<MyHomePage> {
               itemCount: _dateInfoList.length,
               itemBuilder: (context, index) {
                 var thisDate = _dateInfoList[index];
+                return CalenderChildView(isBlank: thisDate.isBlank, day: thisDate.day.toString(), dayOfWeek: thisDate.dayOfWeek);
 
-                if (!thisDate.isBlank) {
-                  return Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Colors.blueGrey, width: 0.2)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            _dateInfoList[index].day.toString(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: thisDate.dayOfWeek == 7
-                                    ? Colors.red
-                                    : thisDate.dayOfWeek == 6
-                                        ? Colors.blue
-                                        : Colors.black87),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Colors.blueGrey, width: 0.2)),
-                    ),
-                  );
-                }
               }),
         ],
       ),
     );
   }
-}
-
-class DateInfo {
-  bool isBlank = false;
-
-  var day;
-  var dayOfWeek;
 }
