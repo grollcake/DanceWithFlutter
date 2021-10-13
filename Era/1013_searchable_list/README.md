@@ -1,16 +1,27 @@
-# searchable_list
+# 검색 가능한 리스트2
 
-A new Flutter project.
+실시간 검색이 되는 리스트뷰 2번째 암기코딩
 
-## Getting Started
+## 결과물
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Youtube
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[Flutter Searchable ListView - Day 28](https://www.youtube.com/watch?v=9PWaRfYZ6Lg)
+
+
+
+## Lesson learned
+
+* Column 안에 ListView를 쓸때는 Expanded로 감싸야한다.
+
+
+
+## Sinppets
+
+* 조건에 맞는 리스트 아이템만 추출하여 새로운 리스트로 저장
+```dart
+_searchedUsers = _allUsers.where((user) => user.name.toLowerCase().contains(keyword.toLowerCase())).toList();
+```
+
