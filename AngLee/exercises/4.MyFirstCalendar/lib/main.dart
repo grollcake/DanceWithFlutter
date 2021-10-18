@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:my_first_calendar/components/calendar/calender_child_view.dart';
+import 'package:my_first_calendar/model/weather_info.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 import 'model/date_info.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.blueGrey,
       ),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
@@ -34,33 +38,46 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<String> _dateHeader = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   List<DateInfo> _dateInfoList = [];
+  Map<String, WeatherInfo> _weatherInfoMap = {};
 
   DateTime _date = DateTime.now();
+
+  Future<String> _getWeather() async {
+
+    final queryParams = {
+      'nx': '60',
+      'ny': '70',
+      'locationCode': 'DT_0001',
+      'loc': '목포'
+    };
+
+    var url = Uri.https('honeyangler.gtz.kr',
+        '/fishingtoc/weather/getWeekData.php', queryParams);
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+
+    return '';
+
+  }
 
   void _drawCalendar() {
     _dateInfoList = [];
 
     setState(() {
-
-
       // 오늘 날짜 객체 설정
       _date = DateTime(_date.year, _date.month, 1);
 
       var startDay = _date.weekday;
-      var maxDay = DateTime(_date.year, _date.month+1, 0).day;
+      var maxDay = DateTime(_date.year, _date.month + 1, 0).day;
 
-      if(startDay == 7){
+      if (startDay == 7) {
         startDay = 0;
       }
 
       int needAddDay = 0;
-
-      print('year ${_date.year} month ${_date.month} day ${_date.day}');
-
-      print(_date.year);
-      print(_date.month);
-      print(startDay);
-      print(maxDay);
 
       for (var i = 1; i < startDay + maxDay + 1; i++) {
         var dateInfo = DateInfo();
@@ -71,45 +88,90 @@ class _MyHomePageState extends State<MyHomePage> {
           var day = i - startDay;
           var calDate = DateTime(_date.year, _date.month, day);
 
-          if(day == maxDay) {
+          if (day == maxDay) {
             needAddDay = calDate.weekday;
           }
-          dateInfo.day = day;
+
+          dateInfo.year = _date.year.toString();
+          dateInfo.month = _date.month.toString();
+          dateInfo.day = day.toString();
+
           dateInfo.dayOfWeek = calDate.weekday;
+
+          if(_weatherInfoMap.containsKey(dateInfo.getFullDate())){
+
+            WeatherInfo? wInfo = _weatherInfoMap[dateInfo.getFullDate()];
+
+            String simpleWeatherCode = wInfo!.weatherCode.toString().substring(0,1);
+            dateInfo.hasWeatherInfo = true;
+
+
+            if(simpleWeatherCode == '0'){
+              dateInfo.wIcons = WeatherIcons.day_sunny;
+            } else if(simpleWeatherCode == '1'){
+              dateInfo.wIcons = WeatherIcons.day_rain;
+            } else {
+              dateInfo.wIcons = WeatherIcons.day_snow;
+            }
+
+          }
+
+
         }
 
         _dateInfoList.add(dateInfo);
       }
 
       // 남은 달력 칸 채우기
-      if(needAddDay == 7){
+      if (needAddDay == 7) {
         needAddDay = 6;
       } else {
         needAddDay = 6 - needAddDay;
       }
 
-      for(var i=0; i<needAddDay; i++){
+      for (var i = 0; i < needAddDay; i++) {
         var blankDate = DateInfo();
         blankDate.isBlank = true;
         _dateInfoList.add(blankDate);
       }
+
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    Future<String> future = _getWeather();
+    future.then((value){
+
+      var jsonResponse = convert.jsonDecode(value) as List<dynamic>;
+
+      jsonResponse.forEach((element) {
+        var el = convert.jsonDecode(convert.jsonEncode(element));
+
+        String dateKey = el['tmEf'].toString().substring(0,10);
+        _weatherInfoMap[dateKey] = WeatherInfo(dateKey, el['code'].toString());
+
+      });
+
+
+      _drawCalendar();
+    }).catchError((error){
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    _drawCalendar();
-
     return Scaffold(
       appBar: PreferredSize(
         child: AppBar(
-            title: Text('First Tide Calendar'),
+            title: Text('FishingToc', textAlign: TextAlign.right,),
             titleTextStyle:
-                TextStyle(fontWeight: FontWeight.w300, fontSize: 22),
+                TextStyle(fontWeight: FontWeight.w200, fontSize: 14),
             elevation: 0),
-        preferredSize: Size.fromHeight(40),
+        preferredSize: Size.fromHeight(24),
       ),
       body: Column(
         children: [
@@ -122,9 +184,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   flex: 2,
                   child: IconButton(
                     icon: Icon(Icons.navigate_before, size: 40),
-                    onPressed: (){
+                    onPressed: () {
                       setState(() {
-                        _date = DateTime(_date.year, _date.month-1, 1);
+                        _date = DateTime(_date.year, _date.month - 1, 1);
                       });
                     },
                   ),
@@ -132,12 +194,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 Expanded(
                   flex: 6,
                   child: Center(
-                    child: Text(
-                      '${_date.year}. ${_date.month}.',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          '${_date.year}',
+                          style:
+                              TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          '${_date.month}',
+                          style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -145,9 +215,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   flex: 2,
                   child: IconButton(
                     icon: Icon(Icons.navigate_next, size: 40),
-                    onPressed: (){
+                    onPressed: () {
                       setState(() {
-                        _date = DateTime(_date.year, _date.month+1, 1);
+                        _date = DateTime(_date.year, _date.month + 1, 1);
                       });
                     },
                   ),
@@ -155,31 +225,34 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          SizedBox(height:10),
+          SizedBox(height: 10),
           GridView.builder(
               shrinkWrap: true,
               itemCount: _dateHeader.length,
               gridDelegate:
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7),
               itemBuilder: (context, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                      border: Border.symmetric(
-                          horizontal: BorderSide(
-                              style: BorderStyle.solid,
-                              color: Colors.black45))),
-                  child: Center(
-                    child: Text(
-                      _dateHeader[index],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: index == 0
-                              ? Colors.red
-                              : index == 6
-                                  ? Colors.blue
-                                  : Colors.black87),
+                return Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.blueGrey.shade100,
+                        border: Border.symmetric(
+                            horizontal: BorderSide(
+                                style: BorderStyle.solid,
+                                color: Colors.black45))),
+                    child: Center(
+                      child: Text(
+                        _dateHeader[index],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: index == 0
+                                ? Colors.red
+                                : index == 6
+                                    ? Colors.blue
+                                    : Colors.black87),
+                      ),
                     ),
                   ),
                 );
@@ -191,8 +264,8 @@ class _MyHomePageState extends State<MyHomePage> {
               itemCount: _dateInfoList.length,
               itemBuilder: (context, index) {
                 var thisDate = _dateInfoList[index];
-                return CalenderChildView(isBlank: thisDate.isBlank, day: thisDate.day.toString(), dayOfWeek: thisDate.dayOfWeek);
-
+                return CalenderChildView(
+                    dateInfo: thisDate,);
               }),
         ],
       ),
