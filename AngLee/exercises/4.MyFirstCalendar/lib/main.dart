@@ -32,15 +32,7 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  List<String> _dateHeader = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-  List<DateInfo> _dateInfoList = [];
-  Map<String, WeatherInfo> _weatherInfoMap = {};
-
-  DateTime _date = DateTime.now();
+  State<MyHomePage> createState() => _MyHomePageState(weatherListStr: _getWeather());
 
   Future<String> _getWeather() async {
 
@@ -63,10 +55,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   }
 
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+
+  _MyHomePageState({required this.weatherListStr});
+
+  List<String> _dateHeader = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  List<DateInfo> _dateInfoList = [];
+  Map<String, WeatherInfo> _weatherInfoMap = {};
+
+  DateTime _date = DateTime.now();
+  final Future<String> weatherListStr;
+
   void _drawCalendar() {
     _dateInfoList = [];
 
-    setState(() {
       // 오늘 날짜 객체 설정
       _date = DateTime(_date.year, _date.month, 1);
 
@@ -135,30 +139,11 @@ class _MyHomePageState extends State<MyHomePage> {
         _dateInfoList.add(blankDate);
       }
 
-    });
   }
 
   @override
   void initState() {
     super.initState();
-    Future<String> future = _getWeather();
-    future.then((value){
-
-      var jsonResponse = convert.jsonDecode(value) as List<dynamic>;
-
-      jsonResponse.forEach((element) {
-        var el = convert.jsonDecode(convert.jsonEncode(element));
-
-        String dateKey = el['tmEf'].toString().substring(0,10);
-        _weatherInfoMap[dateKey] = WeatherInfo(dateKey, el['code'].toString());
-
-      });
-
-
-      _drawCalendar();
-    }).catchError((error){
-
-    });
   }
 
   @override
@@ -257,18 +242,41 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 );
               }),
-          GridView.builder(
-              shrinkWrap: true,
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7),
-              itemCount: _dateInfoList.length,
-              itemBuilder: (context, index) {
-                var thisDate = _dateInfoList[index];
-                return CalenderChildView(
-                    dateInfo: thisDate,);
-              }),
+          FutureBuilder<String>(
+            future: weatherListStr,
+            builder: (context, snapshot){
+              if(snapshot.hasData){
+
+                // 날씨데이터 전달받고 날씨데이터 처리 후 위젯 그리기
+                var jsonResponse = convert.jsonDecode(snapshot.data.toString()) as List<dynamic>;
+
+                jsonResponse.forEach((element) {
+                  var el = convert.jsonDecode(convert.jsonEncode(element));
+
+                  String dateKey = el['tmEf'].toString().substring(0,10);
+                  _weatherInfoMap[dateKey] = WeatherInfo(dateKey, el['code'].toString());
+
+                });
+                _drawCalendar();
+
+                return GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate:
+                    SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7),
+                    itemCount: _dateInfoList.length,
+                    itemBuilder: (context, index) {
+                      var thisDate = _dateInfoList[index];
+                      return CalenderChildView(
+                        dateInfo: thisDate);
+                    });
+              }
+              return CircularProgressIndicator();
+            }
+          ),
         ],
       ),
     );
   }
+
+
 }
