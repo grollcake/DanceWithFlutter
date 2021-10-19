@@ -69,6 +69,23 @@ class _OTPVerificatorState extends State<OTPVerificator> {
                 onComplete: (result) => print('Example3 onComplete: $result'),
                 onChange: (result) => print('Example3 onChange: $result'),
               ),
+              Row(mainAxisSize: MainAxisSize.min, children: [
+                Text('=>'),
+                ...List.generate(
+                  5,
+                  (index) {
+                    return Container(
+                      width: 40,
+                      height: 40,
+                      margin: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.deepPurple[200],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    );
+                  },
+                ),
+              ])
             ],
           ),
         ),
