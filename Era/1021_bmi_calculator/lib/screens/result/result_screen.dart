@@ -1,4 +1,6 @@
+import 'package:bmi_calculator/brains/bmi_calculator.dart';
 import 'package:bmi_calculator/constants/app_style.dart';
+import 'package:bmi_calculator/models/user_info.dart';
 import 'package:flutter/material.dart';
 
 class ResultScreen extends StatefulWidget {
@@ -9,8 +11,15 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
+  UserInfo userInfo = UserInfo(weight: 0, height: 0);
+  BMICalculator? bmiCalc;
+
   @override
   Widget build(BuildContext context) {
+
+    userInfo = ModalRoute.of(context)!.settings.arguments as UserInfo;
+    bmiCalc = BMICalculator(height: userInfo.height, weight: userInfo.weight);
+
     return Scaffold(
       appBar: buildAppBar(),
       body: buildBody(),
@@ -31,7 +40,7 @@ class _ResultScreenState extends State<ResultScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.only(left: 20, top: 20),
           child: Text('Your result', style: AppStyle.titleTextStyle),
         ),
         Expanded(
@@ -44,15 +53,15 @@ class _ResultScreenState extends State<ResultScreen> {
             child: Column(
               children: [
                 SizedBox(height: 40),
-                Text('NORMAL', style: AppStyle.resultTextStyle),
+                Text(bmiCalc?.getResult() ?? 'Unknown', style: AppStyle.resultTextStyle),
                 SizedBox(height: 10),
-                Text('22.1', style: AppStyle.BMITextStyle),
+                Text(bmiCalc?.calculateBMI() ?? '0.0', style: AppStyle.BMITextStyle),
                 Spacer(),
                 Text('Normal BMI range:', style: AppStyle.bodyTextStyle.copyWith(fontSize: 20, color: Colors.white70)),
                 SizedBox(height: 10),
                 Text('18.5 ~ 25 kg/m2', style: AppStyle.largeButtonTextStyle),
                 Spacer(),
-                Text('You have a normal body weight. Good job!',
+                Text(bmiCalc?.getInterpretation() ?? 'Something wrong',
                     style: AppStyle.bodyTextStyle, textAlign: TextAlign.center),
                 Spacer(),
                 ElevatedButton(

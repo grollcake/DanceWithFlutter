@@ -1,16 +1,35 @@
-# bmi_calculator
+# BMI 계산기
 
-A new Flutter project.
+2개의 페이지로 구성된 BMI 계산기
 
-## Getting Started
+## 결과물
 
-This project is a starting point for a Flutter application.
+ ![preview](preview.png)
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Design resource
+
+[Simple BMI Calculator from dribbble](https://dribbble.com/shots/4585382-Simple-BMI-Calculator)
+
+## Lesson learned
+
+* RawMaterialButton
+* routes, initialRoute, Navigator.pushNamed
+* Package: Fluttertoast
+* Package: FontAwesome
+
+## Sinppets
+
+named route를 사용할 때 인자 전달
+
+```dart
+// 호출 쪽
+Navigator.pushNamed(context, '/result', arguments: UserInfo(height: height, weight: weight));
+
+// 받는 쪽
+userInfo = ModalRoute.of(context)!.settings.arguments as UserInfo;
+```
+
+
+

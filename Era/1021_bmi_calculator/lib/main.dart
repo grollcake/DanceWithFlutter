@@ -1,5 +1,6 @@
 import 'package:bmi_calculator/constants/app_style.dart';
 import 'package:bmi_calculator/screens/input/input_screen.dart';
+import 'package:bmi_calculator/screens/result/result_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(BMIApp());
@@ -15,7 +16,11 @@ class BMIApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: AppStyle.backgroundColor,
       ),
-      home: InputScreen(),
+      routes: {
+        '/': (context) => InputScreen(),
+        '/result': (context) => ResultScreen(),
+      },
+      initialRoute: '/',
     );
   }
 }

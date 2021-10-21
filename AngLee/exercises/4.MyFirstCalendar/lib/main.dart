@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _MyHomePageState({required this.weatherListStr});
 
-  List<String> _dateHeader = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  final List<String> _dateHeader = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   List<DateInfo> _dateInfoList = [];
   Map<String, WeatherInfo> _weatherInfoMap = {};
 

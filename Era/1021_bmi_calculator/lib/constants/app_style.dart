@@ -38,6 +38,6 @@ class AppStyle {
   );
 
   static TextStyle  bodyTextStyle = TextStyle(
-    fontSize: 22.0,
+    fontSize: 20.0,
   );
 }

@@ -1,9 +1,10 @@
 import 'package:bmi_calculator/constants/app_style.dart';
 import 'package:bmi_calculator/models/gender.dart';
+import 'package:bmi_calculator/models/user_info.dart';
 import 'package:bmi_calculator/screens/input/widgets/reusable_card.dart';
 import 'package:bmi_calculator/screens/input/widgets/round_button.dart';
-import 'package:bmi_calculator/screens/result/result_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class InputScreen extends StatefulWidget {
@@ -55,7 +56,8 @@ class _InputScreenState extends State<InputScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(FontAwesomeIcons.mars, color: Colors.white, size: 72),
+                        Icon(FontAwesomeIcons.mars,
+                            color: gender == Gender.male ? Colors.white : Color(0xFF8D8E98), size: 72),
                         SizedBox(height: 8),
                         Text('MALE', style: AppStyle.labelTextStyle),
                       ],
@@ -77,7 +79,8 @@ class _InputScreenState extends State<InputScreen> {
                       children: [
                         Transform.rotate(
                           angle: 0.8,
-                          child: Icon(FontAwesomeIcons.venus, color: Colors.white, size: 72),
+                          child: Icon(FontAwesomeIcons.venus,
+                              color: gender == Gender.female ? Colors.white : Color(0xFF8D8E98), size: 72),
                         ),
                         SizedBox(height: 8),
                         Text('FEMALE', style: AppStyle.labelTextStyle),
@@ -147,16 +150,20 @@ class _InputScreenState extends State<InputScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          RoundButton(onPressed: (){
-                            setState(() {
-                              weight--;
-                            });
-                          }, icon: FontAwesomeIcons.minus),
-                          RoundButton(onPressed: (){
-                            setState(() {
-                              weight++;
-                            });
-                          }, icon: FontAwesomeIcons.plus),
+                          RoundButton(
+                              onPressed: () {
+                                setState(() {
+                                  weight--;
+                                });
+                              },
+                              icon: FontAwesomeIcons.minus),
+                          RoundButton(
+                              onPressed: () {
+                                setState(() {
+                                  weight++;
+                                });
+                              },
+                              icon: FontAwesomeIcons.plus),
                         ],
                       )
                     ],
@@ -174,16 +181,20 @@ class _InputScreenState extends State<InputScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          RoundButton(onPressed: (){
-                            setState(() {
-                              age--;
-                            });
-                          }, icon: FontAwesomeIcons.minus),
-                          RoundButton(onPressed: (){
-                            setState(() {
-                              age++;
-                            });
-                          }, icon: FontAwesomeIcons.plus),
+                          RoundButton(
+                              onPressed: () {
+                                setState(() {
+                                  age--;
+                                });
+                              },
+                              icon: FontAwesomeIcons.minus),
+                          RoundButton(
+                              onPressed: () {
+                                setState(() {
+                                  age++;
+                                });
+                              },
+                              icon: FontAwesomeIcons.plus),
                         ],
                       )
                     ],
@@ -196,7 +207,18 @@ class _InputScreenState extends State<InputScreen> {
         SizedBox(height: 20),
         MaterialButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ResultScreen()));
+            // Navigator.push(context, MaterialPageRoute(builder: (context) => ResultScreen()));
+            if (gender == Gender.none) {
+              Fluttertoast.showToast(
+                msg: 'Please select your gender',
+                gravity: ToastGravity.CENTER,
+                backgroundColor: Colors.pinkAccent.shade100,
+                toastLength: Toast.LENGTH_SHORT,
+              );
+            }
+            else {
+              Navigator.pushNamed(context, '/result', arguments: UserInfo(height: height, weight: weight));
+            }
           },
           color: Colors.pinkAccent,
           child: Padding(
