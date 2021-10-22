@@ -35,7 +35,7 @@ Drawer buildCustomDrawer(bool likeIt, VoidCallback onLikeTap) {
               leading: Icon(FontAwesomeIcons.code, color: Colors.white),
               title: Text('Source code', style: TextStyle(fontSize: 20, color: Colors.white)),
               onTap: () {
-                launchUrl('https://github.com/grollcake/DanceWithFlutter');
+                launchUrl('https://github.com/grollcake/DanceWithFlutter/tree/master/Era/_1021_bmi_calculator');
               },
             ),
             ListTile(
