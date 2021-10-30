@@ -46,7 +46,7 @@ class DBHelper {
   
   Future<void> deleteUser(int _idx) async {
     final db = await database;
-    db.delete('users', where: 'idx = ?', whereArgs: [_idx]);
+    await db.delete('users', where: 'idx = ?', whereArgs: [_idx]);
   }
 
   Future<List<User>> getUserList() async {
