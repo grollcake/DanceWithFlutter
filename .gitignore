@@ -29,7 +29,12 @@
 .packages
 .pub-cache/
 .pub/
-**/build/
+
+# build 결과 중에서 web은 포함하도록 함
+# 단, 개별 프로젝트의 .gitignore 파일에서 /build/도 주석 처리해야 정상적으로 작동함
+# **/build/  (원본 설정은 주석처리함)
+**/build/*
+!**/build/web/
 
 # Web related
 lib/generated_plugin_registrant.dart
