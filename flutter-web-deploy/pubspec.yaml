@@ -5,6 +5,7 @@ homepage: https://flutter.ifwind.net
 environment:
   sdk: '>=2.10.0 <3.0.0'
 dependencies: 
+  process_run: ^0.12.2+2
   shelf: ^1.2.0
   shelf_router: ^1.1.2
   shelf_static: ^1.1.0
