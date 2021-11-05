@@ -5,7 +5,13 @@
 * 서버: Oracle 무료 서버 이용
 * 웹서버: dart의 shelf 모듈 사용
 * 도메인: flutter.ifwind.net
+* 서비스 포트: 8888
 * Frontend: Bootstrap5
+
+## 서버 실행
+* 프로젝트 경로: `DanceWithFlutter/flutter-web-deploy`
+* 프로젝트 준비: `bash prepare.sh`
+* 서버 실행: `bash run-server.sh`
 
 ## 프로젝트 세팅 준비 (최초 1회)
 ### a. 우분투 서버에 dart 설치

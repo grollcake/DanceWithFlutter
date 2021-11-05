@@ -11,10 +11,10 @@ import 'package:shelf_static/shelf_static.dart' as shelf_static;
 
 const BASE_HTML_FILE = 'public/base_index.html';
 const SYMLINK_ROOT = 'public/projects';
-const PROJECT_ROOT = 'D:\\flutter-dev\\DanceWithFlutter';
+const PROJECT_ROOT = '/home/rollcake/DanceWithFlutter';
 
 void main() async {
-  final port = int.parse(Platform.environment['PORT'] ?? '8080');
+  final port = int.parse(Platform.environment['PORT'] ?? '8888');
 
   // See https://pub.dev/documentation/shelf/latest/shelf/Cascade-class.html
   final cascade = Cascade()
@@ -37,7 +37,7 @@ void main() async {
 }
 
 // Serve files from the file system.
-final _staticHandler = shelf_static.createStaticHandler('public', defaultDocument: 'index.html');
+final _staticHandler = shelf_static.createStaticHandler('public', defaultDocument: 'index.html', serveFilesOutsidePath: true);
 
 // Router instance to handler requests.
 final _router = shelf_router.Router()
@@ -66,14 +66,14 @@ void rescanProjects() async {
 
   await for (FileSystemEntity file in projecFiles) {
     FileSystemEntityType type = await FileSystemEntity.type(file.path);
-    print('Checking ${file.path} > ${type.toString()}');
-    if (type == FileSystemEntityType.link) {
-      print('${file.path} is link. It will be deleted.'); // TODO
+    if (type == FileSystemEntityType.directory) {
+      file.delete();
+      // print('${file.path} is symlink and deleted.');
     }
   }
 
   // 1. index.html이 있는 프로젝트 검색
-  List<String> indexFiles = await searchFiles(startPath: PROJECT_ROOT, searchFile: '\\build\\web\\index.html');
+  List<String> indexFiles = await searchFiles(startPath: PROJECT_ROOT, searchFile: '/build/web/index.html');
 
   // 2. 프로젝트명 확인
   List<String> projectNames = [];
@@ -84,20 +84,17 @@ void rescanProjects() async {
 
   // 2. 프로젝트명으로 index.html의 base href 변경
   for (int i = 0; i < indexFiles.length; i++) {
-    await changeBaseHref(indexFiles[i], projectNames[i]);
+    await changeBaseHref(indexFiles[i], '/projects/' + projectNames[i]);
   }
 
   // 3. symbolic link 생성
   for (int i = 0; i < indexFiles.length; i++) {
     String projectName = projectNames[i];
-    String projectPath = path.dirname(path.dirname(path.dirname(indexFiles[i])));
+    String projectPath = path.dirname(indexFiles[i]);
     String symPath = SYMLINK_ROOT + Platform.pathSeparator + projectName;
 
-    print('symlink $projectName: $projectPath');
-
-    // TODO: symlink 생성 오류 수정 필요
-    // Link symLink = await Link(projectPath).create(symPath);
-    // print(symLink);
+    Link symLink = await Link(symPath).create(projectPath);
+    print('symlink created: $projectName  >  $projectPath');
   }
 }
 
@@ -109,8 +106,7 @@ Future<String> getIndexHtml() async {
   Stream<FileSystemEntity> projectLink = Directory(SYMLINK_ROOT).list(recursive: false, followLinks: false);
   List<String> links = [];
   await for (FileSystemEntity link in projectLink) {
-    if (await FileSystemEntity.type(link.path) != FileSystemEntityType.link) {
-      // TODO: 여기 변경 필요
+    if (await FileSystemEntity.type(link.path) == FileSystemEntityType.directory) {
       links.add(path.basename(link.path));
     }
   }
