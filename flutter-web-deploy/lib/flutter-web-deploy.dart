@@ -37,27 +37,28 @@ void main() async {
 }
 
 // Serve files from the file system.
-final _staticHandler = shelf_static.createStaticHandler('public', defaultDocument: 'index.html', serveFilesOutsidePath: true);
+final _staticHandler =
+    shelf_static.createStaticHandler('public', defaultDocument: 'index.html', serveFilesOutsidePath: true);
 
 // Router instance to handler requests.
 final _router = shelf_router.Router()
-  ..get('/', _homepageHandler)
-  ..get('/refresh', _homepageHandler);
+  ..get('/refresh', _refreshHandler)
+  ..get('/projects.json', _listHandler);
 
-Future<Response> _homepageHandler(Request request) async {
-  print('Request for "${request.url}", "${request.context}", "${request.requestedUri}"');
-  Map<String, Object> headers = {'Content-Type': 'text/html; charset=utf-8'};
+Future<Response> _refreshHandler(Request request) async {
+  await rescanProjects();
 
-  String url = '/' + request.url.toString();
+  Map<String, Object> headers = {'location': '/'};
 
-  if (url == '/') {
-    String html = await getIndexHtml();
-    return Response.ok(html, headers: headers);
-  } else if (url == '/refresh') {
-    await rescanProjects();
-    String html = await getIndexHtml();
-    return Response.ok(html, headers: headers);
-  }
+  return Response(302, headers: headers);
+}
+
+Future<Response> _listHandler(Request request) async {
+  Map<String, Object> headers = {'Content-Type': 'application/json'};
+
+  List<String> projects = await getProjectList();
+
+  return Response.ok(jsonEncode(projects), headers: headers);
 }
 
 void rescanProjects() async {
@@ -103,20 +104,29 @@ Future<String> getIndexHtml() async {
   String baseHtml = await File(BASE_HTML_FILE).readAsString();
 
   // 2. project 목록 확인
-  Stream<FileSystemEntity> projectLink = Directory(SYMLINK_ROOT).list(recursive: false, followLinks: false);
-  List<String> links = [];
-  await for (FileSystemEntity link in projectLink) {
-    if (await FileSystemEntity.type(link.path) == FileSystemEntityType.directory) {
-      links.add(path.basename(link.path));
-    }
-  }
+  List<String> projects = await getProjectList();
 
   // 3. bootstrap list 생성
-  List<String> listItems = [];
-  for (String link in links) {
-    listItems.add('<a href="/projects/$link" class="list-group-item list-group-item-action">$link</a>');
+  List<String> projectList = [];
+  for (String project in projects) {
+    projectList.add('<a href="/projects/$project" class="list-group-item list-group-item-action">$project</a>');
   }
 
   // 4. html 변경
-  return baseHtml.replaceFirst('<PROJECT-LIST>', listItems.join('\n'));
+  return baseHtml.replaceFirst('<PROJECT-LIST>', projectList.join('\n'));
+}
+
+// public/projects 아래에서 각 프로젝트별 build/web/으로 연결된 심볼릭 링크를 찾아서 반환한다.
+Future<List<String>> getProjectList() async {
+  List<String> projects = [];
+
+  Stream<FileSystemEntity> projectSymlinks = Directory(SYMLINK_ROOT).list(recursive: false, followLinks: false);
+
+  await for (FileSystemEntity symlink in projectSymlinks) {
+    if (await FileSystemEntity.type(symlink.path) == FileSystemEntityType.directory) {
+      projects.add(path.basename(symlink.path));
+    }
+  }
+
+  return projects;
 }
