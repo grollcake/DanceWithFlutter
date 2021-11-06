@@ -37,7 +37,33 @@ https://flutter.ifwind.net
 github에서 제공하는 action 기능을 이용하여, 새로운 프로젝트가 push되면 flutter.ifwind.net도 프로젝트 목록이 자동갱신되도록 `wget https://flutter.ifwind.net/refresh`를 작업으로 추가함
 
 
-## 6. 프로젝트 세팅 준비 (최초 1회)
+## 6. 서버 자동실행 등록
+systemd 서비스를 이용하여 자동 실행되도록 등록하였다.
+
+서비스 파일 생성: `/etc/systemd/system/flutter-web-server.service`
+```systemd
+[Unit]
+Description=flutter web server
+
+[Service]
+User=rollcake
+Group=rollcake
+WorkingDirectory=/home/rollcake/DanceWithFlutter/flutter-web-server
+ExecStart=/home/rollcake/DanceWithFlutter/flutter-web-server/run-server.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+
+서비스 등록 및 확인
+```bash
+sudo systemctl enable flutter-web-server
+sudo systemctl start flutter-web-server.service
+sudo systemctl status flutter-web-server.service
+```
+
+
+## 7. 프로젝트 세팅 준비 (최초 1회)
 
 ### a. 우분투 서버에 dart 설치
 
@@ -52,7 +78,7 @@ github에서 제공하는 action 기능을 이용하여, 새로운 프로젝트�
 ```
 
 
-## 7. 개발관련 메모
+## 8. 개발관련 메모
 
 ### a. pubspec.yaml 생성
 
