@@ -35,6 +35,7 @@
 # **/build/  (원본 설정은 주석처리함)
 **/build/*
 !**/build/web/
+**/flutter-web-server/public/projects/
 
 # Web related
 lib/generated_plugin_registrant.dart
