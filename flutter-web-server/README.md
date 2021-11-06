@@ -1,5 +1,5 @@
-# Flutter web deploy
-각 참여자가 올린 Flutter 프로젝트를 웹에서 작동하는 모습을 바로 볼수 있도록 자동배포
+# Flutter web server
+flutter 프로젝트의 웹앱(`build/web/`)을 바로 실행해볼 수 있도록 목록을 보여주는 웹서버
 
 ## 기본 아키텍처
 * 서버: Oracle 무료 서버 이용
@@ -9,7 +9,7 @@
 * Frontend: Bootstrap5
 
 ## 서버 실행
-* 프로젝트 경로: `DanceWithFlutter/flutter-web-deploy`
+* 프로젝트 경로: `DanceWithFlutter/flutter-web-server`
 * 프로젝트 준비: `bash prepare.sh`
 * 서버 실행: `bash run-server.sh`
 
@@ -28,7 +28,7 @@
 ## 개발관련 메모
 ### a. pubspec.yaml 생성
 ```yaml
-name: flutter_web_deplay
+name: flutter_web_server
 version: "0.1.0"
 description: flutter 프로젝트의 build/web을 자동으로 배포처리
 homepage: https://flutter.ifwind.net

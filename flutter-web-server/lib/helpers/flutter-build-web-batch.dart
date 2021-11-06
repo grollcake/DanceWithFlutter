@@ -1,3 +1,7 @@
+// 이건 사용하지 못하는 프로그램이다.
+// 모든 flutter 프로젝트를 찾아 웹앱을 자동으로 생성하고자 했으나,
+// 오류가 발생하는 프로젝트들이 너무 많아 사용할 수가 없다.
+
 import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:process_run/shell.dart';
