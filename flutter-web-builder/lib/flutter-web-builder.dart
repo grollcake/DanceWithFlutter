@@ -50,6 +50,7 @@ class FlutterWebBuilder {
 
       # git add
       git add build/web/*
+      git add web/*
 
       echo All done!
     ''');
