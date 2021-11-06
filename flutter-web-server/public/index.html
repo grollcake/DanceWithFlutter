@@ -16,7 +16,7 @@
 <body>
     <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Flutter web</a>
+            <a class="navbar-brand" href="#">Flutter web projects</a>
             <form class="d-flex">
                 <a href="/refresh" class="btn btn-outline-success">새로고침</a>
             </form>
@@ -30,6 +30,19 @@
             class="list-group-item list-group-item-action">
             {{ project }}
         </a>
+    </div>
+
+    <div style="height: 50px;"></div>
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <p>여기에 프로젝트 개시</p>
+
+        <p>1. Web 빌드 도구 설정 (<a
+                href="https://github.com/grollcake/DanceWithFlutter/blob/master/flutter-web-builder/README.md">README</a>)<br>
+            2. Web app 빌드: <code>flutter-web-build</code><br>
+            3. github에 올리기: <code>git push</code><br>
+            4. 웹에서 확인: <code>flutter.ifwind.net</code></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
