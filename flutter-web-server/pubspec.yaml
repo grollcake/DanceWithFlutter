@@ -1,4 +1,4 @@
-name: flutter_web_deplay
+name: flutter_web_server
 version: "0.1.0"
 description: flutter 프로젝트의 build/web을 자동으로 배포처리
 homepage: https://flutter.ifwind.net

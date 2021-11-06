@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_web_deplay/helpers/index_manipulate.dart';
-import 'package:flutter_web_deplay/helpers/search_files.dart';
+import 'helpers/index_manipulate.dart';
+import 'helpers/search_files.dart';
 import 'package:path/path.dart' as path;
+import 'package:process_run/shell.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_router/shelf_router.dart' as shelf_router;
@@ -32,6 +33,8 @@ void main() async {
     InternetAddress.anyIPv4, // Allows external connections
     port,
   );
+
+  if (!await Directory(SYMLINK_ROOT).exists()) Directory(SYMLINK_ROOT).create();
 
   print('Serving at http://${server.address.host}:${server.port}');
 }
@@ -62,7 +65,15 @@ Future<Response> _listHandler(Request request) async {
 }
 
 void rescanProjects() async {
-  // 0. 기존 링크 삭제
+  // 1. 최신 소스 가져오기 (git pull)
+  var shell = Shell(workingDirectory: PROJECT_ROOT, throwOnError: false);
+  await shell.run('''
+
+    echo git pull
+    git pull
+  ''');
+
+  // 1. 기존 링크 삭제
   Stream<FileSystemEntity> projecFiles = Directory(SYMLINK_ROOT).list(recursive: false, followLinks: false);
 
   await for (FileSystemEntity file in projecFiles) {
@@ -73,22 +84,22 @@ void rescanProjects() async {
     }
   }
 
-  // 1. index.html이 있는 프로젝트 검색
+  // 2. index.html이 있는 프로젝트 검색
   List<String> indexFiles = await searchFiles(startPath: PROJECT_ROOT, searchFile: '/build/web/index.html');
 
-  // 2. 프로젝트명 확인
+  // 3. 프로젝트명 확인
   List<String> projectNames = [];
   for (String indexFile in indexFiles) {
     String projectName = await extractProjectName(indexFile);
     projectNames.add(projectName);
   }
 
-  // 2. 프로젝트명으로 index.html의 base href 변경
+  // 4. 프로젝트명으로 index.html의 base href 변경
   for (int i = 0; i < indexFiles.length; i++) {
     await changeBaseHref(indexFiles[i], '/projects/' + projectNames[i]);
   }
 
-  // 3. symbolic link 생성
+  // 5. symbolic link 생성
   for (int i = 0; i < indexFiles.length; i++) {
     String projectName = projectNames[i];
     String projectPath = path.dirname(indexFiles[i]);
