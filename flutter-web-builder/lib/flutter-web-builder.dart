@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:path/path.dart' as path;
 import 'package:process_run/shell.dart';
 
 class FlutterWebBuilder {
@@ -19,10 +20,13 @@ class FlutterWebBuilder {
 
     // 1. 유효한 프로젝트인지 확인
     // pubspec.yaml, lib/, android/ 파일이 존재하면 유효한 프로젝트
+    String projectName = '';
     if (!await File('pubspec.yaml').exists() ||
         !await Directory('lib').exists() ||
         !await Directory('android').exists()) {
       throw ('It\'s not valid flutter project directory: $projectPath');
+    } else {
+      projectName = path.basename(Directory.current.path);
     }
 
     // 2. .gitignore에 build 경로 제외를 주석처리
@@ -42,7 +46,7 @@ class FlutterWebBuilder {
       flutter create .
 
       # Web build
-      flutter build web
+      flutter build web --base-href="/projects/$projectName/"
 
       # git add
       git add build/web/*
