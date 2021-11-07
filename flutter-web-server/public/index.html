@@ -26,9 +26,9 @@
     <div style="height: 50px;">
     </div>
     <div class="list-group" id="app">
-        <a v-for="project in projects" v-bind:href="`/projects/${project}`"
+        <a v-for="project in projects" v-bind:href="`/projects/${project.project}`"
             class="list-group-item list-group-item-action">
-            {{ project }}
+            {{ project.project }}
         </a>
     </div>
 

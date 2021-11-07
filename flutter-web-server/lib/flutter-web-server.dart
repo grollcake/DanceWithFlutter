@@ -10,9 +10,10 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_router/shelf_router.dart' as shelf_router;
 import 'package:shelf_static/shelf_static.dart' as shelf_static;
 
-const BASE_HTML_FILE = 'public/base_index.html';
+const INDEX_FILE = 'public/base_index.html';
 const SYMLINK_ROOT = 'public/projects';
 const PROJECT_ROOT = '/home/rollcake/DanceWithFlutter';
+const AUTHORS = ['Era', 'AngLee', 'NewMiracle'];
 
 void main() async {
   final port = int.parse(Platform.environment['PORT'] ?? '8888');
@@ -45,8 +46,20 @@ final _staticHandler =
 
 // Router instance to handler requests.
 final _router = shelf_router.Router()
+  // ..get('/', _indexHandler)
   ..get('/refresh', _refreshHandler)
-  ..get('/projects.json', _listHandler);
+  ..get('/projects.json', _projectsHandler);
+
+Future<Response> _indexHandler(Request request) async {
+  // 1. base html 읽어들이기
+  String index = await File(INDEX_FILE).readAsString();
+
+  // 2. header 준비: 다른 사이트를 iframe으로 사용할 수 있도록 허용 목록을 전송한다.
+  Map<String, Object> headers = {'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': 'script-src *'};
+
+  // 3. 응답 처리
+  return Response.ok(index, headers: headers);
+}
 
 Future<Response> _refreshHandler(Request request) async {
   await rescanProjects();
@@ -56,10 +69,10 @@ Future<Response> _refreshHandler(Request request) async {
   return Response(302, headers: headers);
 }
 
-Future<Response> _listHandler(Request request) async {
+Future<Response> _projectsHandler(Request request) async {
   Map<String, Object> headers = {'Content-Type': 'application/json'};
 
-  List<String> projects = await getProjectList();
+  List<Map<String, String>> projects = await getProjectList();
 
   return Response.ok(jsonEncode(projects), headers: headers);
 }
@@ -110,34 +123,43 @@ void rescanProjects() async {
   }
 }
 
-Future<String> getIndexHtml() async {
-  // 1. base html 읽어들이기
-  String baseHtml = await File(BASE_HTML_FILE).readAsString();
-
-  // 2. project 목록 확인
-  List<String> projects = await getProjectList();
-
-  // 3. bootstrap list 생성
-  List<String> projectList = [];
-  for (String project in projects) {
-    projectList.add('<a href="/projects/$project" class="list-group-item list-group-item-action">$project</a>');
-  }
-
-  // 4. html 변경
-  return baseHtml.replaceFirst('<PROJECT-LIST>', projectList.join('\n'));
-}
-
 // public/projects 아래에서 각 프로젝트별 build/web/으로 연결된 심볼릭 링크를 찾아서 반환한다.
-Future<List<String>> getProjectList() async {
-  List<String> projects = [];
+Future<List<Map<String, String>>> getProjectList() async {
+  List<Map<String, String>> projects = [];
 
+  // 1. projects symlink 경로(public/projects)에서 목록 확인
   Stream<FileSystemEntity> projectSymlinks = Directory(SYMLINK_ROOT).list(recursive: false, followLinks: false);
 
   await for (FileSystemEntity symlink in projectSymlinks) {
+    // 2. 프로젝트 symlink 확인: symlink는 directory로 식별된다.
     if (await FileSystemEntity.type(symlink.path) == FileSystemEntityType.directory) {
-      projects.add(path.basename(symlink.path));
+      // 3. 프로젝트의 원래 절대경로 확인
+      String realpath = await symlink.resolveSymbolicLinks();
+
+      // 4. 프로젝트 이름 찾기
+      String project = path.basename(symlink.path);
+
+      // 5. 프로젝트의 원래 절대경로에서 저작자 이름 찾기
+      String author = 'unknown';
+      for (String candi in AUTHORS) {
+        if (realpath.contains('/$candi/')) {
+          author = candi;
+          break;
+        }
+      }
+
+      // 6. github url 조립하기
+      // [From real path]  /home/rollcake/DanceWithFlutter/Era/_1010_create_password/build/web
+      // [To github url]  https://github.com/grollcake/DanceWithFlutter/tree/master/Era/_1010_create_password
+      String githubUrl = 'https://github.com/grollcake/DanceWithFlutter/tree/master/$author/$project';
+
+      // 7. 결과 취합
+      projects.add({'project': project, 'author': author, 'github': githubUrl});
     }
   }
+
+  // 프로젝트명으로 오름차순 정렬
+  projects.sort((a, b) => a['project'].compareTo(b['project']));
 
   return projects;
 }

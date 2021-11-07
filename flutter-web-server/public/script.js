@@ -1,8 +1,10 @@
 var app = new Vue({
     el: '#app',
     data: {
-        message: '안녕하세요 Vue!',
-        projects: ["project-a", "project-b"]
+        projects: [{ 'project': 'project-a', 'author': 'unknown', 'github': 'https://github.com/grollcake/DanceWithFlutter' }],
+        projectTitle: 'sample title',
+        projectSource: 'https://github.com/grollcake/DanceWithFlutter/blob/master/Era/_1014_verification',
+
     },
     mounted: function () {
         this.getProjectsList()
@@ -13,6 +15,11 @@ var app = new Vue({
                 console.log(response.data);
                 this.projects = response.data;
             })
-        }
+        },
+        showDetail: function (project) {
+            this.projectTitle = project;
+            var myModal = new bootstrap.Modal(document.getElementById('detailView'), {});
+            myModal.show();
+        },
     }
 });
