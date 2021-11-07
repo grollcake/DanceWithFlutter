@@ -159,7 +159,10 @@ Future<List<Map<String, String>>> getProjectsInfo() async {
       // 7. github url 조립하기
       // [From real path]  /home/rollcake/DanceWithFlutter/Era/_1010_create_password/build/web
       // [To github url]  https://github.com/grollcake/DanceWithFlutter/tree/master/Era/_1010_create_password
-      String githubUrl = 'https://github.com/grollcake/DanceWithFlutter/tree/master/$author/$project';
+      String githubUrl = realpath
+          .replaceFirst(
+              '/home/rollcake/DanceWithFlutter/', 'https://github.com/grollcake/DanceWithFlutter/tree/master/')
+          .replaceFirst('/build/web', '');
 
       // 8. 결과 취합
       projects.add({'project': project, 'author': author, 'github': githubUrl, 'previewImage': imageUrl});
