@@ -72,7 +72,7 @@ Future<Response> _refreshHandler(Request request) async {
 Future<Response> _projectsHandler(Request request) async {
   Map<String, Object> headers = {'Content-Type': 'application/json'};
 
-  List<Map<String, String>> projects = await getProjectList();
+  List<Map<String, String>> projects = await getProjectsInfo();
 
   return Response.ok(jsonEncode(projects), headers: headers);
 }
@@ -124,7 +124,7 @@ void rescanProjects() async {
 }
 
 // public/projects 아래에서 각 프로젝트별 build/web/으로 연결된 심볼릭 링크를 찾아서 반환한다.
-Future<List<Map<String, String>>> getProjectList() async {
+Future<List<Map<String, String>>> getProjectsInfo() async {
   List<Map<String, String>> projects = [];
 
   // 1. projects symlink 경로(public/projects)에서 목록 확인
@@ -148,13 +148,21 @@ Future<List<Map<String, String>>> getProjectList() async {
         }
       }
 
-      // 6. github url 조립하기
+      // 6. 미리보기 이미지 찾기
+      // 절대경로가 <project>/build/web/을 가리키고 있기 때문에 두단계 위로 올라간 경로에서 탐색한다.
+      String image = await findImageFromDirectory(path.dirname(path.dirname(realpath)));
+      // /home/rollcake/DanceWithFlutter/Era/_1005_pacman/pacman.apng
+      //  =>  https://github.com/grollcake/DanceWithFlutter/raw/master/Era/_1005_pacman/pacman.apng
+      String imageUrl = image.replaceFirst(
+          '/home/rollcake/DanceWithFlutter/', 'https://github.com/grollcake/DanceWithFlutter/raw/master/');
+
+      // 7. github url 조립하기
       // [From real path]  /home/rollcake/DanceWithFlutter/Era/_1010_create_password/build/web
       // [To github url]  https://github.com/grollcake/DanceWithFlutter/tree/master/Era/_1010_create_password
       String githubUrl = 'https://github.com/grollcake/DanceWithFlutter/tree/master/$author/$project';
 
-      // 7. 결과 취합
-      projects.add({'project': project, 'author': author, 'github': githubUrl});
+      // 8. 결과 취합
+      projects.add({'project': project, 'author': author, 'github': githubUrl, 'previewImage': imageUrl});
     }
   }
 
@@ -162,4 +170,16 @@ Future<List<Map<String, String>>> getProjectList() async {
   projects.sort((a, b) => a['project'].compareTo(b['project']));
 
   return projects;
+}
+
+Future<String> findImageFromDirectory(String dir) async {
+  Stream<FileSystemEntity> files = Directory(dir).list(recursive: false, followLinks: false);
+
+  await for (FileSystemEntity file in files) {
+    if (file.path.endsWith('.png') || file.path.endsWith('.apng') || file.path.endsWith('.jpg')) {
+      return file.path;
+    }
+  }
+
+  return '';
 }

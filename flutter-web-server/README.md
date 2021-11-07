@@ -10,6 +10,8 @@ https://flutter.ifwind.net
 
 ## 2. 서버 실행
 
+서버는 Era가 보유한 오라클 클라우드 무료서버에서 실행한다.
+
 * 프로젝트 경로: `DanceWithFlutter/flutter-web-server`
 * 프로젝트 준비: `bash prepare.sh`
 * 서버 실행: `bash run-server.sh`

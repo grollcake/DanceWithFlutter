@@ -28,7 +28,9 @@
         </div>
         <div class="list-group" id="app">
             <li v-for="project in projects" class="list-group-item" v-on:click="showDetail(project)">
-                {{ project.project }}
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ project.project }}</h5>
+                    <small>{{ project.author }}</small>
             </li>
         </div>
 
@@ -40,8 +42,9 @@
             <p>1. Web 빌드 도구 설정 (<a
                     href="https://github.com/grollcake/DanceWithFlutter/blob/master/flutter-web-builder/README.md">README</a>)<br>
                 2. Web app 빌드: <code>flutter-web-build</code><br>
-                3. github에 올리기: <code>git push</code><br>
-                4. 웹에서 확인: <code>flutter.ifwind.net</code></p>
+                3. 미리보기 이미지 준비: <code>png,jpg</code><br>
+                4. github에 올리기: <code>git push</code><br>
+                5. 웹에서 확인: <code>flutter.ifwind.net</code></p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
@@ -54,7 +57,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        ...
+                        <img v-if="selected.previewImage" v-bind:src="selected.previewImage" class="img-fluid">
+                        <small v-else>프로젝트 루트에 미리보기 이미지가 있으면 여기에 나타납니다. 이름은 자유롭게 사용하되 형식은 png, apng, jpg 중 하나를
+                            사용하세요</small>
                     </div>
                     <div class="modal-footer">
                         <a type="button" class="btn btn-primary"
