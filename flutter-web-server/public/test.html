@@ -50,15 +50,16 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="detailViewLabel"> {{ projectTitle }} </h5>
+                        <h5 class="modal-title" id="detailViewLabel"> {{ selected.project }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         ...
                     </div>
                     <div class="modal-footer">
-                        <a type="button" class="btn btn-primary" v-bind:href="`/projects/${projectTitle}`">Preview</a>
-                        <a type=" button" class="btn btn-success" v-bind:href="projectSource">Github</a>
+                        <a type="button" class="btn btn-primary"
+                            v-bind:href="`/projects/${selected.project}`">Preview</a>
+                        <a type=" button" class="btn btn-success" v-bind:href="selected.github">Github</a>
                     </div>
                 </div>
             </div>

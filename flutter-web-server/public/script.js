@@ -2,9 +2,7 @@ var app = new Vue({
     el: '#app',
     data: {
         projects: [{ 'project': 'project-a', 'author': 'unknown', 'github': 'https://github.com/grollcake/DanceWithFlutter' }],
-        projectTitle: 'sample title',
-        projectSource: 'https://github.com/grollcake/DanceWithFlutter/blob/master/Era/_1014_verification',
-
+        selected: {},
     },
     mounted: function () {
         this.getProjectsList()
@@ -17,7 +15,7 @@ var app = new Vue({
             })
         },
         showDetail: function (project) {
-            this.projectTitle = project;
+            this.selected = project;
             var myModal = new bootstrap.Modal(document.getElementById('detailView'), {});
             myModal.show();
         },
