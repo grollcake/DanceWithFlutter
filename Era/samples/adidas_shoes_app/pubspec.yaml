@@ -1,0 +1,30 @@
+name: adidas_shoes_app
+description: from https://github.com/devefy/Flutter-Adidas-Shoes-Ecommerce-App-UI
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+  fonts:
+    - family: Montserrat-Bold
+      fonts:
+        - asset: assets/Montserrat-Bold.ttf
+
+    - family: Montserrat-Medium
+      fonts:
+        - asset: assets/Montserrat-Medium.ttf
+
+    - family: Montserrat-SemiBold
+      fonts:
+        - asset: assets/Montserrat-SemiBold.ttf
