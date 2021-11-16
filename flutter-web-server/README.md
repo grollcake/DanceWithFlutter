@@ -14,7 +14,10 @@ https://flutter.ifwind.net
 
 * 프로젝트 경로: `DanceWithFlutter/flutter-web-server`
 * 프로젝트 준비: `bash prepare.sh`
-* 서버 실행: `bash run-server.sh`
+* 서버 실행: 
+  * 기본적으로 `systemd`에 등록되어 부팅 시 자동실행된다.
+  * 수동 실행방법 #1: `sudo systemctl start flutter-web-server`
+  * 수동 실행방법 #2: `bash run-server.sh`
 
 
 ## 3. URL Mapping
