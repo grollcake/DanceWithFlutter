@@ -17,6 +17,7 @@ class RoundedButton extends StatelessWidget {
           padding: EdgeInsets.all(0),
           shape: CircleBorder(),
           primary: color,
+          onPrimary: Colors.grey,
         ),
         child: SvgPicture.asset(iconPath, color: color == Colors.white ? Colors.black : Colors.white),
       ),
