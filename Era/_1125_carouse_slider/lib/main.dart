@@ -49,15 +49,16 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
         child: CarouselSlider(
           carouselController: _controller,
           options: CarouselOptions(
-              height: 450,
-              aspectRatio: 10 / 9,
-              enlargeCenterPage: true,
-              viewportFraction: 0.7,
-              pageSnapping: true,
-              enableInfiniteScroll: false,
-              onPageChanged: (int index, CarouselPageChangedReason reason) {
-                print('Current index: $index');
-              }),
+            height: 450,
+            aspectRatio: 10 / 9,
+            enlargeCenterPage: true,
+            viewportFraction: 0.7,
+            pageSnapping: true,
+            enableInfiniteScroll: false,
+            onPageChanged: (int index, CarouselPageChangedReason reason) {
+              print('Current index: $index');
+            },
+          ),
           items: products.asMap().entries.map(
             (item) {
               var idx = item.key;
