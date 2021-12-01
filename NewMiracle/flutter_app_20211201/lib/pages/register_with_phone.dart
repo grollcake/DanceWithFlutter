@@ -1,5 +1,5 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:example/pages/verification.dart';
+import 'verification.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 

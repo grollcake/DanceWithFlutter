@@ -1,4 +1,4 @@
-import 'package:example/pages/button.dart';
+import 'pages/button.dart';
 import 'package:flutter/material.dart';
 
 class FadeAnimation extends StatefulWidget {

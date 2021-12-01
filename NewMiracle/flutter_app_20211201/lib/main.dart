@@ -1,5 +1,5 @@
-import 'package:example/pages/animated_container.dart';
-import 'package:example/pages/register_with_phone.dart';
+import 'pages/animated_container.dart';
+import 'pages/register_with_phone.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(
