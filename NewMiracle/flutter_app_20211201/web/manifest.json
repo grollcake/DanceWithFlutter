@@ -1,6 +1,6 @@
 {
-    "name": "example",
-    "short_name": "example",
+    "name": "Searchable_Dropdown_example",
+    "short_name": "Searchable_Dropdown_example",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
