@@ -28,6 +28,7 @@ class _LoginState extends State<Login> {
         appBar: AppBar(
           title: Text('Login'),
           backgroundColor: Colors.redAccent,
+          centerTitle: true,
         ),
         body: Builder(builder: (context) {
           return GestureDetector(onTap: () {
@@ -37,7 +38,11 @@ class _LoginState extends State<Login> {
                 child : Column(
                   children: [
                     Padding(padding: EdgeInsets.only(top : 50),),
-                    Center(child : Image.asset('image/chef.gif')),
+                    Center(child : Image(
+                      image: AssetImage('image/chef.gif'),
+                      width : 190,
+                      height: 170
+                    )),
                     Form(
                       child : Container(
                         padding: EdgeInsets.all(30.0),

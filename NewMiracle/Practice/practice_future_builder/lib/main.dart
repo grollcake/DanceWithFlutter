@@ -3,7 +3,6 @@ import 'package:http/http.dart';
 import 'dart:convert';
 import 'dart:async';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -32,19 +31,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Future<List<User>> _getUsers() async {
 
-    Future<List<User>> _getUsers() async{
-
-    var data = await get("https://randomuser.me/api/?results=1");
+    //var data = await get("https://next.json-generator.com/EyoaOkQNK")
+    var data = await get("https://https://randomuser.me/api/?results=1");
     var jsonData = json.decode(data.body);
 
     print(jsonData);
 
     List<User> users = [];
 
-    for(var u in jsonData){
-
-      User user = User(u["index"], u["about"], u["name"], u["email"], u["picture"]);
+    for (var u in jsonData) {
+      User user =
+          User(u["index"], u["about"], u["name"], u["email"], u["picture"]);
       users.add(user);
     }
 
@@ -62,67 +61,59 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Container(
-        child : FutureBuilder(
-          future : _getUsers(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.data == null) {
-              return Container(
-                  child: Center(
-                    child: Text('Loading....'),
-                  )
-              );
-            } else {
-              return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                        title: Text(snapshot.data[index].name),
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(snapshot.data[index]
-                              .picture),
-                        ),
-                        subtitle: Text(snapshot.data[index].email),
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) =>
-                                  DetailPage(snapshot.data[index]))
-                          );
-                        }
-                    );
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(widget.title),
+        ),
+        body: Container(
+            child: FutureBuilder(
+                future: _getUsers(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.data == null) {
+                    return Container(
+                        child: Center(
+                      child: Text('Loading....'),
+                    ));
+                  } else {
+                    return ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                              title: Text(snapshot.data[index].name),
+                              leading: CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(snapshot.data[index].picture),
+                              ),
+                              subtitle: Text(snapshot.data[index].email),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            DetailPage(snapshot.data[index])));
+                              });
+                        });
                   }
-              );
-            }
-          }
-        )
-      )
-    );
+                })));
   }
 }
 
-class DetailPage extends StatelessWidget{
+class DetailPage extends StatelessWidget {
+  final User user;
 
-    final User user;
+  DetailPage(this.user);
 
-    DetailPage(this.user);
-
-    @override
-    Widget build(BuildContext context){
-      return Scaffold(
-          appBar : AppBar(
-            title : Text(user.name),
-          )
-      );
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+      title: Text(user.name),
+    ));
+  }
 }
 
-class User{
-
+class User {
   final int index;
   final String about;
   final String name;
@@ -130,6 +121,4 @@ class User{
   final String picture;
 
   User(this.index, this.about, this.name, this.email, this.picture);
-
 }
-

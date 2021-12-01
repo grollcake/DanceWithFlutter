@@ -21,6 +21,7 @@ class _DiceState extends State<Dice> {
       ),
       body : Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center ,
           children: [
             Padding(padding: EdgeInsets.all(30.0),
             child : Row(
