@@ -1,6 +1,6 @@
 import 'dart:math';
 
-enum TTBlockID { I, J, L, O, S, T, Z, random, none }
+import 'package:tetris/models/enums.dart';
 
 class TTCoord {
   int x = 0;
@@ -20,10 +20,10 @@ class TTBlock {
   List<TTCoord> _figure = List<TTCoord>.filled(4, TTCoord(0, 0), growable: false);
   List<TTCoord> _beforeFigure = List<TTCoord>.filled(4, TTCoord(0, 0), growable: false);
 
-  TTBlock(TTBlockID id) {
+  TTBlock([TTBlockID? id]) {
     _initFigures();
 
-    if (id == TTBlockID.random) {
+    if (id == null) {
       this.id = TTBlockID.values[Random().nextInt(6)];
     } else {
       this.id = id;
@@ -133,7 +133,7 @@ class TTBlock {
 }
 
 main() {
-  TTBlock block = TTBlock(TTBlockID.random);
+  TTBlock block = TTBlock();
   print('${block.id}');
   block.dumpBlockCoords();
 
