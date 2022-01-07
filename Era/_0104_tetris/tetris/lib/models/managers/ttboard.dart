@@ -91,6 +91,11 @@ class TTBoard {
         return false;
       }
     }
+
+    _blockX = newX;
+    _blockY = newY;
+
+    return true;
   }
 
   // 블록이 보드 안에 위치하는지 확인
