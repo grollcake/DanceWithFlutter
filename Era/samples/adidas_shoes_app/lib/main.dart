@@ -2,10 +2,20 @@ import 'package:flutter/material.dart';
 import 'utils.dart';
 import 'data.dart';
 
-void main() => runApp(MaterialApp(
-      home: MyApp(),
-      debugShowCheckedModeBanner: false,
-    ));
+void main() => runApp(
+      MaterialApp(
+        home: MyApp(),
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          textTheme: TextTheme(
+            headline2: TextStyle(
+                color: Color(0xFF949598),
+                fontSize: 14,
+                fontFamily: "Montserrat-SemiBold"),
+          ),
+        ),
+      ),
+    );
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -55,6 +65,7 @@ class _MyAppState extends State<MyApp> {
               ],
             ),
             body: SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
               child: Column(
                 children: <Widget>[
                   ProductScreenTopPart(),
@@ -75,30 +86,26 @@ class ProductScreenTopPart extends StatefulWidget {
 class _ProductScreenTopPartState extends State<ProductScreenTopPart> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: screenAwareSize(245.0, context),
       child: Stack(
         children: <Widget>[
           Stack(
             children: <Widget>[
-              Container(
-                child: Image.asset("assets/adidas.png",
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 60.0, right: 35.0),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    width: screenAwareSize(50.0, context),
-                    height: screenAwareSize(50.0, context),
-                    decoration: BoxDecoration(
-                        color: Colors.black26, shape: BoxShape.circle),
-                    child: Image.asset("assets/360.png"),
-                  ),
+              Image.asset("assets/adidas.png",
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover),
+              Positioned(
+                top: 60,
+                right: 30,
+                child: Container(
+                  width: screenAwareSize(50.0, context),
+                  height: screenAwareSize(50.0, context),
+                  decoration: BoxDecoration(
+                      color: Colors.black26, shape: BoxShape.circle),
+                  child: Image.asset("assets/360.png"),
                 ),
               )
             ],
@@ -109,11 +116,7 @@ class _ProductScreenTopPartState extends State<ProductScreenTopPart> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text("Rating",
-                    style: TextStyle(
-                        color: Color(0xFF949598),
-                        fontSize: screenAwareSize(10.0, context),
-                        fontFamily: "Montserrat-SemiBold")),
+                Text("Rating", style: Theme.of(context).textTheme.headline2),
                 SizedBox(
                   height: screenAwareSize(8.0, context),
                 ),
@@ -258,16 +261,8 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text("Size",
-                    style: TextStyle(
-                        color: Color(0xFF949598),
-                        fontSize: screenAwareSize(10.0, context),
-                        fontFamily: "Montserrat-SemiBold")),
-                Text("Quantity",
-                    style: TextStyle(
-                        color: Color(0xFF949598),
-                        fontSize: screenAwareSize(10.0, context),
-                        fontFamily: "Montserrat-SemiBold"))
+                Text("Size", style: Theme.of(context).textTheme.headline2),
+                Text("Quantity", style: Theme.of(context).textTheme.headline2)
               ],
             ),
           ),
@@ -278,7 +273,7 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
+                SizedBox(
                   height: screenAwareSize(38.0, context),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -367,10 +362,7 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
           Padding(
             padding: EdgeInsets.only(left: screenAwareSize(18.0, context)),
             child: Text("Select Color",
-                style: TextStyle(
-                    color: Color(0xFF949598),
-                    fontSize: screenAwareSize(10.0, context),
-                    fontFamily: "Montserrat-SemiBold")),
+                style: Theme.of(context).textTheme.headline2),
           ),
           SizedBox(
             height: screenAwareSize(8.0, context),
@@ -388,10 +380,7 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
           ),
           Padding(
             padding: EdgeInsets.only(left: screenAwareSize(20.0, context)),
-            child: Text("Price",
-                style: TextStyle(
-                    color: Color(0xFF949598),
-                    fontFamily: "Montserrat-SemiBold")),
+            child: Text("Price", style: Theme.of(context).textTheme.headline2),
           ),
           Container(
             width: double.infinity,
