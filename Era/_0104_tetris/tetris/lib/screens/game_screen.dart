@@ -1,0 +1,285 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:tetris/constants/app_style.dart';
+import 'package:tetris/managers/ttboard.dart';
+import 'package:tetris/models/enums.dart';
+import 'package:tetris/screens/widgets/game_end_dialog.dart';
+import 'package:tetris/screens/widgets/game_start_dialog.dart';
+
+class GameScreen extends StatefulWidget {
+  const GameScreen({Key? key}) : super(key: key);
+
+  @override
+  _GameScreenState createState() => _GameScreenState();
+}
+
+class _GameScreenState extends State<GameScreen> {
+  static const int maxColumns = TTBoard.width;
+  static const int maxRows = TTBoard.height;
+  final Color bgTileColor = Colors.grey.shade700;
+
+  TTBoard ttBoard = TTBoard();
+  Timer? _timer;
+  bool _isFlikering = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () => _showGameStartDialog());
+  }
+
+  // 게임 시작
+  void _startGame() {
+    setState(() {
+      ttBoard.reset();
+      ttBoard.newBlock();
+    });
+    _startTimer();
+  }
+
+  // 게임시작 전 Dialog
+  void _showGameStartDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return GameStartDialog(onPressed: _startGame);
+      },
+    );
+  }
+
+  // 게임종료 Dialog
+  void _showGameEndDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return GameEndDialog(onPressed: _startGame);
+      },
+    );
+  }
+
+  // 블록 자동 이동 타이머 개시
+  void _startTimer() {
+    if (_timer == null ? false : _timer!.isActive) _timer!.cancel();
+
+    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      bool result = ttBoard.moveDown();
+
+      // 이동에 성공하면 화면에 반영하고 탈출
+      if (result) {
+        setState(() {});
+        return;
+      } else {
+        _fixingBlockPosition();
+      }
+    });
+  }
+
+  // 블록 이동
+  bool _movenRotate(String direction) {
+    bool isChanged = false;
+    switch (direction) {
+      case 'LEFT':
+        isChanged = ttBoard.moveLeft();
+        break;
+      case 'RIGHT':
+        isChanged = ttBoard.moveRight();
+        break;
+      case 'DOWN':
+        isChanged = ttBoard.moveDown();
+        break;
+      case 'ROTATE':
+        isChanged = ttBoard.rotate();
+        break;
+    }
+    if (isChanged) {
+      setState(() {});
+    }
+    // 아래로 이동하는데 실패했다면 현위치에 블록 확정
+    else if (direction == 'DOWN' && !isChanged) {
+      _fixingBlockPosition();
+    }
+    return isChanged;
+  }
+
+  // 블록 위치 확정
+  void _fixingBlockPosition() async {
+    _timer?.cancel();
+    setState(() {
+      ttBoard.fixBlock();
+    });
+
+    // 완성된 줄이 있는 경우, 깜빡이다가 지우기
+    if (ttBoard.hasCompleteRow()) {
+      // 줄 삭제전 깜빡임 이벤트 보여주기
+      for (int i = 0; i < 4; i++) {
+        await Future.delayed(Duration(milliseconds: 100));
+        setState(() {
+          _isFlikering = !_isFlikering;
+        });
+      }
+
+      // 줄 삭제
+      setState(() {
+        int tileCnt = ttBoard.clearing();
+        print(tileCnt);
+      });
+
+      await Future.delayed(Duration(milliseconds: 200));
+    }
+
+    // 새로운 블록 생성
+    setState(() {
+      // 새로운 블록 생성에 실패하면 게임 Over
+      if (!ttBoard.newBlock()) {
+        _showGameEndDialog();
+      } else {
+        _startTimer();
+      }
+    });
+  }
+
+  // 블록 색상 반환
+  Color _getTileColor(TTBlockID blockID) {
+    if (blockID.index > 6) return Colors.grey.shade200;
+
+    return [
+      Colors.red.shade300,
+      Colors.orange.shade300,
+      Colors.yellow.shade300,
+      Colors.green.shade300,
+      Colors.blue.shade300,
+      Colors.indigo.shade300,
+      Colors.purple.shade300
+    ][blockID.index];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            Expanded(
+              flex: 9,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 0,
+                    child: buildStatusPanel(),
+                  ),
+                  Expanded(
+                    flex: 10,
+                    child: buildTetrisPanel(),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: buildControlPanel(),
+              // child: Container(                color: Colors.yellow              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 상태표시 화면 Build
+  Container buildStatusPanel() {
+    return Container(
+      color: AppStyle.bgColor,
+    );
+  }
+
+  // 테트리스 화면 Build
+  Widget buildTetrisPanel() {
+    return Container(
+      padding: EdgeInsets.all(0),
+      color: AppStyle.bgColor,
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: TTBoard.width,
+        ),
+        itemCount: maxColumns * maxRows,
+        itemBuilder: (BuildContext context, int index) {
+          int gridX = index % maxColumns;
+          int gridY = index ~/ maxColumns;
+
+          Color color = bgTileColor;
+
+          TTBlockID? id = ttBoard.getBlockId(gridX, gridY);
+          if (id != null) {
+            if (_isFlikering && ttBoard.isCompletedTile(gridX, gridY)) {
+              color = bgTileColor;
+            } else {
+              color = _getTileColor(id);
+            }
+          }
+
+          return Container(
+            margin: EdgeInsets.all(0.2),
+            color: color,
+            child: Center(
+                child: Text(gridX.toString() + ',' + gridY.toString(),
+                    style: TextStyle(fontSize: 10, color: Colors.black54))),
+          );
+        },
+      ),
+    );
+  }
+
+  // 조작 화면 Build
+  Widget buildControlPanel() {
+    return Container(
+      color: Colors.grey,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Score'),
+              Text('${ttBoard.score}',
+                  style: TextStyle(fontSize: 22, color: Colors.yellow, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: Colors.blue, shape: CircleBorder()),
+            onPressed: () => _movenRotate('LEFT'),
+            child: Icon(Icons.arrow_back),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: Colors.blue, shape: CircleBorder()),
+            onPressed: () => _movenRotate('ROTATE'),
+            child: Icon(Icons.refresh),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: Colors.blue, shape: CircleBorder()),
+            onPressed: () => _movenRotate('RIGHT'),
+            child: Icon(Icons.arrow_forward),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: Colors.blue, shape: CircleBorder()),
+            onPressed: () => _movenRotate('DOWN'),
+            child: Icon(Icons.arrow_downward),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: Colors.pinkAccent, shape: CircleBorder()),
+            onPressed: () {
+              setState(() {
+                _timer?.cancel();
+                ttBoard.reset();
+                _showGameStartDialog();
+              });
+            },
+            child: Text('R'),
+          ),
+        ],
+      ),
+    );
+  }
+}

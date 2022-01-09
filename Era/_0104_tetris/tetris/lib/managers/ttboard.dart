@@ -2,16 +2,17 @@ import 'package:tetris/models/enums.dart';
 import 'package:tetris/managers/ttblock.dart';
 
 class TTBoard {
-  static const int width = 10;
-  static const int height = 18;
+  static const int width = 11;
+  static const int height = 19;
 
   // 게임판 (width x height)
-  List<List<TTBlockID?>> _boards =
+  List<List<TTBlockID?>> _boardCoords =
       List.generate(width, (idx) => List.filled(height, null, growable: false), growable: false);
 
   TTBlock? _block;
   int? _blockX;
   int? _blockY;
+  int _score = 0;
 
   TTBoard() {
     reset();
@@ -26,32 +27,51 @@ class TTBoard {
 
   int? get blockY => _blockY;
 
+  int get score => _score;
+
   // 화면을 모두 Reset
   void reset() {
-    _boards.forEach((first) => first.forEach((second) => second = null));
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        _boardCoords[x][y] = null;
+      }
+    }
     _block = null;
     _blockX = 0;
     _blockY = 0;
+    _score = 0;
+
+    _makeTestBlocks();
   }
 
   // 테스트 블록 생성
   void _makeTestBlocks() {
     // 초기 블록 생성
-    _boards[0][17] = TTBlockID.I;
-    _boards[1][17] = TTBlockID.I;
-    _boards[2][17] = TTBlockID.I;
-    _boards[3][17] = TTBlockID.I;
-    _boards[4][17] = TTBlockID.I;
-    _boards[8][5] = TTBlockID.I;
-    _boards[8][6] = TTBlockID.I;
+    for (int i = 0; i < width; i++) {
+      if (i == 6) continue;
+      _boardCoords[i][17] = TTBlockID.S;
+      _boardCoords[i][18] = TTBlockID.S;
+    }
+    // _boardCoords[1][17] = TTBlockID.I;
+    // _boardCoords[2][17] = TTBlockID.I;
+    // _boardCoords[3][17] = TTBlockID.I;
+    // _boardCoords[4][17] = TTBlockID.I;
+    // _boardCoords[8][5] = TTBlockID.I;
+    // _boardCoords[8][6] = TTBlockID.I;
   }
 
   // 블록 생성
-  TTBlockID newBlock([TTBlockID? blockId]) {
-    _block = TTBlock(blockId);
+  bool newBlock([TTBlockID? blockId]) {
     _blockX = width ~/ 2;
     _blockY = 0;
-    return _block!.id;
+    _block = TTBlock(blockId);
+
+    // 블록을 생성하자마자 다른 블록과 겹친다면 게임 Over
+    if (_isOverlapped(_block!.getCoord(_blockX!, _blockY!))) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -63,12 +83,15 @@ class TTBoard {
   bool rotate() => _moveBlock('ROTATE');
 
   ////////////////////////////////////////////////////////////////////
-  // 블록 Fix
+  // 움직이는 블록 위치 확정
   ////////////////////////////////////////////////////////////////////
   void fixBlock() {
+    if (_block == null) return;
     for (TTCoord coord in _block!.getCoord(_blockX!, _blockY!)) {
-      _boards[coord.x][coord.y] = _block!.id;
+      _boardCoords[coord.x][coord.y] = _block!.id;
     }
+    _block = null;
+    _score += 10;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -78,7 +101,7 @@ class TTBoard {
   // 요청 위치에 블록이 존재하는지 확인 (고정된 블록, 이동중 블록 모두 확인)
   bool hasBlock(int x, int y) {
     // 고정된 블록부터 확인
-    if (_boards[x][y] != null) return true;
+    if (_boardCoords[x][y] != null) return true;
     // 이동 중인 블록도 확인
     for (TTCoord coord in _block!.getCoord(blockX!, blockY!)) {
       if (coord.x == x && coord.y == y) return true;
@@ -89,7 +112,10 @@ class TTBoard {
   // 요청 위치의 블록 이름을 반환한다 (고정된 블록, 이동중 블록 모두 확인)
   TTBlockID? getBlockId(int x, int y) {
     // 고정된 블록부터 확인
-    if (_boards[x][y] != null) return _boards[x][y];
+    if (_boardCoords[x][y] != null) return _boardCoords[x][y];
+
+    if (_block == null) return null;
+
     // 이동 중인 블록도 확인
     for (TTCoord coord in _block!.getCoord(blockX!, blockY!)) {
       if (coord.x == x && coord.y == y) return _block!.id;
@@ -100,7 +126,8 @@ class TTBoard {
   // 요청 위치의 블록 상태(고정형,이동중,완성)을 확인
   TTBlockStatus getBlockStatus(int x, int y) {
     if (isCompletedTile(x, y)) return TTBlockStatus.completed;
-    if (_boards[x][y] != null) return TTBlockStatus.fixed;
+    if (_boardCoords[x][y] != null) return TTBlockStatus.fixed;
+    if (_block == null) return TTBlockStatus.none;
     for (TTCoord coord in _block!.getCoord(blockX!, blockY!)) {
       if (coord.x == x && coord.y == y) return TTBlockStatus.float;
     }
@@ -130,7 +157,7 @@ class TTBoard {
 
   // 완성 줄 삭제 후 삭제된 조각 개수 반환
   int clearing() {
-    int removedBlockTile = 0;
+    int removedRows = 0;
 
     // 완성되지 않은 줄만 복사하기 위한 새로운 보드 준비
     List<List<TTBlockID?>> newBoards =
@@ -142,19 +169,23 @@ class TTBoard {
     for (int rowNum = height - 1; rowNum >= 0; rowNum--) {
       if (_getRow(rowNum).any((element) => element == null)) {
         for (int i = 0; i < width; i++) {
-          newBoards[i][targetRow] = _boards[i][rowNum];
+          newBoards[i][targetRow] = _boardCoords[i][rowNum];
         }
         targetRow--;
       } else {
-        removedBlockTile += width;
+        removedRows++;
       }
     }
 
     // 보드를 새로운 보드로 교체한다.
-    _boards = newBoards.map((element) => List<TTBlockID?>.from(element)).toList();
+    _boardCoords = newBoards.map((element) => List<TTBlockID?>.from(element)).toList();
+
+    // 점수 계산: 한 줄당 100점. 2줄 이상이면 한줄당 보너스 10점 추가
+    _score += removedRows * 100;
+    _score += (removedRows - 1) * 10;
 
     // 삭제한 조각 개수 반환
-    return removedBlockTile;
+    return removedRows;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -228,7 +259,7 @@ class TTBoard {
 
   // 기존 블록과 겹치는지 확인
   bool _isOverlapped(List<TTCoord> blockCoords) {
-    return !blockCoords.every((e) => _boards[e.x][e.y] == null);
+    return !blockCoords.every((e) => _boardCoords[e.x][e.y] == null);
   }
 
   // 블록 회전 후 경계를 초과한 경우 조정할 [x,y] 값을 반환한다.
@@ -272,7 +303,7 @@ class TTBoard {
 
   // 한 줄 반환
   List<TTBlockID?> _getRow(int rowNum) {
-    return _boards.map((e) => e[rowNum]).toList();
+    return _boardCoords.map((e) => e[rowNum]).toList();
   }
 }
 

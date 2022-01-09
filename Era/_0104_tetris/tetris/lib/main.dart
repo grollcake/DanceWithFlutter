@@ -1,8 +1,17 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:tetris/managers/ttboard.dart';
-import 'package:tetris/models/enums.dart';
+import 'package:tetris/screens/game_screen.dart';
+
+// Done GameStart dialog 화면
+// Done 가로크기를 11로 했을 때 블록 생성이 잘 못되는 문제 수정
+// todo 전체 레이아웃 다시 잡기
+// Done 점수 계산하기
+// todo 제스처로 블록 이동
+// Done Game End 처리
+// todo 레벨 구현
+// todo 블록 회전 후 위치 조정 (기준점과의 거리를 계산으로 최적 위치 선정)
+// todo 타일을 그리는 것을 TTTile 위젯으로 추출
+// todo Next 블록 표시
+// todo 확정위치 가이드 표시
 
 void main() => runApp(TetrisApp());
 
@@ -14,168 +23,7 @@ class TetrisApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Tetris',
       debugShowCheckedModeBanner: false,
-      home: TetrisHome(),
-    );
-  }
-}
-
-class TetrisHome extends StatefulWidget {
-  const TetrisHome({Key? key}) : super(key: key);
-
-  @override
-  _TetrisHomeState createState() => _TetrisHomeState();
-}
-
-class _TetrisHomeState extends State<TetrisHome> {
-  TTBoard ttBoard = TTBoard();
-  late Timer _timer;
-  static const int MAX_COLUMNS = 10;
-  static const int MAX_ROWS = 18;
-
-  @override
-  void initState() {
-    super.initState();
-
-    ttBoard.newBlock();
-    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
-      if (!ttBoard.moveDown()) {
-        _fixingBlock();
-      }
-      setState(() {});
-    });
-  }
-
-  // After block fix
-  void _fixingBlock() async {
-    setState(() {
-      ttBoard.fixBlock();
-    });
-
-    if (ttBoard.hasCompleteRow()) {
-      _timer.cancel();
-      await Future.delayed(Duration(milliseconds: 100));
-      setState(() {
-        int tileCnt = ttBoard.clearing();
-        print(tileCnt);
-      });
-    }
-    setState(() {
-      ttBoard.newBlock();
-    });
-  }
-
-  // 블록 이동
-  bool _movenRotate(String direction) {
-    bool isChanged = false;
-    switch (direction) {
-      case 'LEFT':
-        isChanged = ttBoard.moveLeft();
-        break;
-      case 'RIGHT':
-        isChanged = ttBoard.moveRight();
-        break;
-      case 'DOWN':
-        isChanged = ttBoard.moveDown();
-        break;
-      case 'ROTATE':
-        isChanged = ttBoard.rotate();
-        break;
-    }
-    if (isChanged) {
-      setState(() {});
-    }
-    return isChanged;
-  }
-
-  // 블록 색상 반환
-  Color _getBlockColor(TTBlockID blockID) {
-    if (blockID.index > 6) return Colors.grey.shade200;
-
-    return [
-      Colors.red.shade300,
-      Colors.orange.shade300,
-      Colors.yellow.shade300,
-      Colors.green.shade300,
-      Colors.blue.shade300,
-      Colors.indigo.shade300,
-      Colors.purple.shade300
-    ][blockID.index];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Flexible(
-            flex: 9,
-            child: Container(
-              padding: EdgeInsets.all(50),
-              color: Colors.grey.shade900,
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 10,
-                ),
-                itemCount: MAX_COLUMNS * MAX_ROWS,
-                itemBuilder: (BuildContext context, int index) {
-                  int gridX = index % MAX_COLUMNS;
-                  int gridY = index ~/ MAX_COLUMNS;
-
-                  Color color = Colors.grey.shade700;
-
-                  TTBlockID? id = ttBoard.getBlockId(gridX, gridY);
-
-                  if (id != null) {
-                    color = _getBlockColor(id);
-                  }
-
-                  return Container(
-                    margin: EdgeInsets.all(0.2),
-                    color: color,
-                    // child: Center(child: Text(gridX.toString() + ',' + gridY.toString())),
-                  );
-                },
-              ),
-            ),
-          ),
-          Flexible(
-            flex: 1,
-            child: Container(
-              color: Colors.black,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => _movenRotate('LEFT'),
-                    child: Text('Left'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _movenRotate('ROTATE'),
-                    child: Text('Rotate'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _movenRotate('RIGHT'),
-                    child: Text('Right'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _movenRotate('DOWN'),
-                    child: Text('Down'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        ttBoard.reset();
-                        ttBoard.newBlock();
-                      });
-                    },
-                    child: Text('NEW'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+      home: GameScreen(),
     );
   }
 }
