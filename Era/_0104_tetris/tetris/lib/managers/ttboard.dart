@@ -2,8 +2,8 @@ import 'package:tetris/models/enums.dart';
 import 'package:tetris/managers/ttblock.dart';
 
 class TTBoard {
-  static const int width = 11;
-  static const int height = 19;
+  static const int width = 10;
+  static const int height = 20;
 
   // 게임판 (width x height)
   List<List<TTBlockID?>> _boardCoords =

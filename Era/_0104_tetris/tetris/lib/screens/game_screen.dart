@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
-import 'package:tetris/screens/widgets/game_end_dialog.dart';
-import 'package:tetris/screens/widgets/game_start_dialog.dart';
+import 'package:tetris/screens/widgets/game_dialog.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -43,7 +42,7 @@ class _GameScreenState extends State<GameScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return GameStartDialog(onPressed: _startGame);
+        return GameDialog(title: 'Let\'s play', btnText: 'Start', onPressed: _startGame);
       },
     );
   }
@@ -53,7 +52,7 @@ class _GameScreenState extends State<GameScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return GameEndDialog(onPressed: _startGame);
+        return GameDialog(title: 'Game end', btnText: 'Restart', onPressed: _startGame);
       },
     );
   }
@@ -144,54 +143,155 @@ class _GameScreenState extends State<GameScreen> {
     if (blockID.index > 6) return Colors.grey.shade200;
 
     return [
-      Colors.red.shade300,
-      Colors.orange.shade300,
-      Colors.yellow.shade300,
-      Colors.green.shade300,
-      Colors.blue.shade300,
-      Colors.indigo.shade300,
-      Colors.purple.shade300
+      Colors.red.shade400,
+      Colors.orange.shade400,
+      Colors.yellow.shade400,
+      Colors.green.shade400,
+      Colors.blue.shade400,
+      Colors.indigo.shade400,
+      Colors.purple.shade400
     ][blockID.index];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: [
-            Expanded(
-              flex: 9,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 0,
-                    child: buildStatusPanel(),
-                  ),
-                  Expanded(
-                    flex: 10,
-                    child: buildTetrisPanel(),
-                  ),
-                ],
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(),
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: buildControlPanel(),
-              // child: Container(                color: Colors.yellow              ),
-            ),
-          ],
+              Expanded(
+                flex: 8,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: buildHoldPanel(),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: buildTetrisPanel(),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        children: [
+                          buildNextPanel(),
+                          buildStatusPanel(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: buildControlPanel(),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
+  // Hold 패널 Build
+  Widget buildHoldPanel() {
+    List<int> blockZ = [1, 1, 0, 0, 1, 1];
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(left: 10),
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          width: double.infinity,
+          height: 80,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+            color: Colors.pinkAccent,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('HOLD', style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: Center(
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                      itemCount: blockZ.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          color: blockZ[index] == 1 ? Colors.white : Colors.transparent,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   // 상태표시 화면 Build
-  Container buildStatusPanel() {
+  Widget buildNextPanel() {
+    List<int> blockZ = [1, 1, 1, 0, 1, 0];
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(right: 10),
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          width: double.infinity,
+          height: 80,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
+            color: Colors.pinkAccent,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('NEXT', style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: Center(
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                      itemCount: blockZ.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          color: blockZ[index] == 1 ? Colors.white : Colors.transparent,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // 상태표시 화면 Build
+  Widget buildStatusPanel() {
     return Container(
-      color: AppStyle.bgColor,
+      color: Colors.yellow,
     );
   }
 
@@ -199,7 +299,7 @@ class _GameScreenState extends State<GameScreen> {
   Widget buildTetrisPanel() {
     return Container(
       padding: EdgeInsets.all(0),
-      color: AppStyle.bgColor,
+      color: Colors.purpleAccent[800],
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: TTBoard.width,
@@ -209,7 +309,7 @@ class _GameScreenState extends State<GameScreen> {
           int gridX = index % maxColumns;
           int gridY = index ~/ maxColumns;
 
-          Color color = bgTileColor;
+          Color color = Colors.deepPurple.shade800;
 
           TTBlockID? id = ttBoard.getBlockId(gridX, gridY);
           if (id != null) {
@@ -221,11 +321,11 @@ class _GameScreenState extends State<GameScreen> {
           }
 
           return Container(
-            margin: EdgeInsets.all(0.2),
+            margin: EdgeInsets.all(0.5),
             color: color,
-            child: Center(
-                child: Text(gridX.toString() + ',' + gridY.toString(),
-                    style: TextStyle(fontSize: 10, color: Colors.black54))),
+            // child: Center(
+            //     child: Text(gridX.toString() + ',' + gridY.toString(),
+            //         style: TextStyle(fontSize: 10, color: Colors.black54))),
           );
         },
       ),
