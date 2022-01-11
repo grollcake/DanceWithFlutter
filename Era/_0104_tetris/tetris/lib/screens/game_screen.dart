@@ -5,6 +5,7 @@ import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
+import 'package:tetris/screens/widgets/preview_block.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class _GameScreenState extends State<GameScreen> {
   final Color bgTileColor = Colors.grey.shade700;
 
   TTBoard ttBoard = TTBoard();
+  TTBlockID? _holdBlockId;
   Timer? _timer;
   bool _isFlikering = false;
 
@@ -30,11 +32,21 @@ class _GameScreenState extends State<GameScreen> {
 
   // 게임 시작
   void _startGame() {
+    _holdBlockId = null;
+    ttBoard.reset();
+    _generateNewBlock();
+  }
+
+  // 새로운 블록 생성
+  void _generateNewBlock() {
+    _timer?.cancel();
     setState(() {
-      ttBoard.reset();
-      ttBoard.newBlock();
+      if (!ttBoard.newBlock()) {
+        _showGameEndDialog();
+      } else {
+        _startTimer();
+      }
     });
-    _startTimer();
   }
 
   // 게임시작 전 Dialog
@@ -101,6 +113,20 @@ class _GameScreenState extends State<GameScreen> {
     return isChanged;
   }
 
+  // 블록 홀드
+  void _holdBlock() {
+    if (_holdBlockId == null) {
+      _holdBlockId = ttBoard.blockId;
+      _generateNewBlock();
+    } else {
+      TTBlockID? _tempBlockId = _holdBlockId;
+      _holdBlockId = ttBoard.blockId;
+      setState(() {
+        ttBoard.changeBlock(_tempBlockId!);
+      });
+    }
+  }
+
   // 블록 위치 확정
   void _fixingBlockPosition() async {
     _timer?.cancel();
@@ -128,14 +154,7 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     // 새로운 블록 생성
-    setState(() {
-      // 새로운 블록 생성에 실패하면 게임 Over
-      if (!ttBoard.newBlock()) {
-        _showGameEndDialog();
-      } else {
-        _startTimer();
-      }
-    });
+    _generateNewBlock();
   }
 
   // 블록 색상 반환
@@ -204,7 +223,6 @@ class _GameScreenState extends State<GameScreen> {
 
   // Hold 패널 Build
   Widget buildHoldPanel() {
-    List<int> blockZ = [1, 1, 0, 0, 1, 1];
     return Column(
       children: [
         Container(
@@ -224,17 +242,7 @@ class _GameScreenState extends State<GameScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: Center(
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-                      itemCount: blockZ.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          color: blockZ[index] == 1 ? Colors.white : Colors.transparent,
-                        );
-                      },
-                    ),
+                    child: PreviewBlock(blockID: _holdBlockId),
                   ),
                 ),
               ),
@@ -247,7 +255,6 @@ class _GameScreenState extends State<GameScreen> {
 
   // 상태표시 화면 Build
   Widget buildNextPanel() {
-    List<int> blockZ = [1, 1, 1, 0, 1, 0];
     return Column(
       children: [
         Container(
@@ -267,17 +274,7 @@ class _GameScreenState extends State<GameScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: Center(
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-                      itemCount: blockZ.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          color: blockZ[index] == 1 ? Colors.white : Colors.transparent,
-                        );
-                      },
-                    ),
+                    child: PreviewBlock(blockID: ttBoard.nextId),
                   ),
                 ),
               ),
@@ -303,6 +300,8 @@ class _GameScreenState extends State<GameScreen> {
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: TTBoard.width,
+          crossAxisSpacing: 0.5,
+          mainAxisSpacing: 0.5,
         ),
         itemCount: maxColumns * maxRows,
         itemBuilder: (BuildContext context, int index) {
@@ -336,8 +335,8 @@ class _GameScreenState extends State<GameScreen> {
   Widget buildControlPanel() {
     return Container(
       color: Colors.grey,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Wrap(
+        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -366,6 +365,11 @@ class _GameScreenState extends State<GameScreen> {
             style: ElevatedButton.styleFrom(primary: Colors.blue, shape: CircleBorder()),
             onPressed: () => _movenRotate('DOWN'),
             child: Icon(Icons.arrow_downward),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: Colors.pinkAccent, shape: CircleBorder()),
+            onPressed: () => _holdBlock(),
+            child: Text('H'),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(primary: Colors.pinkAccent, shape: CircleBorder()),

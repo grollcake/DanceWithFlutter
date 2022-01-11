@@ -10,6 +10,7 @@ class TTBoard {
       List.generate(width, (idx) => List.filled(height, null, growable: false), growable: false);
 
   TTBlock? _block;
+  TTBlock? _next;
   int? _blockX;
   int? _blockY;
   int _score = 0;
@@ -21,6 +22,7 @@ class TTBoard {
 
   // Getter
   TTBlockID? get blockId => _block?.id;
+  TTBlockID? get nextId => _next?.id;
 
   // get block => _block;
   int? get blockX => _blockX;
@@ -37,6 +39,7 @@ class TTBoard {
       }
     }
     _block = null;
+    _next = null;
     _blockX = 0;
     _blockY = 0;
     _score = 0;
@@ -64,7 +67,8 @@ class TTBoard {
   bool newBlock([TTBlockID? blockId]) {
     _blockX = width ~/ 2;
     _blockY = 0;
-    _block = TTBlock(blockId);
+    _block = _next ?? TTBlock(blockId);
+    _next = TTBlock();
 
     // 블록을 생성하자마자 다른 블록과 겹친다면 게임 Over
     if (_isOverlapped(_block!.getCoord(_blockX!, _blockY!))) {
@@ -72,6 +76,11 @@ class TTBoard {
     } else {
       return true;
     }
+  }
+
+  // 블록 변경
+  void changeBlock(TTBlockID blockID) {
+    _block = TTBlock(blockID);
   }
 
   ////////////////////////////////////////////////////////////////////
