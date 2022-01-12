@@ -14,6 +14,7 @@ class TTBoard {
   int? _blockX;
   int? _blockY;
   int _score = 0;
+  List<int> _frequency = List.filled(TTBlockID.values.length, 0);
 
   TTBoard() {
     reset();
@@ -43,6 +44,7 @@ class TTBoard {
     _blockX = 0;
     _blockY = 0;
     _score = 0;
+    _frequency = List.filled(TTBlockID.values.length, 0);
 
     _makeTestBlocks();
   }
@@ -69,6 +71,8 @@ class TTBoard {
     _blockY = 0;
     _block = _next ?? TTBlock(blockId);
     _next = TTBlock();
+
+    _frequency[_block!.id.index]++;
 
     // 블록을 생성하자마자 다른 블록과 겹친다면 게임 Over
     if (_isOverlapped(_block!.getCoord(_blockX!, _blockY!))) {
@@ -142,6 +146,9 @@ class TTBoard {
     }
     return TTBlockStatus.none;
   }
+
+  // 블록 생성 빈도 확인
+  int getBlockFrequency(TTBlockID blockID) => _frequency[blockID.index];
 
   ////////////////////////////////////////////////////////////////////
   // 완성 줄 처리 메서드

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
+import 'package:tetris/screens/widgets/circle_button.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
 import 'package:tetris/screens/widgets/preview_block.dart';
 
@@ -53,6 +54,7 @@ class _GameScreenState extends State<GameScreen> {
   void _showGameStartDialog() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return GameDialog(title: 'Let\'s play', btnText: 'Start', onPressed: _startGame);
       },
@@ -63,6 +65,7 @@ class _GameScreenState extends State<GameScreen> {
   void _showGameEndDialog() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return GameDialog(title: 'Game end', btnText: 'Restart', onPressed: _startGame);
       },
@@ -184,7 +187,9 @@ class _GameScreenState extends State<GameScreen> {
             children: [
               Expanded(
                 flex: 1,
-                child: Container(),
+                child: Container(
+                  color: Colors.white,
+                ),
               ),
               Expanded(
                 flex: 8,
@@ -256,6 +261,7 @@ class _GameScreenState extends State<GameScreen> {
   // 상태표시 화면 Build
   Widget buildNextPanel() {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           margin: EdgeInsets.only(right: 10),
@@ -288,7 +294,24 @@ class _GameScreenState extends State<GameScreen> {
   // 상태표시 화면 Build
   Widget buildStatusPanel() {
     return Container(
-      color: Colors.yellow,
+      padding: EdgeInsets.only(top: 20),
+      color: Colors.black54,
+      child: Column(
+        children: List.generate(
+          TTBlockID.values.length,
+          (index) => Container(
+            padding: EdgeInsets.all(10),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                  TTBlockID.values[index].toString().split('.')[1] +
+                      ': ' +
+                      ttBoard.getBlockFrequency(TTBlockID.values[index]).toString(),
+                  style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -335,8 +358,8 @@ class _GameScreenState extends State<GameScreen> {
   Widget buildControlPanel() {
     return Container(
       color: Colors.grey,
-      child: Wrap(
-        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -346,42 +369,21 @@ class _GameScreenState extends State<GameScreen> {
                   style: TextStyle(fontSize: 22, color: Colors.yellow, fontWeight: FontWeight.bold)),
             ],
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: Colors.blue, shape: CircleBorder()),
-            onPressed: () => _movenRotate('LEFT'),
-            child: Icon(Icons.arrow_back),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: Colors.blue, shape: CircleBorder()),
-            onPressed: () => _movenRotate('ROTATE'),
-            child: Icon(Icons.refresh),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: Colors.blue, shape: CircleBorder()),
-            onPressed: () => _movenRotate('RIGHT'),
-            child: Icon(Icons.arrow_forward),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: Colors.blue, shape: CircleBorder()),
-            onPressed: () => _movenRotate('DOWN'),
-            child: Icon(Icons.arrow_downward),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: Colors.pinkAccent, shape: CircleBorder()),
-            onPressed: () => _holdBlock(),
-            child: Text('H'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: Colors.pinkAccent, shape: CircleBorder()),
-            onPressed: () {
-              setState(() {
-                _timer?.cancel();
-                ttBoard.reset();
-                _showGameStartDialog();
-              });
-            },
-            child: Text('R'),
-          ),
+          CircleButton(color: Colors.blue, icon: Icons.arrow_back, onPressed: () => _movenRotate('LEFT')),
+          CircleButton(color: Colors.blue, icon: Icons.refresh, onPressed: () => _movenRotate('ROTATE')),
+          CircleButton(color: Colors.blue, icon: Icons.arrow_forward, onPressed: () => _movenRotate('RIGHT')),
+          CircleButton(color: Colors.blue, icon: Icons.arrow_downward, onPressed: () => _movenRotate('DOWN')),
+          CircleButton(color: Colors.pinkAccent, icon: Icons.change_circle, onPressed: () => _holdBlock()),
+          CircleButton(
+              color: Colors.pinkAccent,
+              icon: Icons.cleaning_services,
+              onPressed: () {
+                setState(() {
+                  _timer?.cancel();
+                  ttBoard.reset();
+                  _showGameStartDialog();
+                });
+              }),
         ],
       ),
     );

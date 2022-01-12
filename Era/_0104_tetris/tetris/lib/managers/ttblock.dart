@@ -24,7 +24,7 @@ class TTBlock {
     _initFigures();
 
     if (id == null) {
-      this.id = TTBlockID.values[Random().nextInt(6)];
+      this.id = TTBlockID.values[Random().nextInt(7)];
     } else {
       this.id = id;
     }
