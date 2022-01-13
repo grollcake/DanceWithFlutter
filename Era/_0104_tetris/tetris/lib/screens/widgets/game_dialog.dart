@@ -18,10 +18,10 @@ class GameDialog extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(borderRadius),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
             child: AlertDialog(
               insetPadding: EdgeInsets.zero,
-              backgroundColor: Colors.white.withOpacity(0.05),
+              backgroundColor: Colors.white.withOpacity(0.07),
               elevation: 0.0,
               title: Align(
                 alignment: Alignment.center,
@@ -31,7 +31,10 @@ class GameDialog extends StatelessWidget {
                 ),
               ),
               // content: Text('Just for fun'),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(borderRadius),
+                side: BorderSide(width: 2, color: Colors.white54),
+              ),
               actions: [
                 Center(
                   child: TextButton(

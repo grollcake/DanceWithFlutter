@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/screens/widgets/circle_button.dart';
@@ -21,7 +20,6 @@ class _GameScreenState extends State<GameScreen> {
   final Color bgTileColor = Colors.grey.shade700;
 
   TTBoard ttBoard = TTBoard();
-  TTBlockID? _holdBlockId;
   Timer? _timer;
   bool _isFlikering = false;
 
@@ -33,7 +31,6 @@ class _GameScreenState extends State<GameScreen> {
 
   // 게임 시작
   void _startGame() {
-    _holdBlockId = null;
     ttBoard.reset();
     _generateNewBlock();
   }
@@ -116,18 +113,27 @@ class _GameScreenState extends State<GameScreen> {
     return isChanged;
   }
 
+  // 블록 떨어뜨리기
+  void _dropBlock() {
+    ttBoard.dropBlock();
+    _fixingBlockPosition();
+  }
+
   // 블록 홀드
   void _holdBlock() {
-    if (_holdBlockId == null) {
-      _holdBlockId = ttBoard.blockId;
-      _generateNewBlock();
-    } else {
-      TTBlockID? _tempBlockId = _holdBlockId;
-      _holdBlockId = ttBoard.blockId;
-      setState(() {
-        ttBoard.changeBlock(_tempBlockId!);
-      });
+    if (ttBoard.holdBlock()) {
+      setState(() {});
     }
+    // if (_holdBlockId == null) {
+    //   _holdBlockId = ttBoard.blockId;
+    //   _generateNewBlock();
+    // } else {
+    //   TTBlockID? _tempBlockId = _holdBlockId;
+    //   _holdBlockId = ttBoard.blockId;
+    //   setState(() {
+    //     ttBoard.changeBlock(_tempBlockId!);
+    //   });
+    // }
   }
 
   // 블록 위치 확정
@@ -247,7 +253,7 @@ class _GameScreenState extends State<GameScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: Center(
-                    child: PreviewBlock(blockID: _holdBlockId),
+                    child: PreviewBlock(blockID: ttBoard.holdId),
                   ),
                 ),
               ),
@@ -369,21 +375,22 @@ class _GameScreenState extends State<GameScreen> {
                   style: TextStyle(fontSize: 22, color: Colors.yellow, fontWeight: FontWeight.bold)),
             ],
           ),
-          CircleButton(color: Colors.blue, icon: Icons.arrow_back, onPressed: () => _movenRotate('LEFT')),
-          CircleButton(color: Colors.blue, icon: Icons.refresh, onPressed: () => _movenRotate('ROTATE')),
-          CircleButton(color: Colors.blue, icon: Icons.arrow_forward, onPressed: () => _movenRotate('RIGHT')),
-          CircleButton(color: Colors.blue, icon: Icons.arrow_downward, onPressed: () => _movenRotate('DOWN')),
-          CircleButton(color: Colors.pinkAccent, icon: Icons.change_circle, onPressed: () => _holdBlock()),
-          CircleButton(
-              color: Colors.pinkAccent,
-              icon: Icons.cleaning_services,
-              onPressed: () {
-                setState(() {
-                  _timer?.cancel();
-                  ttBoard.reset();
-                  _showGameStartDialog();
-                });
-              }),
+          CircleButton(color: Colors.blue, child: Icon(Icons.arrow_back), onPressed: () => _movenRotate('LEFT')),
+          CircleButton(color: Colors.blue, child: Icon(Icons.refresh), onPressed: () => _movenRotate('ROTATE')),
+          CircleButton(color: Colors.blue, child: Icon(Icons.arrow_forward), onPressed: () => _movenRotate('RIGHT')),
+          CircleButton(color: Colors.blue, child: Icon(Icons.arrow_downward), onPressed: () => _movenRotate('DOWN')),
+          CircleButton(color: Colors.pinkAccent, child: Text('D'), onPressed: () => _dropBlock()),
+          CircleButton(color: Colors.pinkAccent, child: Text('H'), onPressed: () => _holdBlock()),
+          // CircleButton(
+          //     color: Colors.pinkAccent,
+          //     child: Text('R'),
+          //     onPressed: () {
+          //       setState(() {
+          //         _timer?.cancel();
+          //         ttBoard.reset();
+          //         _showGameStartDialog();
+          //       });
+          //     }),
         ],
       ),
     );
