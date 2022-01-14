@@ -33,7 +33,7 @@ class GameDialog extends StatelessWidget {
               // content: Text('Just for fun'),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(borderRadius),
-                side: BorderSide(width: 2, color: Colors.white54),
+                side: BorderSide(width: 1, color: Colors.white54),
               ),
               actions: [
                 Center(

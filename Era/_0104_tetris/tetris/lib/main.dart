@@ -15,7 +15,7 @@ import 'package:tetris/screens/game_screen.dart';
 // Done HOLD Change는 블록당 한번만 가능
 // Done 마지막 생성된 블록이 기존 블록을 겹치는 문제 (게임종료 조건에서..)
 // Done Dialog에 흰색 테두리 추가
-// todo 가이드 블록 표시
+// Done 드랍위치 가이드 블록 표시
 // todo Drop시 화면 흔들림
 // todo 미리보기 블록 구현 방식 변경 column x row
 // todo 블록 down, drop 시 트랜지션(애니메이션) 처리
@@ -23,6 +23,7 @@ import 'package:tetris/screens/game_screen.dart';
 // todo 타일을 그리는 것을 TTTile 위젯으로 분리
 // todo 전체 레이아웃 다시 잡기
 // todo 제스처로 블록 이동
+// todo Intro 화면 구현
 // todo 레벨 구현
 
 void main() => runApp(TetrisApp());

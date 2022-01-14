@@ -345,6 +345,11 @@ class _GameScreenState extends State<GameScreen> {
               color = bgTileColor;
             } else {
               color = _getTileColor(id);
+
+              // Drop될 위치의 미리보기 블록은 흐릿하게 표시
+              if (ttBoard.getBlockStatus(gridX, gridY) == TTBlockStatus.preivew) {
+                color = color.withOpacity(0.2);
+              }
             }
           }
 

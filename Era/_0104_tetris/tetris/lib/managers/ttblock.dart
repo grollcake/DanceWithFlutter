@@ -33,6 +33,9 @@ class TTBlock {
     _figure = [..._figures[this.id.index]]; // array deep copy
   }
 
+  List<TTCoord> get figure => _figure;
+  set setFigure(List<TTCoord> newFigure) => _figure = [...newFigure];
+
   // 블록 회전
   // - 오른쪽으로 회전
   // - 2번째 조각을 기준으로 회전
