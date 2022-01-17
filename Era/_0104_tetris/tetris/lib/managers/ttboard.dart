@@ -1,9 +1,10 @@
+import 'package:tetris/constants/constants.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/managers/ttblock.dart';
 
 class TTBoard {
-  static const int width = 10;
-  static const int height = 20;
+  static const int width = kTetrisMatrixWidth;
+  static const int height = kTetrisMatrixHeight;
 
   // 게임판 (width x height)
   List<List<TTBlockID?>> _boardCoords =
@@ -11,12 +12,13 @@ class TTBoard {
 
   TTBlock? _block;
   TTBlock? _next;
-  List<TTCoord>? _previewCoords; // Drop될 위치 미리보기
+  List<TTCoord>? _shadowBlockCoords; //드랍 위치의 가이드 블록
   TTBlockID? _holdId;
   bool _holdUsed = false;
   int? _blockX;
   int? _blockY;
   int _score = 0;
+  int _cleans = 0; // 지운 줄 개수
   List<int> _frequency = List.filled(TTBlockID.values.length, 0);
 
   TTBoard() {
@@ -26,7 +28,9 @@ class TTBoard {
 
   // Getter
   TTBlockID? get blockId => _block?.id;
+
   TTBlockID? get nextId => _next?.id;
+
   TTBlockID? get holdId => _holdId;
 
   // get block => _block;
@@ -35,6 +39,10 @@ class TTBoard {
   int? get blockY => _blockY;
 
   int get score => _score;
+
+  int get cleans => _cleans;
+
+  int get blockCount => _frequency.reduce((value, element) => value + element);
 
   ////////////////////////////////////////////////////////////////////
   // 초기화 및 블록 생성
@@ -48,12 +56,13 @@ class TTBoard {
     }
     _block = null;
     _next = null;
-    _previewCoords = null;
+    _shadowBlockCoords = null;
     _holdId = null;
     _holdUsed = false;
     _blockX = 0;
     _blockY = 0;
     _score = 0;
+    _cleans = 0;
     _frequency = List.filled(TTBlockID.values.length, 0);
 
     _makeTestBlocks();
@@ -85,7 +94,7 @@ class TTBoard {
 
     _holdUsed = false;
 
-    _calcPreviewCoords();
+    _calcShadowBlockCoords();
 
     // 블록을 생성하자마자 다른 블록과 겹친다면 게임 Over
     if (_isOverlapped(_block!.getCoord(_blockX!, _blockY!))) {
@@ -103,8 +112,11 @@ class TTBoard {
   // 블록 이동
   ////////////////////////////////////////////////////////////////////
   bool moveLeft() => _moveBlock('LEFT');
+
   bool moveRight() => _moveBlock('RIGHT');
+
   bool moveDown() => _moveBlock('DOWN');
+
   bool rotate() => _moveBlock('ROTATE');
 
   void dropBlock() {
@@ -170,8 +182,8 @@ class TTBoard {
     }
 
     // 미리보기 블록도 확인
-    if (_previewCoords != null) {
-      for (TTCoord coord in _previewCoords!) {
+    if (_shadowBlockCoords != null) {
+      for (TTCoord coord in _shadowBlockCoords!) {
         if (coord.x == x && coord.y == y) return _block!.id;
       }
     }
@@ -187,8 +199,8 @@ class TTBoard {
     for (TTCoord coord in _block!.getCoord(blockX!, blockY!)) {
       if (coord.x == x && coord.y == y) return TTBlockStatus.float;
     }
-    if (_previewCoords != null) {
-      for (TTCoord coord in _previewCoords!) {
+    if (_shadowBlockCoords != null) {
+      for (TTCoord coord in _shadowBlockCoords!) {
         if (coord.x == x && coord.y == y) return TTBlockStatus.preivew;
       }
     }
@@ -248,6 +260,7 @@ class TTBoard {
     // 점수 계산: 한 줄당 100점. 2줄 이상이면 한줄당 보너스 10점 추가
     _score += removedRows * 100;
     _score += (removedRows - 1) * 10;
+    _cleans += removedRows;
 
     // 삭제한 조각 개수 반환
     return removedRows;
@@ -311,10 +324,12 @@ class TTBoard {
       }
     }
 
+    // 4. 블록 위치 확정
     _blockX = newX;
     _blockY = newY;
 
-    _calcPreviewCoords();
+    // 5. 그림자 블록 위치 계산
+    _calcShadowBlockCoords();
 
     return true;
   }
@@ -368,21 +383,21 @@ class TTBoard {
     return adjustOffsets;
   }
 
-  // preview 블록 위치 계산
-  void _calcPreviewCoords() {
-    if (_block == null) return;
-    TTBlock preview = TTBlock(_block!.id);
-    preview.setFigure = [..._block!.figure];
-    int previewY = _blockY!;
+  // 드랍 위치 가이드 블록의 좌표 계산
+  void _calcShadowBlockCoords() {
+    if (_block == null || !kShowShadowBlock) return;
+    TTBlock shadowBlock = TTBlock(_block!.id);
+    shadowBlock.setFigure = [..._block!.figure];
+    int shadowY = _blockY!;
 
     while (true) {
-      List<TTCoord> coords2 = preview.getCoord(_blockX!, previewY + 1);
+      List<TTCoord> coords2 = shadowBlock.getCoord(_blockX!, shadowY + 1);
       if (!_isInsideBoard(coords2) || _isOverlapped(coords2)) {
         break;
       }
-      previewY++;
+      shadowY++;
     }
-    _previewCoords = preview.getCoord(_blockX!, previewY);
+    _shadowBlockCoords = shadowBlock.getCoord(_blockX!, shadowY);
 
     // 현재 블록과 겹치는 위치가 있다면 preview 위치 정보는 지워버린다.
     // TTCoord previewTopY = _previewCoords!.reduce((v, e) => v.y < e.y ? v : e);

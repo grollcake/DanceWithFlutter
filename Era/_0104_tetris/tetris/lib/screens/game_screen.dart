@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:tetris/constants/constants.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
+import 'package:tetris/modules/shaker_widget.dart';
 import 'package:tetris/screens/widgets/circle_button.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
 import 'package:tetris/screens/widgets/preview_block.dart';
@@ -15,13 +18,16 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  static const int maxColumns = TTBoard.width;
-  static const int maxRows = TTBoard.height;
   final Color bgTileColor = Colors.grey.shade700;
 
   TTBoard ttBoard = TTBoard();
   Timer? _timer;
   bool _isFlikering = false;
+  int _level = 1;
+  Duration _gameSpeed = kInitalSpeed;
+  Stopwatch stopwatch = Stopwatch();
+
+  GlobalKey<ShakeWidgetState> shakeKey = GlobalKey();
 
   @override
   void initState() {
@@ -30,9 +36,20 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   // 게임 시작
-  void _startGame() {
+  void _startGame({bool reset = false}) {
     ttBoard.reset();
+
+    if (reset) {
+      _level = 1;
+      _gameSpeed = kInitalSpeed;
+    } else {
+      _level++;
+      // 레벨이 올라갈 때마다 속도를 20%씩 빠르게 한다.
+      _gameSpeed = Duration(milliseconds: (kInitalSpeed.inMilliseconds * math.pow(0.8, _level - 1)).toInt());
+    }
     _generateNewBlock();
+    stopwatch.reset();
+    stopwatch.start();
   }
 
   // 새로운 블록 생성
@@ -53,7 +70,18 @@ class _GameScreenState extends State<GameScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return GameDialog(title: 'Let\'s play', btnText: 'Start', onPressed: _startGame);
+        return GameDialog(title: 'Let\'s play', btnText: 'Start', onPressed: () => _startGame(reset: true));
+      },
+    );
+  }
+
+  // 다음 레벨 도전
+  void _showNextLevelDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return GameDialog(title: 'Congratulation!', btnText: 'Next level', onPressed: () => _startGame());
       },
     );
   }
@@ -64,7 +92,7 @@ class _GameScreenState extends State<GameScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return GameDialog(title: 'Game end', btnText: 'Restart', onPressed: _startGame);
+        return GameDialog(title: 'Game end', btnText: 'Restart', onPressed: () => _startGame(reset: true));
       },
     );
   }
@@ -73,7 +101,7 @@ class _GameScreenState extends State<GameScreen> {
   void _startTimer() {
     if (_timer == null ? false : _timer!.isActive) _timer!.cancel();
 
-    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+    _timer = Timer.periodic(_gameSpeed, (timer) {
       bool result = ttBoard.moveDown();
 
       // 이동에 성공하면 화면에 반영하고 탈출
@@ -116,6 +144,7 @@ class _GameScreenState extends State<GameScreen> {
   // 블록 떨어뜨리기
   void _dropBlock() {
     ttBoard.dropBlock();
+    shakeKey.currentState!.shake();
     _fixingBlockPosition();
   }
 
@@ -124,16 +153,6 @@ class _GameScreenState extends State<GameScreen> {
     if (ttBoard.holdBlock()) {
       setState(() {});
     }
-    // if (_holdBlockId == null) {
-    //   _holdBlockId = ttBoard.blockId;
-    //   _generateNewBlock();
-    // } else {
-    //   TTBlockID? _tempBlockId = _holdBlockId;
-    //   _holdBlockId = ttBoard.blockId;
-    //   setState(() {
-    //     ttBoard.changeBlock(_tempBlockId!);
-    //   });
-    // }
   }
 
   // 블록 위치 확정
@@ -158,12 +177,17 @@ class _GameScreenState extends State<GameScreen> {
         int tileCnt = ttBoard.clearing();
         print(tileCnt);
       });
-
-      await Future.delayed(Duration(milliseconds: 200));
     }
 
-    // 새로운 블록 생성
-    _generateNewBlock();
+    await Future.delayed(_gameSpeed);
+
+    if (ttBoard.cleans >= kCleansForLevel) {
+      // 다음 레벨로 이동
+      _showNextLevelDialog();
+    } else {
+      // 새로운 블록 생성
+      _generateNewBlock();
+    }
   }
 
   // 블록 색상 반환
@@ -193,9 +217,7 @@ class _GameScreenState extends State<GameScreen> {
             children: [
               Expanded(
                 flex: 1,
-                child: Container(
-                  color: Colors.white,
-                ),
+                child: buildTopPanel(),
               ),
               Expanded(
                 flex: 8,
@@ -228,6 +250,25 @@ class _GameScreenState extends State<GameScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Container buildTopPanel() {
+    String timerText =
+        '${stopwatch.elapsed.inMinutes.remainder(60).toString().padLeft(2, '0')}:${stopwatch.elapsed.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+
+    return Container(
+      color: Colors.white,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text('Level:\n$_level', textAlign: TextAlign.center),
+          Text('Cleans:\n${ttBoard.cleans}', textAlign: TextAlign.center),
+          Text('Blocks:\n${ttBoard.blockCount}', textAlign: TextAlign.center),
+          Text('Speed:\n${_gameSpeed.inMilliseconds}ms', textAlign: TextAlign.center),
+          Text('Elapsed:\n$timerText', textAlign: TextAlign.center),
+        ],
       ),
     );
   }
@@ -323,44 +364,47 @@ class _GameScreenState extends State<GameScreen> {
 
   // 테트리스 화면 Build
   Widget buildTetrisPanel() {
-    return Container(
-      padding: EdgeInsets.all(0),
-      color: Colors.purpleAccent[800],
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: TTBoard.width,
-          crossAxisSpacing: 0.5,
-          mainAxisSpacing: 0.5,
-        ),
-        itemCount: maxColumns * maxRows,
-        itemBuilder: (BuildContext context, int index) {
-          int gridX = index % maxColumns;
-          int gridY = index ~/ maxColumns;
+    return ShakeWidget(
+      key: shakeKey,
+      child: Container(
+        padding: EdgeInsets.all(0),
+        color: Colors.purpleAccent[800],
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: TTBoard.width,
+            crossAxisSpacing: 0.5,
+            mainAxisSpacing: 0.5,
+          ),
+          itemCount: kTetrisMatrixWidth * kTetrisMatrixHeight,
+          itemBuilder: (BuildContext context, int index) {
+            int gridX = index % kTetrisMatrixWidth;
+            int gridY = index ~/ kTetrisMatrixWidth;
 
-          Color color = Colors.deepPurple.shade800;
+            Color color = Colors.deepPurple.shade800;
 
-          TTBlockID? id = ttBoard.getBlockId(gridX, gridY);
-          if (id != null) {
-            if (_isFlikering && ttBoard.isCompletedTile(gridX, gridY)) {
-              color = bgTileColor;
-            } else {
-              color = _getTileColor(id);
+            TTBlockID? id = ttBoard.getBlockId(gridX, gridY);
+            if (id != null) {
+              if (_isFlikering && ttBoard.isCompletedTile(gridX, gridY)) {
+                color = bgTileColor;
+              } else {
+                color = _getTileColor(id);
 
-              // Drop될 위치의 미리보기 블록은 흐릿하게 표시
-              if (ttBoard.getBlockStatus(gridX, gridY) == TTBlockStatus.preivew) {
-                color = color.withOpacity(0.2);
+                // Drop될 위치의 미리보기 블록은 흐릿하게 표시
+                if (ttBoard.getBlockStatus(gridX, gridY) == TTBlockStatus.preivew) {
+                  color = color.withOpacity(0.2);
+                }
               }
             }
-          }
 
-          return Container(
-            margin: EdgeInsets.all(0.5),
-            color: color,
-            // child: Center(
-            //     child: Text(gridX.toString() + ',' + gridY.toString(),
-            //         style: TextStyle(fontSize: 10, color: Colors.black54))),
-          );
-        },
+            return Container(
+              margin: EdgeInsets.all(0.5),
+              color: color,
+              // child: Center(
+              //     child: Text(gridX.toString() + ',' + gridY.toString(),
+              //         style: TextStyle(fontSize: 10, color: Colors.black54))),
+            );
+          },
+        ),
       ),
     );
   }
@@ -386,16 +430,6 @@ class _GameScreenState extends State<GameScreen> {
           CircleButton(color: Colors.blue, child: Icon(Icons.arrow_downward), onPressed: () => _movenRotate('DOWN')),
           CircleButton(color: Colors.pinkAccent, child: Text('D'), onPressed: () => _dropBlock()),
           CircleButton(color: Colors.pinkAccent, child: Text('H'), onPressed: () => _holdBlock()),
-          // CircleButton(
-          //     color: Colors.pinkAccent,
-          //     child: Text('R'),
-          //     onPressed: () {
-          //       setState(() {
-          //         _timer?.cancel();
-          //         ttBoard.reset();
-          //         _showGameStartDialog();
-          //       });
-          //     }),
         ],
       ),
     );

@@ -16,15 +16,22 @@ import 'package:tetris/screens/game_screen.dart';
 // Done 마지막 생성된 블록이 기존 블록을 겹치는 문제 (게임종료 조건에서..)
 // Done Dialog에 흰색 테두리 추가
 // Done 드랍위치 가이드 블록 표시
-// todo Drop시 화면 흔들림
+// Done 상수 파일 분리
+// Done Drop시 화면 흔들림
+// Done 레벨 구현
+// todo Score가 유지되지 않는 문제 수정
 // todo 미리보기 블록 구현 방식 변경 column x row
+// todo newBlock 메서드의 블록 아래로 이동 부분을 moveBlock 메서드와 합치기
 // todo 블록 down, drop 시 트랜지션(애니메이션) 처리
 // todo 블록 회전 후 위치 조정 (기준점과의 거리를 계산으로 최적 위치 선정)
 // todo 타일을 그리는 것을 TTTile 위젯으로 분리
 // todo 전체 레이아웃 다시 잡기
 // todo 제스처로 블록 이동
 // todo Intro 화면 구현
-// todo 레벨 구현
+// todo 효과음 추가
+// todo 배경음악 추가
+// todo 점수판 구현 (파이어스토어)
+// todo 새로운 기록 갱신 시 push 알림
 
 void main() => runApp(TetrisApp());
 
