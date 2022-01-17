@@ -24,7 +24,7 @@ class TTBlock {
     _initFigures();
 
     if (id == null) {
-      this.id = TTBlockID.values[Random().nextInt(6)];
+      this.id = TTBlockID.values[Random().nextInt(7)];
     } else {
       this.id = id;
     }
@@ -32,6 +32,9 @@ class TTBlock {
     // 블록 지정
     _figure = [..._figures[this.id.index]]; // array deep copy
   }
+
+  List<TTCoord> get figure => _figure;
+  set setFigure(List<TTCoord> newFigure) => _figure = [...newFigure];
 
   // 블록 회전
   // - 오른쪽으로 회전
