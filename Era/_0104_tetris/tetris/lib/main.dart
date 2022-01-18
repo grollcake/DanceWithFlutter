@@ -19,7 +19,9 @@ import 'package:tetris/screens/game_screen.dart';
 // Done 상수 파일 분리
 // Done Drop시 화면 흔들림
 // Done 레벨 구현
-// todo Score가 유지되지 않는 문제 수정
+// Done 레벨처리를 TTBlock 클래스 내부에 구현
+// todo Drop을 연타하면 블록이 무한 재생성되는 문제 수정
+// todo Hold시 새로 생성된 블록이 최상단에 생성되는 문제 수정
 // todo 미리보기 블록 구현 방식 변경 column x row
 // todo newBlock 메서드의 블록 아래로 이동 부분을 moveBlock 메서드와 합치기
 // todo 블록 down, drop 시 트랜지션(애니메이션) 처리

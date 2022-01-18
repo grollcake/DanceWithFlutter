@@ -3,3 +3,4 @@ const int kTetrisMatrixHeight = 20; // 테트리스 게임판의 타일 개수 (
 const bool kShowShadowBlock = true; // 드랍 위치 가이드 블록 표시여부
 const int kCleansForLevel = 2; // 한 레벨당 지워야 할 줄 수
 const Duration kInitalSpeed = Duration(milliseconds: 1000); // 초기 게임 속도
+const double kSpeedUpForLevel = 0.2; // 레벨업 할때마다 증가시킬 속도값 %

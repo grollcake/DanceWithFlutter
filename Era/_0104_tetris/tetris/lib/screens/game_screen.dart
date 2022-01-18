@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:tetris/constants/constants.dart';
 import 'package:tetris/managers/ttboard.dart';
@@ -23,9 +21,6 @@ class _GameScreenState extends State<GameScreen> {
   TTBoard ttBoard = TTBoard();
   Timer? _timer;
   bool _isFlikering = false;
-  int _level = 1;
-  Duration _gameSpeed = kInitalSpeed;
-  Stopwatch stopwatch = Stopwatch();
 
   GlobalKey<ShakeWidgetState> shakeKey = GlobalKey();
 
@@ -37,19 +32,12 @@ class _GameScreenState extends State<GameScreen> {
 
   // 게임 시작
   void _startGame({bool reset = false}) {
-    ttBoard.reset();
-
     if (reset) {
-      _level = 1;
-      _gameSpeed = kInitalSpeed;
+      ttBoard.reset();
     } else {
-      _level++;
-      // 레벨이 올라갈 때마다 속도를 20%씩 빠르게 한다.
-      _gameSpeed = Duration(milliseconds: (kInitalSpeed.inMilliseconds * math.pow(0.8, _level - 1)).toInt());
+      ttBoard.levelUp();
     }
     _generateNewBlock();
-    stopwatch.reset();
-    stopwatch.start();
   }
 
   // 새로운 블록 생성
@@ -101,7 +89,7 @@ class _GameScreenState extends State<GameScreen> {
   void _startTimer() {
     if (_timer == null ? false : _timer!.isActive) _timer!.cancel();
 
-    _timer = Timer.periodic(_gameSpeed, (timer) {
+    _timer = Timer.periodic(ttBoard.getSpeed, (timer) {
       bool result = ttBoard.moveDown();
 
       // 이동에 성공하면 화면에 반영하고 탈출
@@ -179,9 +167,9 @@ class _GameScreenState extends State<GameScreen> {
       });
     }
 
-    await Future.delayed(_gameSpeed);
+    await Future.delayed(ttBoard.getSpeed);
 
-    if (ttBoard.cleans >= kCleansForLevel) {
+    if (ttBoard.getCleans >= kCleansForLevel) {
       // 다음 레벨로 이동
       _showNextLevelDialog();
     } else {
@@ -255,19 +243,23 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Container buildTopPanel() {
-    String timerText =
-        '${stopwatch.elapsed.inMinutes.remainder(60).toString().padLeft(2, '0')}:${stopwatch.elapsed.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+    String timerText1 = ttBoard.getCurrentElapsed.inMinutes.remainder(60).toString().padLeft(2, '0') +
+        ':' +
+        ttBoard.getCurrentElapsed.inSeconds.remainder(60).toString().padLeft(2, '0');
+    String timerText2 = ttBoard.getTotalElapsed.inMinutes.remainder(60).toString().padLeft(2, '0') +
+        ':' +
+        ttBoard.getTotalElapsed.inSeconds.remainder(60).toString().padLeft(2, '0');
 
     return Container(
       color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text('Level:\n$_level', textAlign: TextAlign.center),
-          Text('Cleans:\n${ttBoard.cleans}', textAlign: TextAlign.center),
-          Text('Blocks:\n${ttBoard.blockCount}', textAlign: TextAlign.center),
-          Text('Speed:\n${_gameSpeed.inMilliseconds}ms', textAlign: TextAlign.center),
-          Text('Elapsed:\n$timerText', textAlign: TextAlign.center),
+          Text('Level:\n${ttBoard.getLevel}', textAlign: TextAlign.center),
+          Text('Cleans:\n${ttBoard.getCleans}', textAlign: TextAlign.center),
+          Text('Blocks:\n${ttBoard.getBlockCount}', textAlign: TextAlign.center),
+          Text('Speed:\n${ttBoard.getSpeed.inMilliseconds}ms', textAlign: TextAlign.center),
+          Text('Elapsed:\n$timerText1\n$timerText2', textAlign: TextAlign.center),
         ],
       ),
     );
@@ -294,7 +286,7 @@ class _GameScreenState extends State<GameScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: Center(
-                    child: PreviewBlock(blockID: ttBoard.holdId),
+                    child: PreviewBlock(blockID: ttBoard.getHoldId),
                   ),
                 ),
               ),
@@ -327,7 +319,7 @@ class _GameScreenState extends State<GameScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: Center(
-                    child: PreviewBlock(blockID: ttBoard.nextId),
+                    child: PreviewBlock(blockID: ttBoard.getNextId),
                   ),
                 ),
               ),
@@ -420,7 +412,7 @@ class _GameScreenState extends State<GameScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text('Score'),
-              Text('${ttBoard.score}',
+              Text('${ttBoard.getScore}',
                   style: TextStyle(fontSize: 22, color: Colors.yellow, fontWeight: FontWeight.bold)),
             ],
           ),

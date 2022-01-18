@@ -1,5 +1,6 @@
 import 'package:tetris/constants/constants.dart';
 import 'package:tetris/models/enums.dart';
+import 'dart:math' as math;
 import 'package:tetris/managers/ttblock.dart';
 
 class TTBoard {
@@ -10,16 +11,20 @@ class TTBoard {
   List<List<TTBlockID?>> _boardCoords =
       List.generate(width, (idx) => List.filled(height, null, growable: false), growable: false);
 
-  TTBlock? _block;
-  TTBlock? _next;
-  List<TTCoord>? _shadowBlockCoords; //드랍 위치의 가이드 블록
-  TTBlockID? _holdId;
-  bool _holdUsed = false;
-  int? _blockX;
-  int? _blockY;
-  int _score = 0;
+  TTBlock? _block; // 현재 블록
+  TTBlock? _next; // 다음 블록
+  List<TTCoord>? _shadowBlockCoords; // 그림자 블록 (드랍 위치를 나타내는 블록)
+  TTBlockID? _holdId; // 보관 블록
+  bool _holdUsed = false; // 보관 기능 사용여부
+  int? _blockX; // 현재 블록의 x 위치값
+  int? _blockY; // 현재 블록의 y 위치값
+  int _score = 0; // 현재 점수
   int _cleans = 0; // 지운 줄 개수
-  List<int> _frequency = List.filled(TTBlockID.values.length, 0);
+  int _level = 1; // 현재 레벨
+  bool _isLevelUpCondition = false; // 레벨업 조건 충족 여부
+  List<int> _frequency = List.filled(TTBlockID.values.length, 0); // 블록별 생성 횟수
+  Stopwatch _currentStopwatch = Stopwatch();
+  Stopwatch _totalStopwatch = Stopwatch();
 
   TTBoard() {
     reset();
@@ -27,28 +32,37 @@ class TTBoard {
   }
 
   // Getter
-  TTBlockID? get blockId => _block?.id;
+  TTBlockID? get getCurrentId => _block?.id;
 
-  TTBlockID? get nextId => _next?.id;
+  TTBlockID? get getNextId => _next?.id;
 
-  TTBlockID? get holdId => _holdId;
+  TTBlockID? get getHoldId => _holdId;
 
-  // get block => _block;
-  int? get blockX => _blockX;
+  int? get getBlockX => _blockX;
 
-  int? get blockY => _blockY;
+  int? get getBlockY => _blockY;
 
-  int get score => _score;
+  int get getScore => _score;
 
-  int get cleans => _cleans;
+  int get getCleans => _cleans;
 
-  int get blockCount => _frequency.reduce((value, element) => value + element);
+  int get getLevel => _level;
+
+  bool get isLevelUpCondition => _isLevelUpCondition;
+
+  Duration get getSpeed =>
+      Duration(milliseconds: (kInitalSpeed.inMilliseconds * math.pow((1 - kSpeedUpForLevel), _level - 1)).toInt());
+
+  int get getBlockCount => _frequency.reduce((value, element) => value + element);
+
+  Duration get getCurrentElapsed => _currentStopwatch.elapsed;
+  Duration get getTotalElapsed => _totalStopwatch.elapsed;
 
   ////////////////////////////////////////////////////////////////////
   // 초기화 및 블록 생성
   ////////////////////////////////////////////////////////////////////
   // 화면을 모두 Reset
-  void reset() {
+  void reset({bool isLevelUp = false}) {
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         _boardCoords[x][y] = null;
@@ -61,8 +75,14 @@ class TTBoard {
     _holdUsed = false;
     _blockX = 0;
     _blockY = 0;
-    _score = 0;
     _cleans = 0;
+    _isLevelUpCondition = false;
+
+    if (!isLevelUp) {
+      _score = 0;
+      _level = 1;
+    }
+
     _frequency = List.filled(TTBlockID.values.length, 0);
 
     _makeTestBlocks();
@@ -78,7 +98,9 @@ class TTBoard {
     }
   }
 
+  ////////////////////////////////////////////////////////////////////
   // 블록 생성
+  ////////////////////////////////////////////////////////////////////
   bool newBlock([TTBlockID? blockId]) {
     _blockX = width ~/ 2;
     _blockY = 0;
@@ -91,6 +113,13 @@ class TTBoard {
     }
 
     _frequency[_block!.id.index]++;
+
+    // 첫번째 블록 생성 시 스탑워치 시작
+    if (getBlockCount == 1) {
+      _currentStopwatch.reset();
+      _currentStopwatch.start(); // todo 여기도 시작점이 틀어지는 문제가 있어요.
+      _totalStopwatch.start(); // todo 여기 시작점이 틀어지는 문제가 있음
+    }
 
     _holdUsed = false;
 
@@ -143,7 +172,7 @@ class TTBoard {
   }
 
   ////////////////////////////////////////////////////////////////////
-  // 블록 고정
+  // 블록 위치 고정
   ////////////////////////////////////////////////////////////////////
   void fixBlock() {
     if (_block == null) return;
@@ -163,7 +192,7 @@ class TTBoard {
     // 고정된 블록부터 확인
     if (_boardCoords[x][y] != null) return true;
     // 이동 중인 블록도 확인
-    for (TTCoord coord in _block!.getCoord(blockX!, blockY!)) {
+    for (TTCoord coord in _block!.getCoord(getBlockX!, getBlockY!)) {
       if (coord.x == x && coord.y == y) return true;
     }
     return false;
@@ -177,7 +206,7 @@ class TTBoard {
     if (_block == null) return null;
 
     // 이동 중인 블록도 확인
-    for (TTCoord coord in _block!.getCoord(blockX!, blockY!)) {
+    for (TTCoord coord in _block!.getCoord(getBlockX!, getBlockY!)) {
       if (coord.x == x && coord.y == y) return _block!.id;
     }
 
@@ -196,7 +225,7 @@ class TTBoard {
     if (isCompletedTile(x, y)) return TTBlockStatus.completed;
     if (_boardCoords[x][y] != null) return TTBlockStatus.fixed;
     if (_block == null) return TTBlockStatus.none;
-    for (TTCoord coord in _block!.getCoord(blockX!, blockY!)) {
+    for (TTCoord coord in _block!.getCoord(getBlockX!, getBlockY!)) {
       if (coord.x == x && coord.y == y) return TTBlockStatus.float;
     }
     if (_shadowBlockCoords != null) {
@@ -262,8 +291,24 @@ class TTBoard {
     _score += (removedRows - 1) * 10;
     _cleans += removedRows;
 
+    if (_cleans >= kCleansForLevel) {
+      _isLevelUpCondition = true;
+      _currentStopwatch.stop();
+      _totalStopwatch.stop();
+    }
+
     // 삭제한 조각 개수 반환
     return removedRows;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  // 레벨업 처리
+  ////////////////////////////////////////////////////////////////////
+  int levelUp() {
+    reset(isLevelUp: true);
+    _level++;
+
+    return _level;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -398,13 +443,6 @@ class TTBoard {
       shadowY++;
     }
     _shadowBlockCoords = shadowBlock.getCoord(_blockX!, shadowY);
-
-    // 현재 블록과 겹치는 위치가 있다면 preview 위치 정보는 지워버린다.
-    // TTCoord previewTopY = _previewCoords!.reduce((v, e) => v.y < e.y ? v : e);
-    // TTCoord blockBottomY = _block!.getCoord(_blockX!, _blockY!).reduce((v, e) => v.y < e.y ? e : v);
-    // if (blockBottomY.y >= previewTopY.y) {
-    //   _previewCoords = null;
-    // }
   }
 
   // 한 줄 반환
