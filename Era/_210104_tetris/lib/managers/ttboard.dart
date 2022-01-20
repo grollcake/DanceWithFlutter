@@ -56,6 +56,7 @@ class TTBoard {
   int get getBlockCount => _frequency.reduce((value, element) => value + element);
 
   Duration get getCurrentElapsed => _totalStopwatch.elapsed - _beforeDuration;
+
   Duration get getTotalElapsed => _totalStopwatch.elapsed;
 
   ////////////////////////////////////////////////////////////////////
@@ -104,17 +105,34 @@ class TTBoard {
   // 블록 생성
   ////////////////////////////////////////////////////////////////////
   bool newBlock([TTBlockID? blockId]) {
-    _blockX = width ~/ 2;
-    _blockY = 0;
     _block = _next ?? TTBlock(blockId);
+    _holdUsed = false;
 
     // 같은 블록이 연속으로 생성되면 한번 더 재생성 시도한다.
     for (int i = 0; i < 2; i++) {
       _next = TTBlock();
       if (_next!.id != _block!.id) break;
     }
-
     _frequency[_block!.id.index]++;
+
+    // 블록 초기 위치 확인
+    if (_block!.id == TTBlockID.L) {
+      _blockX = width ~/ 2 - 1;
+    } else {
+      _blockX = width ~/ 2;
+    }
+
+    _blockY = 0;
+
+    for (int newY = -3; newY < 1; newY++) {
+      for (TTCoord coord in _block!.getCoord(_blockX!, newY)) {
+        // 기존 블록과 겹치는지 확인
+        if (coord.y >= 0 && _boardCoords[coord.x][coord.y] != null) {
+          _blockY = newY - 1;
+          return false;
+        }
+      }
+    }
 
     // 첫번째 블록 생성 시 스탑워치 시작
     if (getBlockCount == 1) {
@@ -122,20 +140,21 @@ class TTBoard {
       _totalStopwatch.start();
     }
 
-    _holdUsed = false;
-
+    // 그림자 블록 위치 계산
     _calcShadowBlockCoords();
 
     // 블록을 생성하자마자 다른 블록과 겹친다면 게임 Over
-    if (_isOverlapped(_block!.getCoord(_blockX!, _blockY!))) {
-      // 겹치는 부분을 위로 밀어올리고 게임을 종료한다 (기존 블록과 겹쳐서 출력되는 문제 해결위해서임)
-      while (_isOverlapped(_block!.getCoord(_blockX!, _blockY!))) {
-        _blockY = _blockY! - 1;
-      }
-      return false;
-    } else {
-      return true;
-    }
+    // if (_isOverlapped(_block!.getCoord(_blockX!, _blockY!))) {
+    //   // 겹치는 부분을 위로 밀어올리고 게임을 종료한다 (기존 블록과 겹쳐서 출력되는 문제 해결위해서임)
+    //   while (_isOverlapped(_block!.getCoord(_blockX!, _blockY!))) {
+    //     _blockY = _blockY! - 1;
+    //   }
+    //   return false;
+    // } else {
+    //   return true;
+    // }
+
+    return true;
   }
 
   ////////////////////////////////////////////////////////////////////
