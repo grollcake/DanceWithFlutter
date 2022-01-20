@@ -1,6 +1,6 @@
+import 'dart:math' as math;
 import 'package:tetris/constants/constants.dart';
 import 'package:tetris/models/enums.dart';
-import 'dart:math' as math;
 import 'package:tetris/managers/ttblock.dart';
 
 class TTBoard {
@@ -23,8 +23,8 @@ class TTBoard {
   int _level = 1; // 현재 레벨
   bool _isLevelUpCondition = false; // 레벨업 조건 충족 여부
   List<int> _frequency = List.filled(TTBlockID.values.length, 0); // 블록별 생성 횟수
-  Stopwatch _currentStopwatch = Stopwatch();
   Stopwatch _totalStopwatch = Stopwatch();
+  Duration _beforeDuration = Duration();
 
   TTBoard() {
     reset();
@@ -55,7 +55,7 @@ class TTBoard {
 
   int get getBlockCount => _frequency.reduce((value, element) => value + element);
 
-  Duration get getCurrentElapsed => _currentStopwatch.elapsed;
+  Duration get getCurrentElapsed => _totalStopwatch.elapsed - _beforeDuration;
   Duration get getTotalElapsed => _totalStopwatch.elapsed;
 
   ////////////////////////////////////////////////////////////////////
@@ -81,6 +81,8 @@ class TTBoard {
     if (!isLevelUp) {
       _score = 0;
       _level = 1;
+      _beforeDuration = Duration();
+      _totalStopwatch.reset();
     }
 
     _frequency = List.filled(TTBlockID.values.length, 0);
@@ -116,9 +118,8 @@ class TTBoard {
 
     // 첫번째 블록 생성 시 스탑워치 시작
     if (getBlockCount == 1) {
-      _currentStopwatch.reset();
-      _currentStopwatch.start(); // todo 여기도 시작점이 틀어지는 문제가 있어요.
-      _totalStopwatch.start(); // todo 여기 시작점이 틀어지는 문제가 있음
+      _beforeDuration = _totalStopwatch.elapsed;
+      _totalStopwatch.start();
     }
 
     _holdUsed = false;
@@ -148,10 +149,12 @@ class TTBoard {
 
   bool rotate() => _moveBlock('ROTATE');
 
-  void dropBlock() {
+  bool dropBlock() {
+    if (_block == null) return false;
     while (_moveBlock('DOWN')) {
       continue;
     }
+    return true;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -293,7 +296,6 @@ class TTBoard {
 
     if (_cleans >= kCleansForLevel) {
       _isLevelUpCondition = true;
-      _currentStopwatch.stop();
       _totalStopwatch.stop();
     }
 

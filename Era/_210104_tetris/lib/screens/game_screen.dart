@@ -131,9 +131,10 @@ class _GameScreenState extends State<GameScreen> {
 
   // 블록 떨어뜨리기
   void _dropBlock() {
-    ttBoard.dropBlock();
-    shakeKey.currentState!.shake();
-    _fixingBlockPosition();
+    if (ttBoard.dropBlock()) {
+      shakeKey.currentState!.shake();
+      _fixingBlockPosition();
+    }
   }
 
   // 블록 홀드
