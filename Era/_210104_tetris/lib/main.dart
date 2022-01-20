@@ -22,7 +22,7 @@ import 'package:tetris/screens/game_screen.dart';
 // Done 레벨처리를 TTBlock 클래스 내부에 구현
 // Done Drop을 연타하면 블록이 무한 재생성되는 문제 수정
 // Done 게임시간 불일치 문제 (현재 레벨과 전체 진행시간 차이)
-// todo 미리보기 블록 구현 방식 변경 column x row
+// Done 미리보기 블록 구현 방식을 column x row로 변경
 // todo newBlock 메서드의 블록 아래로 이동 부분을 moveBlock 메서드와 합치기
 // todo 블록 down, drop 시 트랜지션(애니메이션) 처리
 // todo 블록 회전 후 위치 조정 (기준점과의 거리를 계산으로 최적 위치 선정)

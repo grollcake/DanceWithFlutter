@@ -6,7 +6,7 @@ import 'package:tetris/models/enums.dart';
 import 'package:tetris/modules/shaker_widget.dart';
 import 'package:tetris/screens/widgets/circle_button.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
-import 'package:tetris/screens/widgets/preview_block.dart';
+import 'package:tetris/screens/widgets/mini_block.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -284,11 +284,8 @@ class _GameScreenState extends State<GameScreen> {
             children: [
               const Text('HOLD', style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
-                  child: Center(
-                    child: PreviewBlock(blockID: ttBoard.getHoldId),
-                  ),
+                child: Center(
+                  child: MiniBlock(blockID: ttBoard.getHoldId),
                 ),
               ),
             ],
@@ -317,11 +314,8 @@ class _GameScreenState extends State<GameScreen> {
             children: [
               const Text('NEXT', style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
-                  child: Center(
-                    child: PreviewBlock(blockID: ttBoard.getNextId),
-                  ),
+                child: Center(
+                  child: MiniBlock(blockID: ttBoard.getNextId),
                 ),
               ),
             ],
