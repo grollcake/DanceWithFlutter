@@ -23,12 +23,13 @@ import 'package:tetris/screens/game_screen.dart';
 // Done Drop을 연타하면 블록이 무한 재생성되는 문제 수정
 // Done 게임시간 불일치 문제 (현재 레벨과 전체 진행시간 차이)
 // Done 미리보기 블록 구현 방식을 column x row로 변경
-// done game end 블록 생성 시 기존 블록과 겹치는 문제 수정
+// Done game end 블록 생성 시 기존 블록과 겹치는 문제 수정
+// Done 제스처로 블록 이동
+// Done 제스처 강도에 따른 블록 이동
 // todo 블록 down, drop 시 트랜지션(애니메이션) 처리
 // todo 블록 회전 후 위치 조정 (기준점과의 거리를 계산으로 최적 위치 선정)
-// todo 타일을 그리는 것을 TTTile 위젯으로 분리
+// todo 타일을 더 이쁘게 그리기 위해 별도 위젯(TTTile)으로 분리
 // todo 전체 레이아웃 다시 잡기
-// todo 제스처로 블록 이동
 // todo Intro 화면 구현
 // todo 효과음 추가
 // todo 배경음악 추가

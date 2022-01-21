@@ -4,6 +4,7 @@ import 'package:tetris/constants/constants.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/modules/shaker_widget.dart';
+import 'package:tetris/modules/user_actions.dart';
 import 'package:tetris/screens/widgets/circle_button.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
 import 'package:tetris/screens/widgets/mini_block.dart';
@@ -218,7 +219,27 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                     Expanded(
                       flex: 5,
-                      child: buildTetrisPanel(),
+                      child: UserActions(
+                        child: buildTetrisPanel(),
+                        onTap: () => _movenRotate('ROTATE'),
+                        onSwipeLeft: (int steps) {
+                          for (int i = 0; i < steps; i++) {
+                            _movenRotate('LEFT');
+                          }
+                        },
+                        onSwipeRight: (int steps) {
+                          for (int i = 0; i < steps; i++) {
+                            _movenRotate('RIGHT');
+                          }
+                        },
+                        onSwipeUp: () => _holdBlock(),
+                        onSwipeDown: (int steps) {
+                          for (int i = 0; i < steps; i++) {
+                            _movenRotate('DOWN');
+                          }
+                        },
+                        onSwipeDrop: () => _dropBlock(),
+                      ),
                     ),
                     Expanded(
                       flex: 1,
@@ -357,6 +378,7 @@ class _GameScreenState extends State<GameScreen> {
         padding: EdgeInsets.all(0),
         color: Colors.purpleAccent[800],
         child: GridView.builder(
+          physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: TTBoard.width,
             crossAxisSpacing: 0.5,
