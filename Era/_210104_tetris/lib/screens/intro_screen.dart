@@ -22,8 +22,16 @@ class _IntroScreenState extends State<IntroScreen> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-            // color: Colors.blueGrey.shade800,
-            ),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.black.withOpacity(0.1),
+              Colors.black.withOpacity(0.4),
+            ],
+          ),
+          // color: Colors.blueGrey.shade800,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

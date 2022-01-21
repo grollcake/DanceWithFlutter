@@ -30,7 +30,7 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () => _showGameStartDialog());
+    Future.delayed(Duration(milliseconds: 1000), () => _startGame(reset: true));
   }
 
   // 게임 시작
@@ -192,11 +192,12 @@ class _GameScreenState extends State<GameScreen> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.person,
-                color: Colors.white,
-              ))
+            onPressed: () {},
+            icon: Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
+          )
         ],
       ),
       body: SafeArea(
