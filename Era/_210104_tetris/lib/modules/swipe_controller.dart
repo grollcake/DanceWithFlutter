@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class UserActions extends StatelessWidget {
-  UserActions(
+class SwipeController extends StatelessWidget {
+  SwipeController(
       {Key? key,
       required this.child,
       required this.onTap,
@@ -28,7 +28,7 @@ class UserActions extends StatelessWidget {
     return GestureDetector(
       child: child,
       onTap: () {
-        print('OnTap');
+        // print('OnTap');
         onTap();
       },
       onHorizontalDragStart: (DragStartDetails details) {
@@ -41,10 +41,10 @@ class UserActions extends StatelessWidget {
         int steps = (horizontalDistance.toInt() ~/ 70).abs() + 1;
 
         if (horizontalDistance < 0) {
-          print('onSwipeLeft($steps) -- $horizontalDistance');
+          // print('onSwipeLeft($steps) -- $horizontalDistance');
           onSwipeLeft(steps);
         } else {
-          print('onSwipeRight($steps) -- $horizontalDistance');
+          // print('onSwipeRight($steps) -- $horizontalDistance');
           onSwipeRight(steps);
         }
       },
@@ -60,14 +60,16 @@ class UserActions extends StatelessWidget {
 
         int steps = (verticalDistance.toInt() ~/ 50).abs() + 1;
 
+        // print('$speed => $steps => $verticalDistance');
+
         if (verticalDistance < 0) {
-          print('onSwipeUp() => $verticalDistance');
+          // print('onSwipeUp() => $verticalDistance');
           onSwipeUp();
-        } else if (speed > 0.8) {
-          print('onSwipeDrop($steps) => $verticalDistance');
+        } else if (speed > 0.5) {
+          // print('onSwipeDrop($steps) => $verticalDistance');
           onSwipeDrop();
         } else {
-          print('onSwipeDown($steps) => $verticalDistance');
+          // print('onSwipeDown($steps) => $verticalDistance');
           onSwipeDown(steps);
         }
       },

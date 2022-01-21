@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:tetris/constants/app_style.dart';
+import 'package:tetris/constants/blockColor.dart';
 import 'package:tetris/constants/constants.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/modules/shaker_widget.dart';
-import 'package:tetris/modules/user_actions.dart';
+import 'package:tetris/modules/swipe_controller.dart';
 import 'package:tetris/screens/widgets/circle_button.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
 import 'package:tetris/screens/widgets/mini_block.dart';
@@ -180,25 +182,23 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
-  // 블록 색상 반환
-  Color _getTileColor(TTBlockID blockID) {
-    if (blockID.index > 6) return Colors.grey.shade200;
-
-    return [
-      Colors.red.shade400,
-      Colors.orange.shade400,
-      Colors.yellow.shade400,
-      Colors.green.shade400,
-      Colors.blue.shade400,
-      Colors.indigo.shade400,
-      Colors.purple.shade400
-    ][blockID.index];
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppStyle.bgColor,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.person,
+                color: Colors.white,
+              ))
+        ],
+      ),
       body: SafeArea(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -219,7 +219,7 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                     Expanded(
                       flex: 5,
-                      child: UserActions(
+                      child: SwipeController(
                         child: buildTetrisPanel(),
                         onTap: () => _movenRotate('ROTATE'),
                         onSwipeLeft: (int steps) {
@@ -396,7 +396,7 @@ class _GameScreenState extends State<GameScreen> {
               if (_isFlikering && ttBoard.isCompletedTile(gridX, gridY)) {
                 color = bgTileColor;
               } else {
-                color = _getTileColor(id);
+                color = getBlockColor(id);
 
                 // Drop될 위치의 미리보기 블록은 흐릿하게 표시
                 if (ttBoard.getBlockStatus(gridX, gridY) == TTBlockStatus.preivew) {

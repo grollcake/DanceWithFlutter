@@ -3,10 +3,11 @@ import 'package:tetris/managers/ttblock.dart';
 import 'package:tetris/models/enums.dart';
 
 class MiniBlock extends StatelessWidget {
-  const MiniBlock({Key? key, this.blockID}) : super(key: key);
+  MiniBlock({Key? key, this.blockID, this.size = 10, this.color = Colors.yellowAccent}) : super(key: key);
 
   final TTBlockID? blockID;
-  static const double blockSize = 10.0;
+  double size;
+  Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -18,17 +19,19 @@ class MiniBlock extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         block.length,
-            (row) {
+        (row) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
               block[row].length,
-                  (col) => Container(
-                margin: EdgeInsets.all(0.5),
-                width: blockSize,
-                height: blockSize,
-                decoration: BoxDecoration(
-                  color: block[row][col] == 1 ? Colors.white : null,
+              (col) => Container(
+                padding: EdgeInsets.all(0.5),
+                width: size,
+                height: size,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: block[row][col] == 1 ? color : null,
+                  ),
                 ),
               ),
             ),
