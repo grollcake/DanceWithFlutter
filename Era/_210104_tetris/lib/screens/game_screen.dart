@@ -186,6 +186,7 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppStyle.bgColor,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
@@ -200,174 +201,123 @@ class _GameScreenState extends State<GameScreen> {
           )
         ],
       ),
-      body: SafeArea(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              Expanded(
-                flex: 1,
-                child: buildTopPanel(),
-              ),
-              Expanded(
-                flex: 8,
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: buildHoldPanel(),
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: SwipeController(
-                        child: buildTetrisPanel(),
-                        onTap: () => _movenRotate('ROTATE'),
-                        onSwipeLeft: (int steps) {
-                          for (int i = 0; i < steps; i++) {
-                            _movenRotate('LEFT');
-                          }
-                        },
-                        onSwipeRight: (int steps) {
-                          for (int i = 0; i < steps; i++) {
-                            _movenRotate('RIGHT');
-                          }
-                        },
-                        onSwipeUp: () => _holdBlock(),
-                        onSwipeDown: (int steps) {
-                          for (int i = 0; i < steps; i++) {
-                            _movenRotate('DOWN');
-                          }
-                        },
-                        onSwipeDrop: () => _dropBlock(),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        children: [
-                          buildNextPanel(),
-                          buildStatusPanel(),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: buildControlPanel(),
-              ),
-            ],
-          ),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 60, vertical: 70),
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage('assets/images/bg01.png'), fit: BoxFit.cover),
+        ),
+        child: Column(
+          children: [
+            // 상단 상태 패널
+            Container(
+              height: 70,
+              width: double.infinity,
+              // color: Colors.blueGrey,
+              child: buildTopPanel(),
+            ),
+            SizedBox(height: 6),
+            // 메인 게임 패널
+            SwipeController(
+              child: buildTetrisPanel(),
+              onTap: () => _movenRotate('ROTATE'),
+              onSwipeLeft: (int steps) {
+                for (int i = 0; i < steps; i++) {
+                  _movenRotate('LEFT');
+                }
+              },
+              onSwipeRight: (int steps) {
+                for (int i = 0; i < steps; i++) {
+                  _movenRotate('RIGHT');
+                }
+              },
+              onSwipeUp: () => _holdBlock(),
+              onSwipeDown: (int steps) {
+                for (int i = 0; i < steps; i++) {
+                  _movenRotate('DOWN');
+                }
+              },
+              onSwipeDrop: () => _dropBlock(),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Container buildTopPanel() {
-    String timerText1 = ttBoard.getCurrentElapsed.inMinutes.remainder(60).toString().padLeft(2, '0') +
-        ':' +
-        ttBoard.getCurrentElapsed.inSeconds.remainder(60).toString().padLeft(2, '0');
-    String timerText2 = ttBoard.getTotalElapsed.inMinutes.remainder(60).toString().padLeft(2, '0') +
+  Widget buildTopPanel() {
+    Color previewBgColor = Colors.pinkAccent.withOpacity(.2);
+    String timerText = ttBoard.getTotalElapsed.inMinutes.remainder(60).toString().padLeft(2, '0') +
         ':' +
         ttBoard.getTotalElapsed.inSeconds.remainder(60).toString().padLeft(2, '0');
 
-    return Container(
-      color: Colors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('Level:\n${ttBoard.getLevel}', textAlign: TextAlign.center),
-          Text('Cleans:\n${ttBoard.getCleans}', textAlign: TextAlign.center),
-          Text('Blocks:\n${ttBoard.getBlockCount}', textAlign: TextAlign.center),
-          Text('Speed:\n${ttBoard.getSpeed.inMilliseconds}ms', textAlign: TextAlign.center),
-          Text('Elapsed:\n$timerText1\n$timerText2', textAlign: TextAlign.center),
-        ],
-      ),
-    );
-  }
-
-  // Hold 패널 Build
-  Widget buildHoldPanel() {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          margin: EdgeInsets.only(left: 10),
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          width: double.infinity,
-          height: 80,
+          width: 50,
+          padding: EdgeInsets.all(6),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
-            color: Colors.pinkAccent,
-          ),
+              color: previewBgColor,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14))),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('HOLD', style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
-              Expanded(
-                child: Center(
-                  child: MiniBlock(blockID: ttBoard.getHoldId),
-                ),
-              ),
+              const Text('HOLD', style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
+              Expanded(child: MiniBlock(blockID: ttBoard.getHoldId, size: 10, color: Colors.white)),
             ],
           ),
         ),
-      ],
-    );
-  }
-
-  // 상태표시 화면 Build
-  Widget buildNextPanel() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          margin: EdgeInsets.only(right: 10),
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          width: double.infinity,
-          height: 80,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
-            color: Colors.pinkAccent,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('NEXT', style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
-              Expanded(
-                child: Center(
-                  child: MiniBlock(blockID: ttBoard.getNextId),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 5, vertical: 16),
+            color: Colors.transparent,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Score', style: TextStyle(fontSize: 12, color: Colors.white)),
+                      Text(ttBoard.getScore.toString(),
+                          style: TextStyle(fontSize: 16, color: Colors.yellowAccent, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  // 상태표시 화면 Build
-  Widget buildStatusPanel() {
-    return Container(
-      padding: EdgeInsets.only(top: 20),
-      color: Colors.black54,
-      child: Column(
-        children: List.generate(
-          TTBlockID.values.length,
-          (index) => Container(
-            padding: EdgeInsets.all(10),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                  TTBlockID.values[index].toString().split('.')[1] +
-                      ': ' +
-                      ttBoard.getBlockFrequency(TTBlockID.values[index]).toString(),
-                  style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
+                SizedBox(
+                  width: 40,
+                  child: Center(
+                      child: Text(ttBoard.getLevel.toString(),
+                          style: TextStyle(fontSize: 40, color: Colors.yellowAccent, fontWeight: FontWeight.bold))),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Time', style: TextStyle(fontSize: 12, color: Colors.white)),
+                      Text(timerText,
+                          style: TextStyle(fontSize: 16, color: Colors.yellowAccent, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-      ),
+        Container(
+          width: 50,
+          padding: EdgeInsets.all(6),
+          decoration: BoxDecoration(
+              color: previewBgColor,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('NEXT', style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
+              Expanded(child: MiniBlock(blockID: ttBoard.getNextId, size: 10, color: Colors.white)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -376,44 +326,50 @@ class _GameScreenState extends State<GameScreen> {
     return ShakeWidget(
       key: shakeKey,
       child: Container(
-        padding: EdgeInsets.all(0),
-        color: Colors.purpleAccent[800],
-        child: GridView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: TTBoard.width,
-            crossAxisSpacing: 0.5,
-            mainAxisSpacing: 0.5,
-          ),
-          itemCount: kTetrisMatrixWidth * kTetrisMatrixHeight,
-          itemBuilder: (BuildContext context, int index) {
-            int gridX = index % kTetrisMatrixWidth;
-            int gridY = index ~/ kTetrisMatrixWidth;
+        padding: EdgeInsets.all(2),
+        color: Colors.white,
+        child: Container(
+          color: AppStyle.bgColor.withOpacity(0.9),
+          child: MediaQuery.removePadding(
+            removeTop: true,
+            context: context,
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: kTetrisMatrixWidth * kTetrisMatrixHeight,
+              // itemCount: kTetrisMatrixWidth,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: kTetrisMatrixWidth,
+                crossAxisSpacing: 0.5,
+                mainAxisSpacing: 0.5,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                int gridX = index % kTetrisMatrixWidth;
+                int gridY = index ~/ kTetrisMatrixWidth;
 
-            Color color = Colors.deepPurple.shade800;
+                Color color = AppStyle.bgColor.withOpacity(0.4);
 
-            TTBlockID? id = ttBoard.getBlockId(gridX, gridY);
-            if (id != null) {
-              if (_isFlikering && ttBoard.isCompletedTile(gridX, gridY)) {
-                color = bgTileColor;
-              } else {
-                color = getBlockColor(id);
+                TTBlockID? id = ttBoard.getBlockId(gridX, gridY);
+                if (id != null) {
+                  if (_isFlikering && ttBoard.isCompletedTile(gridX, gridY)) {
+                    color = bgTileColor;
+                  } else {
+                    color = getBlockColor(id);
 
-                // Drop될 위치의 미리보기 블록은 흐릿하게 표시
-                if (ttBoard.getBlockStatus(gridX, gridY) == TTBlockStatus.preivew) {
-                  color = color.withOpacity(0.2);
+                    // Drop될 위치의 미리보기 블록은 흐릿하게 표시
+                    if (ttBoard.getBlockStatus(gridX, gridY) == TTBlockStatus.preivew) {
+                      color = color.withOpacity(0.15);
+                    }
+                  }
                 }
-              }
-            }
 
-            return Container(
-              margin: EdgeInsets.all(0.5),
-              color: color,
-              // child: Center(
-              //     child: Text(gridX.toString() + ',' + gridY.toString(),
-              //         style: TextStyle(fontSize: 10, color: Colors.black54))),
-            );
-          },
+                return Container(
+                  margin: EdgeInsets.all(0.5),
+                  color: color,
+                );
+              },
+            ),
+          ),
         ),
       ),
     );

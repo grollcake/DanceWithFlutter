@@ -27,7 +27,7 @@ class GameDialog extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   title,
-                  style: TextStyle(fontSize: 18, color: Colors.yellowAccent, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
               // content: Text('Just for fun'),

@@ -28,7 +28,8 @@ import 'package:tetris/screens/intro_screen.dart';
 // Done 제스처로 블록 이동
 // Done 제스처 강도에 따른 블록 이동
 // Done Intro 화면 구현
-// todo 전체 레이아웃 다시 잡기
+// Done 전체 레이아웃 다시 잡기
+// Done 배경 이미지 추가
 // todo 블록 down, drop 시 트랜지션(애니메이션) 처리
 // todo 블록 회전 후 위치 조정 (기준점과의 거리를 계산으로 최적 위치 선정)
 // todo 타일을 더 이쁘게 그리기 위해 별도 위젯(TTTile)으로 분리

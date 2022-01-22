@@ -88,7 +88,7 @@ class TTBoard {
 
     _frequency = List.filled(TTBlockID.values.length, 0);
 
-    _makeTestBlocks();
+    // _makeTestBlocks();
   }
 
   // 테스트 블록 생성
