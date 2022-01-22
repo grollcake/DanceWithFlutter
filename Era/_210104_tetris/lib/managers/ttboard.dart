@@ -143,17 +143,6 @@ class TTBoard {
     // 그림자 블록 위치 계산
     _calcShadowBlockCoords();
 
-    // 블록을 생성하자마자 다른 블록과 겹친다면 게임 Over
-    // if (_isOverlapped(_block!.getCoord(_blockX!, _blockY!))) {
-    //   // 겹치는 부분을 위로 밀어올리고 게임을 종료한다 (기존 블록과 겹쳐서 출력되는 문제 해결위해서임)
-    //   while (_isOverlapped(_block!.getCoord(_blockX!, _blockY!))) {
-    //     _blockY = _blockY! - 1;
-    //   }
-    //   return false;
-    // } else {
-    //   return true;
-    // }
-
     return true;
   }
 
@@ -331,6 +320,12 @@ class TTBoard {
 
     return _level;
   }
+
+  ////////////////////////////////////////////////////////////////////
+  // 게임 일시 정지 처리
+  ////////////////////////////////////////////////////////////////////
+  void pauseGame() => _totalStopwatch.stop();
+  void resumeGame() => _totalStopwatch.start();
 
   ////////////////////////////////////////////////////////////////////
   // 내부 전용 메서드

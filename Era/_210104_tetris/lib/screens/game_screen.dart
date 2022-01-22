@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pausable_timer/pausable_timer.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/constants/blockColor.dart';
 import 'package:tetris/constants/constants.dart';
@@ -22,8 +24,9 @@ class _GameScreenState extends State<GameScreen> {
   final Color bgTileColor = Colors.grey.shade700;
 
   TTBoard ttBoard = TTBoard();
-  Timer? _timer;
+  PausableTimer? _timer;
   bool _isFlikering = false;
+  bool _isPaused = false;
 
   GlobalKey<ShakeWidgetState> shakeKey = GlobalKey();
 
@@ -55,18 +58,27 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
-  // 게임시작 전 Dialog
-  void _showGameStartDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return GameDialog(title: 'Let\'s play', btnText: 'Start', onPressed: () => _startGame(reset: true));
-      },
-    );
+  // 블록 자동 이동 타이머 개시
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = PausableTimer(ttBoard.getSpeed, () {
+      bool result = ttBoard.moveDown();
+
+      // 이동에 성공하면 화면에 반영하고 탈출
+      if (result) {
+        setState(() {});
+        _timer!
+          ..reset()
+          ..start();
+        return;
+      } else {
+        _fixingBlockPosition();
+      }
+    })
+      ..start();
   }
 
-  // 다음 레벨 도전
+  // 다음 레벨 이동
   void _showNextLevelDialog() {
     showDialog(
       context: context,
@@ -88,25 +100,9 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
-  // 블록 자동 이동 타이머 개시
-  void _startTimer() {
-    if (_timer == null ? false : _timer!.isActive) _timer!.cancel();
-
-    _timer = Timer.periodic(ttBoard.getSpeed, (timer) {
-      bool result = ttBoard.moveDown();
-
-      // 이동에 성공하면 화면에 반영하고 탈출
-      if (result) {
-        setState(() {});
-        return;
-      } else {
-        _fixingBlockPosition();
-      }
-    });
-  }
-
   // 블록 이동
   bool _movenRotate(String direction) {
+    if (ttBoard.getCurrentId == null) return false;
     bool isChanged = false;
     switch (direction) {
       case 'LEFT':
@@ -182,27 +178,36 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
+  // 일시정지,재개 처리
+  void _pauseControll(bool isPausing) {
+    // 일시정지 처리
+    if (isPausing) {
+      // 블록 자동이동 timer 일시정지
+      _timer?.pause();
+      // ttboard의 플레이타임 타이머 일시정지
+      ttBoard.pauseGame();
+      setState(() {
+        _isPaused = true;
+      });
+    }
+    // 게임 재개 처리
+    else {
+      _isPaused = false;
+      // 블록 자동이동 타이머 재개
+      _timer?.start();
+      // ttboard의 플레이타임 타이머 재개
+      ttBoard.resumeGame();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppStyle.bgColor,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.person,
-              color: Colors.white,
-            ),
-          )
-        ],
-      ),
+      appBar: buildAppBar(),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 60, vertical: 0),
+        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         decoration: BoxDecoration(
           image: DecorationImage(image: AssetImage('assets/images/bg01.png'), fit: BoxFit.cover),
         ),
@@ -211,33 +216,46 @@ class _GameScreenState extends State<GameScreen> {
             Spacer(),
             // 상단 상태 패널
             Container(
+              padding: EdgeInsets.symmetric(horizontal: 60),
               height: 70,
-              width: double.infinity,
+              // width: double.infinity,
               // color: Colors.blueGrey,
               child: buildTopPanel(),
             ),
             SizedBox(height: 6),
             // 메인 게임 패널
-            SwipeController(
-              child: buildTetrisPanel(),
-              onTap: () => _movenRotate('ROTATE'),
-              onSwipeLeft: (int steps) {
-                for (int i = 0; i < steps; i++) {
-                  _movenRotate('LEFT');
-                }
-              },
-              onSwipeRight: (int steps) {
-                for (int i = 0; i < steps; i++) {
-                  _movenRotate('RIGHT');
-                }
-              },
-              onSwipeUp: () => _holdBlock(),
-              onSwipeDown: (int steps) {
-                for (int i = 0; i < steps; i++) {
-                  _movenRotate('DOWN');
-                }
-              },
-              onSwipeDrop: () => _dropBlock(),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SizedBox(width: 60),
+                Expanded(
+                  child: SwipeController(
+                    child: buildTetrisPanel(),
+                    onTap: () => _movenRotate('ROTATE'),
+                    onSwipeLeft: (int steps) {
+                      for (int i = 0; i < steps; i++) {
+                        _movenRotate('LEFT');
+                      }
+                    },
+                    onSwipeRight: (int steps) {
+                      for (int i = 0; i < steps; i++) {
+                        _movenRotate('RIGHT');
+                      }
+                    },
+                    onSwipeUp: () => _holdBlock(),
+                    onSwipeDown: (int steps) {
+                      for (int i = 0; i < steps; i++) {
+                        _movenRotate('DOWN');
+                      }
+                    },
+                    onSwipeDrop: () => _dropBlock(),
+                  ),
+                ),
+                SizedBox(
+                  width: 60,
+                  child: buildPauseControll(),
+                ),
+              ],
             ),
             Spacer(),
           ],
@@ -246,6 +264,26 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
+  // 투명 AppBar Build
+  AppBar buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      automaticallyImplyLeading: false,
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(
+            FontAwesomeIcons.cog,
+            size: 18,
+            color: Colors.white,
+          ),
+        )
+      ],
+    );
+  }
+
+  // 상태 화면 Build
   Widget buildTopPanel() {
     Color previewBgColor = Colors.pinkAccent.withOpacity(.2);
     String timerText = ttBoard.getTotalElapsed.inMinutes.remainder(60).toString().padLeft(2, '0') +
@@ -377,29 +415,27 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
-  // 조작 화면 Build
-  Widget buildControlPanel() {
-    return Container(
-      color: Colors.grey,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Score'),
-              Text('${ttBoard.getScore}',
-                  style: TextStyle(fontSize: 22, color: Colors.yellow, fontWeight: FontWeight.bold)),
-            ],
-          ),
-          CircleButton(color: Colors.blue, child: Icon(Icons.arrow_back), onPressed: () => _movenRotate('LEFT')),
-          CircleButton(color: Colors.blue, child: Icon(Icons.refresh), onPressed: () => _movenRotate('ROTATE')),
-          CircleButton(color: Colors.blue, child: Icon(Icons.arrow_forward), onPressed: () => _movenRotate('RIGHT')),
-          CircleButton(color: Colors.blue, child: Icon(Icons.arrow_downward), onPressed: () => _movenRotate('DOWN')),
-          CircleButton(color: Colors.pinkAccent, child: Text('D'), onPressed: () => _dropBlock()),
-          CircleButton(color: Colors.pinkAccent, child: Text('H'), onPressed: () => _holdBlock()),
-        ],
+  // 일시정지 아이콘 Build
+  Widget buildPauseControll() {
+    return IconButton(
+      icon: Icon(
+        _isPaused ? FontAwesomeIcons.play : FontAwesomeIcons.pause,
+        color: Colors.white,
+        size: 16,
       ),
+      onPressed: () {
+        // 타이머들 일시 정지
+        _pauseControll(true);
+
+        // 일시정지 다이얼로그 노출
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return GameDialog(title: 'P A S U E D', btnText: 'Restart', onPressed: () => _pauseControll(false));
+          },
+        );
+      },
     );
   }
 }

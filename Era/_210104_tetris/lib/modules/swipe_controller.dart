@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SwipeController extends StatelessWidget {
-  SwipeController(
+class SwipeController extends StatefulWidget {
+  const SwipeController(
       {Key? key,
       required this.child,
       required this.onTap,
@@ -19,60 +19,81 @@ class SwipeController extends StatelessWidget {
   final Function(int) onSwipeRight;
   final Function() onSwipeDrop;
 
+  static const double xAxisThreadhold = 30.0;
+  static const double yAxisThreadhold = 20.0;
+  static const double dropSpeedThreadhold = 1.0;
+
+  @override
+  State<SwipeController> createState() => _SwipeControllerState();
+}
+
+class _SwipeControllerState extends State<SwipeController> {
   int verticalMilliseconds = 0;
-  double verticalDistance = 0.0;
-  double horizontalDistance = 0.0;
+  int verticalMovedSteps = 0;
+  double verticalSwipeDistance = 0.0;
+  int horizontalMovedSteps = 0;
+  double horizontalSwipeDistance = 0.0;
+  bool isSwipeDone = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: child,
-      onTap: () {
-        // print('OnTap');
-        onTap();
-      },
+      child: widget.child,
+      onTap: widget.onTap,
       onHorizontalDragStart: (DragStartDetails details) {
-        horizontalDistance = 0.0;
+        isSwipeDone = false;
+        horizontalMovedSteps = 0;
+        horizontalSwipeDistance = 0;
       },
       onHorizontalDragUpdate: (DragUpdateDetails details) {
-        horizontalDistance += details.delta.dx;
-      },
-      onHorizontalDragEnd: (DragEndDetails details) {
-        int steps = (horizontalDistance.toInt() ~/ 70).abs() + 1;
-
-        if (horizontalDistance < 0) {
-          // print('onSwipeLeft($steps) -- $horizontalDistance');
-          onSwipeLeft(steps);
-        } else {
-          // print('onSwipeRight($steps) -- $horizontalDistance');
-          onSwipeRight(steps);
+        if (isSwipeDone) return;
+        horizontalSwipeDistance += details.delta.dx;
+        int steps = horizontalSwipeDistance.abs() ~/ SwipeController.xAxisThreadhold;
+        if (steps > horizontalMovedSteps) {
+          if (horizontalSwipeDistance > 0) {
+            widget.onSwipeRight(steps - horizontalMovedSteps);
+          } else {
+            widget.onSwipeLeft(steps - horizontalMovedSteps);
+          }
+          horizontalMovedSteps = steps;
         }
       },
+      onHorizontalDragEnd: (DragEndDetails details) {},
       onVerticalDragStart: (DragStartDetails details) {
+        isSwipeDone = false;
+        verticalMovedSteps = 0;
+        verticalSwipeDistance = 0.0;
         verticalMilliseconds = DateTime.now().millisecondsSinceEpoch;
-        verticalDistance = 0.0;
       },
       onVerticalDragUpdate: (DragUpdateDetails details) {
-        verticalDistance += details.delta.dy;
-      },
-      onVerticalDragEnd: (DragEndDetails details) {
-        double speed = verticalDistance / (DateTime.now().millisecondsSinceEpoch - verticalMilliseconds);
+        if (isSwipeDone) return;
+        verticalSwipeDistance += details.delta.dy;
+        int steps = verticalSwipeDistance.abs() ~/ SwipeController.yAxisThreadhold;
 
-        int steps = (verticalDistance.toInt() ~/ 50).abs() + 1;
+        // 아래 방향으로 일정 속도 이상이면 Drop 처리
+        int elapsed = DateTime.now().millisecondsSinceEpoch - verticalMilliseconds;
+        double speed = verticalSwipeDistance / (DateTime.now().millisecondsSinceEpoch - verticalMilliseconds);
+        if (verticalSwipeDistance > 0 && speed > SwipeController.dropSpeedThreadhold) {
+          // print('Distance $verticalSwipeDistance / ${elapsed}ms  =>  Speed ${speed.toStringAsFixed(5)}');
+          isSwipeDone = true;
+          widget.onSwipeDrop();
+        }
+        // 아래로 움직인 거리와, 위로 움직였을 경우 처리
+        else {
+          if (steps > verticalMovedSteps) {
+            // print('Distance $verticalSwipeDistance / ${elapsed}ms  =>  Speed ${speed.toStringAsFixed(5)}');
 
-        // print('$speed => $steps => $verticalDistance');
-
-        if (verticalDistance < 0) {
-          // print('onSwipeUp() => $verticalDistance');
-          onSwipeUp();
-        } else if (speed > 0.5) {
-          // print('onSwipeDrop($steps) => $verticalDistance');
-          onSwipeDrop();
-        } else {
-          // print('onSwipeDown($steps) => $verticalDistance');
-          onSwipeDown(steps);
+            if (verticalSwipeDistance > 0) {
+              widget.onSwipeDown(steps - verticalMovedSteps);
+            } else {
+              isSwipeDone = true;
+              widget.onSwipeUp();
+            }
+            verticalMovedSteps = steps;
+          }
         }
       },
+      onVerticalDragEnd: (DragEndDetails details) {},
     );
   }
 }
