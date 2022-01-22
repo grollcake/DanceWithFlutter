@@ -202,12 +202,13 @@ class _GameScreenState extends State<GameScreen> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 60, vertical: 70),
+        padding: EdgeInsets.symmetric(horizontal: 60, vertical: 0),
         decoration: BoxDecoration(
           image: DecorationImage(image: AssetImage('assets/images/bg01.png'), fit: BoxFit.cover),
         ),
         child: Column(
           children: [
+            Spacer(),
             // 상단 상태 패널
             Container(
               height: 70,
@@ -238,6 +239,7 @@ class _GameScreenState extends State<GameScreen> {
               },
               onSwipeDrop: () => _dropBlock(),
             ),
+            Spacer(),
           ],
         ),
       ),
