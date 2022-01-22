@@ -95,7 +95,7 @@ class _GameScreenState extends State<GameScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return GameDialog(title: 'Game end', btnText: 'Restart', onPressed: () => _startGame(reset: true));
+        return GameDialog(title: 'G A M E  E N D', btnText: 'Restart', onPressed: () => _startGame(reset: true));
       },
     );
   }
@@ -202,64 +202,75 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppStyle.bgColor,
-      extendBodyBehindAppBar: true,
-      appBar: buildAppBar(),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-        decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage('assets/images/bg01.png'), fit: BoxFit.cover),
-        ),
-        child: Column(
-          children: [
-            Spacer(),
-            // 상단 상태 패널
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 60),
-              height: 70,
-              // width: double.infinity,
-              // color: Colors.blueGrey,
-              child: buildTopPanel(),
-            ),
-            SizedBox(height: 6),
-            // 메인 게임 패널
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                SizedBox(width: 60),
-                Expanded(
-                  child: SwipeController(
-                    child: buildTetrisPanel(),
-                    onTap: () => _movenRotate('ROTATE'),
-                    onSwipeLeft: (int steps) {
-                      for (int i = 0; i < steps; i++) {
-                        _movenRotate('LEFT');
-                      }
-                    },
-                    onSwipeRight: (int steps) {
-                      for (int i = 0; i < steps; i++) {
-                        _movenRotate('RIGHT');
-                      }
-                    },
-                    onSwipeUp: () => _holdBlock(),
-                    onSwipeDown: (int steps) {
-                      for (int i = 0; i < steps; i++) {
-                        _movenRotate('DOWN');
-                      }
-                    },
-                    onSwipeDrop: () => _dropBlock(),
-                  ),
+    return WillPopScope(
+      onWillPop: () async {
+        print('Back button disabled');
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: AppStyle.bgColor,
+        extendBodyBehindAppBar: true,
+        appBar: buildAppBar(),
+        body: buildBody(),
+      ),
+    );
+  }
+
+  // 메인 게임화면 레이아웃
+  Widget buildBody() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage('assets/images/bg01.png'), fit: BoxFit.cover),
+      ),
+      child: Column(
+        children: [
+          Spacer(),
+          // 상단 상태 패널
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 60),
+            height: 70,
+            // width: double.infinity,
+            // color: Colors.blueGrey,
+            child: buildTopPanel(),
+          ),
+          SizedBox(height: 6),
+          // 메인 게임 패널
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              SizedBox(width: 60),
+              Expanded(
+                child: SwipeController(
+                  child: buildTetrisPanel(),
+                  onTap: () => _movenRotate('ROTATE'),
+                  onSwipeLeft: (int steps) {
+                    for (int i = 0; i < steps; i++) {
+                      _movenRotate('LEFT');
+                    }
+                  },
+                  onSwipeRight: (int steps) {
+                    for (int i = 0; i < steps; i++) {
+                      _movenRotate('RIGHT');
+                    }
+                  },
+                  onSwipeUp: () => _holdBlock(),
+                  onSwipeDown: (int steps) {
+                    for (int i = 0; i < steps; i++) {
+                      _movenRotate('DOWN');
+                    }
+                  },
+                  onSwipeDrop: () => _dropBlock(),
                 ),
-                SizedBox(
-                  width: 60,
-                  child: buildPauseControll(),
-                ),
-              ],
-            ),
-            Spacer(),
-          ],
-        ),
+              ),
+              SizedBox(
+                width: 60,
+                child: buildPauseControll(),
+              ),
+            ],
+          ),
+          Spacer(),
+        ],
       ),
     );
   }
@@ -432,7 +443,7 @@ class _GameScreenState extends State<GameScreen> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return GameDialog(title: 'P A S U E D', btnText: 'Restart', onPressed: () => _pauseControll(false));
+            return GameDialog(title: 'P A U S E D', btnText: 'Restart', onPressed: () => _pauseControll(false));
           },
         );
       },
