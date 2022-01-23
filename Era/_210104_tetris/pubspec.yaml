@@ -37,6 +37,7 @@ dependencies:
   animate_do: ^2.1.0
   font_awesome_flutter: ^9.2.0
   pausable_timer: ^1.0.0+3
+  url_launcher: ^6.0.18
 
 dev_dependencies:
   flutter_test:

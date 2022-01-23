@@ -4,3 +4,4 @@ const bool kShowShadowBlock = true; // 드랍 위치 가이드 블록 표시여�
 const int kCleansForLevel = 10; // 한 레벨당 지워야 할 줄 수
 const Duration kInitalSpeed = Duration(milliseconds: 1000); // 초기 게임 속도
 const double kSpeedUpForLevel = 0.2; // 레벨업 할때마다 증가시킬 속도값 %
+const String kGithubUrl = 'https://github.com/grollcake/DanceWithFlutter/tree/master/Era/_210104_tetris';

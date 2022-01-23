@@ -11,6 +11,7 @@ import 'package:tetris/modules/shaker_widget.dart';
 import 'package:tetris/modules/swipe_controller.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
 import 'package:tetris/screens/widgets/mini_block.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -281,6 +282,12 @@ class _GameScreenState extends State<GameScreen> {
       elevation: 0.0,
       automaticallyImplyLeading: false,
       actions: [
+        IconButton(
+          onPressed: () async {
+            if (!await launch(kGithubUrl)) throw 'Could not launch $kGithubUrl';
+          },
+          icon: Icon(FontAwesomeIcons.code, size: 18, color: Colors.white),
+        ),
         IconButton(
           onPressed: () {
             // 타이머들 일시 정지
