@@ -35,11 +35,13 @@ import 'package:tetris/screens/intro_screen.dart';
 // Done pause 구현
 // Done 뒤로가기 버튼 비활성화
 // Done 앱 아이콘 제작
-// todo App 정보 페이지
-// todo 블록 회전 후 위치 조정 (기준점과의 거리를 계산으로 최적 위치 선정)
+// todo App 정보 페이지 -> github 연결
+// todo (설정화면) 컬러테마 선택
+// todo (설정화면) 블록모양 선택
+// todo (설정화면) 스와이프 감도 설정 화면 구현 (미니 블록으로 직접 스와이핑 하면서 감도 설정)
 // todo 타일을 더 이쁘게 그리기 위해 별도 위젯(TTTile)으로 분리
+// todo 블록 회전 후 위치 조정 (기준점과의 거리를 계산으로 최적 위치 선정)
 // todo 블록 down, drop 시 트랜지션(애니메이션) 처리
-// todo 스와이프 감도 설정 화면 구현 (미니 블록으로 직접 스와이핑 하면서 감도 설정)
 // todo 효과음 추가
 // todo 배경음악 추가
 // todo 점수판 구현 (파이어스토어)
