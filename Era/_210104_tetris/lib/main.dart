@@ -34,7 +34,7 @@ import 'package:tetris/screens/intro_screen.dart';
 // Done SwipeDown을 연속으로 하는 경우 빠르게 불록이 나타났다 사라지는 현상 수정
 // Done pause 구현
 // Done 뒤로가기 버튼 비활성화
-// todo 앱 아이콘 제작
+// Done 앱 아이콘 제작
 // todo App 정보 페이지
 // todo 블록 회전 후 위치 조정 (기준점과의 거리를 계산으로 최적 위치 선정)
 // todo 타일을 더 이쁘게 그리기 위해 별도 위젯(TTTile)으로 분리

@@ -82,6 +82,8 @@ void rescanProjects() async {
   var shell = Shell(workingDirectory: PROJECT_ROOT, throwOnError: false);
   await shell.run('''
 
+    echo git checkout *
+    git checkout *
     echo git pull
     git pull
   ''');
