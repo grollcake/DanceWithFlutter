@@ -35,6 +35,8 @@ import 'package:tetris/screens/intro_screen.dart';
 // Done pause 구현
 // Done 뒤로가기 버튼 비활성화
 // Done 앱 아이콘 제작
+// Done (오류수정) Hold 후 그림자 블록이 예전 모양으로 잠시 나타나는 문제 수정
+// Done (개선) 스와이프 반응성 개선
 // todo App 정보 페이지 -> github 연결
 // todo (설정화면) 컬러테마 선택
 // todo (설정화면) 블록모양 선택

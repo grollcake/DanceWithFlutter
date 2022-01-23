@@ -19,8 +19,8 @@ class SwipeController extends StatefulWidget {
   final Function(int) onSwipeRight;
   final Function() onSwipeDrop;
 
-  static const double xAxisThreadhold = 30.0;
-  static const double yAxisThreadhold = 20.0;
+  static const double xAxisThreadhold = 40.0;
+  static const double yAxisThreadhold = 30.0;
   static const double dropSpeedThreadhold = 1.0;
 
   @override
@@ -49,7 +49,10 @@ class _SwipeControllerState extends State<SwipeController> {
         if (isSwipeDone) return;
         horizontalSwipeDistance += details.delta.dx;
         int steps = horizontalSwipeDistance.abs() ~/ SwipeController.xAxisThreadhold;
-        if (steps > horizontalMovedSteps) {
+        if (horizontalMovedSteps == 0 || steps > horizontalMovedSteps) {
+          if (steps == 0) {
+            steps = 1;
+          }
           if (horizontalSwipeDistance > 0) {
             widget.onSwipeRight(steps - horizontalMovedSteps);
           } else {
@@ -71,7 +74,6 @@ class _SwipeControllerState extends State<SwipeController> {
         int steps = verticalSwipeDistance.abs() ~/ SwipeController.yAxisThreadhold;
 
         // 아래 방향으로 일정 속도 이상이면 Drop 처리
-        int elapsed = DateTime.now().millisecondsSinceEpoch - verticalMilliseconds;
         double speed = verticalSwipeDistance / (DateTime.now().millisecondsSinceEpoch - verticalMilliseconds);
         if (verticalSwipeDistance > 0 && speed > SwipeController.dropSpeedThreadhold) {
           // print('Distance $verticalSwipeDistance / ${elapsed}ms  =>  Speed ${speed.toStringAsFixed(5)}');
@@ -80,9 +82,12 @@ class _SwipeControllerState extends State<SwipeController> {
         }
         // 아래로 움직인 거리와, 위로 움직였을 경우 처리
         else {
-          if (steps > verticalMovedSteps) {
+          if (verticalMovedSteps == 0 || steps > verticalMovedSteps) {
             // print('Distance $verticalSwipeDistance / ${elapsed}ms  =>  Speed ${speed.toStringAsFixed(5)}');
 
+            if (verticalMovedSteps == 0) {
+              steps = 1;
+            }
             if (verticalSwipeDistance > 0) {
               widget.onSwipeDown(steps - verticalMovedSteps);
             } else {

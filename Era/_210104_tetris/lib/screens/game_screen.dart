@@ -282,9 +282,27 @@ class _GameScreenState extends State<GameScreen> {
       automaticallyImplyLeading: false,
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            // 타이머들 일시 정지
+            _pauseControll(true);
+
+            // 일시정지 다이얼로그 노출
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return GameDialog(
+                  title: 'TETRIS by Era',
+                  content:
+                      Text('Toy project just for fun & study', style: TextStyle(fontSize: 14, color: Colors.white)),
+                  btnText: 'Close',
+                  onPressed: () => _pauseControll(false),
+                );
+              },
+            );
+          },
           icon: Icon(
-            FontAwesomeIcons.cog,
+            FontAwesomeIcons.info,
             size: 18,
             color: Colors.white,
           ),

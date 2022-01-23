@@ -3,10 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class GameDialog extends StatelessWidget {
-  const GameDialog({Key? key, required this.onPressed, required this.title, required this.btnText}) : super(key: key);
+  const GameDialog({Key? key, required this.onPressed, required this.title, required this.btnText, this.content})
+      : super(key: key);
   final String title;
   final String btnText;
   final Function onPressed;
+  final Widget? content;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class GameDialog extends StatelessWidget {
                     style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
-                // content: Text('Just for fun'),
+                content: content,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(borderRadius),
                   side: BorderSide(width: 1.5, color: Colors.white.withOpacity(0.3)),

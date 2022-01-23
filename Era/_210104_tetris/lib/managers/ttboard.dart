@@ -177,6 +177,7 @@ class TTBoard {
       TTBlockID? _tempBlockId = _holdId;
       _holdId = _block!.id;
       _block = TTBlock(_tempBlockId!);
+      _calcShadowBlockCoords();
     }
     _holdUsed = true;
     return true;
