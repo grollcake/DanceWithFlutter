@@ -28,7 +28,7 @@ class TTBoard {
 
   TTBoard() {
     reset();
-    _makeTestBlocks();
+    // _makeTestBlocks();
   }
 
   // Getter
