@@ -9,7 +9,6 @@ import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/modules/shaker_widget.dart';
 import 'package:tetris/modules/swipe_controller.dart';
-import 'package:tetris/screens/widgets/circle_button.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
 import 'package:tetris/screens/widgets/mini_block.dart';
 
@@ -443,7 +442,7 @@ class _GameScreenState extends State<GameScreen> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return GameDialog(title: 'P A U S E D', btnText: 'Restart', onPressed: () => _pauseControll(false));
+            return GameDialog(title: 'P A U S E D', btnText: 'Resume', onPressed: () => _pauseControll(false));
           },
         );
       },
