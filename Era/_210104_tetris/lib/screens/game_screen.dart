@@ -9,6 +9,7 @@ import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/modules/shaker_widget.dart';
 import 'package:tetris/modules/swipe_controller.dart';
+import 'package:tetris/screens/settings_screen.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
 import 'package:tetris/screens/widgets/mini_block.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -284,7 +285,11 @@ class _GameScreenState extends State<GameScreen> {
       actions: [
         IconButton(
           onPressed: () async {
-            if (!await launch(kGithubUrl)) throw 'Could not launch $kGithubUrl';
+            if (!await launch(
+              kGithubUrl,
+              forceSafariVC: false,
+              forceWebView: false,
+            )) throw 'Could not launch $kGithubUrl';
           },
           icon: Icon(FontAwesomeIcons.code, size: 18, color: Colors.white),
         ),
@@ -313,14 +318,13 @@ class _GameScreenState extends State<GameScreen> {
             size: 18,
             color: Colors.white,
           ),
-        )
+        ),
       ],
     );
   }
 
   // 상태 화면 Build
   Widget buildTopPanel() {
-    Color previewBgColor = Colors.pinkAccent.withOpacity(.2);
     String timerText = ttBoard.getTotalElapsed.inMinutes.remainder(60).toString().padLeft(2, '0') +
         ':' +
         ttBoard.getTotalElapsed.inSeconds.remainder(60).toString().padLeft(2, '0');
@@ -328,20 +332,7 @@ class _GameScreenState extends State<GameScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          width: 50,
-          padding: EdgeInsets.all(6),
-          decoration: BoxDecoration(
-              color: previewBgColor,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('HOLD', style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
-              Expanded(child: MiniBlock(blockID: ttBoard.getHoldId, size: 10, color: Colors.white)),
-            ],
-          ),
-        ),
+        PreviewPanel(title: 'HOLD', blockId: ttBoard.getHoldId),
         Expanded(
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 5, vertical: 16),
@@ -378,20 +369,7 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
         ),
-        Container(
-          width: 50,
-          padding: EdgeInsets.all(6),
-          decoration: BoxDecoration(
-              color: previewBgColor,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('NEXT', style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
-              Expanded(child: MiniBlock(blockID: ttBoard.getNextId, size: 10, color: Colors.white)),
-            ],
-          ),
-        ),
+        PreviewPanel(title: 'NEXT', blockId: ttBoard.getNextId),
       ],
     );
   }
@@ -471,6 +449,35 @@ class _GameScreenState extends State<GameScreen> {
           },
         );
       },
+    );
+  }
+}
+
+class PreviewPanel extends StatelessWidget {
+  const PreviewPanel({
+    Key? key,
+    required this.blockId,
+    required this.title,
+  }) : super(key: key);
+
+  final String title;
+  final TTBlockID? blockId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 50,
+      padding: EdgeInsets.all(6),
+      decoration: BoxDecoration(
+          color: Colors.pinkAccent.withOpacity(.2),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14))),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(title, style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
+          Expanded(child: MiniBlock(blockID: blockId, size: 10, color: Colors.white)),
+        ],
+      ),
     );
   }
 }
