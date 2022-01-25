@@ -40,6 +40,7 @@ import 'package:tetris/screens/intro_screen.dart';
 // Done App에 github 연결 아이콘 추가
 // todo (설정화면) 컬러테마 선택
 // todo (설정화면) 블록모양 선택
+// todo (설정화면) 배경이미지 선택
 // todo (설정화면) 스와이프 감도 설정 화면 구현 (미니 블록으로 직접 스와이핑 하면서 감도 설정)
 // todo 타일을 더 이쁘게 그리기 위해 별도 위젯(TTTile)으로 분리
 // todo 블록 회전 후 위치 조정 (기준점과의 거리를 계산으로 최적 위치 선정)
