@@ -39,7 +39,6 @@ class _IntroScreenState extends State<IntroScreen> {
             Colors.black.withOpacity(0.5),
           ],
         ),
-        // color: Colors.blueGrey.shade800,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -59,11 +58,11 @@ class _IntroScreenState extends State<IntroScreen> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => GameScreen()));
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.yellowAccent,
+                  primary: AppStyle.accentColor,
                 ),
                 child: Text(
                   'P L A Y',
-                  style: TextStyle(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20, color: AppStyle.darkTextColor, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

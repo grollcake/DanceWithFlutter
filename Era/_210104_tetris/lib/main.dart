@@ -62,7 +62,6 @@ class TetrisApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: AppStyle.bgColor,
-        primarySwatch: Colors.blueGrey,
       ),
       home: IntroScreen(),
     );

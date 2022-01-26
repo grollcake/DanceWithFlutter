@@ -291,7 +291,7 @@ class _GameScreenState extends State<GameScreen> {
               forceWebView: false,
             )) throw 'Could not launch $kGithubUrl';
           },
-          icon: Icon(FontAwesomeIcons.code, size: 18, color: Colors.white),
+          icon: Icon(FontAwesomeIcons.code, size: 18, color: AppStyle.lightTextColor),
         ),
         IconButton(
           onPressed: () async {
@@ -318,7 +318,7 @@ class _GameScreenState extends State<GameScreen> {
           icon: Icon(
             FontAwesomeIcons.info,
             size: 18,
-            color: Colors.white,
+            color: AppStyle.lightTextColor,
           ),
         ),
       ],
@@ -345,9 +345,9 @@ class _GameScreenState extends State<GameScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text('Score', style: TextStyle(fontSize: 12, color: Colors.white)),
+                      Text('Score', style: TextStyle(fontSize: 12, color: AppStyle.lightTextColor)),
                       Text(ttBoard.getScore.toString(),
-                          style: TextStyle(fontSize: 16, color: Colors.yellowAccent, fontWeight: FontWeight.bold)),
+                          style: TextStyle(fontSize: 16, color: AppStyle.accentColor, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -355,15 +355,15 @@ class _GameScreenState extends State<GameScreen> {
                   width: 40,
                   child: Center(
                       child: Text(ttBoard.getLevel.toString(),
-                          style: TextStyle(fontSize: 40, color: Colors.yellowAccent, fontWeight: FontWeight.bold))),
+                          style: TextStyle(fontSize: 40, color: AppStyle.accentColor, fontWeight: FontWeight.bold))),
                 ),
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text('Time', style: TextStyle(fontSize: 12, color: Colors.white)),
+                      Text('Time', style: TextStyle(fontSize: 12, color: AppStyle.lightTextColor)),
                       Text(timerText,
-                          style: TextStyle(fontSize: 16, color: Colors.yellowAccent, fontWeight: FontWeight.bold)),
+                          style: TextStyle(fontSize: 16, color: AppStyle.accentColor, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -384,7 +384,7 @@ class _GameScreenState extends State<GameScreen> {
         padding: EdgeInsets.all(2),
         color: Colors.white,
         child: Container(
-          color: AppStyle.bgColor.withOpacity(0.9),
+          color: AppStyle.bgColor,
           child: MediaQuery.removePadding(
             removeTop: true,
             context: context,
@@ -402,7 +402,7 @@ class _GameScreenState extends State<GameScreen> {
                 int gridX = index % kTetrisMatrixWidth;
                 int gridY = index ~/ kTetrisMatrixWidth;
 
-                Color color = AppStyle.bgColor.withOpacity(0.4);
+                Color color = AppStyle.bgColorAccent;
 
                 TTBlockID? id = ttBoard.getBlockId(gridX, gridY);
                 if (id != null) {
@@ -413,7 +413,7 @@ class _GameScreenState extends State<GameScreen> {
 
                     // Drop될 위치의 미리보기 블록은 흐릿하게 표시
                     if (ttBoard.getBlockStatus(gridX, gridY) == TTBlockStatus.preivew) {
-                      color = color.withOpacity(0.15);
+                      color = color.withOpacity(0.20);
                     }
                   }
                 }
@@ -435,7 +435,7 @@ class _GameScreenState extends State<GameScreen> {
     return IconButton(
       icon: Icon(
         _isPaused ? FontAwesomeIcons.play : FontAwesomeIcons.pause,
-        color: Colors.white,
+        color: AppStyle.lightTextColor,
         size: 16,
       ),
       onPressed: () {
@@ -471,7 +471,7 @@ class PreviewPanel extends StatelessWidget {
       width: 50,
       padding: EdgeInsets.all(6),
       decoration: BoxDecoration(
-          color: Colors.pinkAccent.withOpacity(.2),
+          color: AppStyle.secondaryColor.withOpacity(.2),
           borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
