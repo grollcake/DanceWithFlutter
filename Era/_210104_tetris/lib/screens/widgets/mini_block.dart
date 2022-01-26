@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tetris/managers/ttblock.dart';
 import 'package:tetris/models/enums.dart';
+import 'package:tetris/screens/widgets/tttile.dart';
 
 class MiniBlock extends StatelessWidget {
   MiniBlock({Key? key, this.blockID, this.size = 10, this.color = Colors.yellowAccent}) : super(key: key);

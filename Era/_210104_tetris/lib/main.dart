@@ -38,8 +38,8 @@ import 'package:tetris/screens/intro_screen.dart';
 // Done (오류수정) Hold 후 그림자 블록이 예전 모양으로 잠시 나타나는 문제 수정
 // Done (개선) 스와이프 반응성 개선
 // Done App에 github 연결 아이콘 추가
-// todo (설정화면) 컬러테마 선택
-// todo (설정화면) 블록모양 선택
+// Done (설정화면) 컬러테마 선택
+// Done (설정화면) 블록모양 선택
 // todo (설정화면) 배경이미지 선택
 // todo (설정화면) 스와이프 감도 설정 화면 구현 (미니 블록으로 직접 스와이핑 하면서 감도 설정)
 // todo 타일을 더 이쁘게 그리기 위해 별도 위젯(TTTile)으로 분리

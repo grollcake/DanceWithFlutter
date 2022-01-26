@@ -242,7 +242,7 @@ class TTBoard {
     }
     if (_shadowBlockCoords != null) {
       for (TTCoord coord in _shadowBlockCoords!) {
-        if (coord.x == x && coord.y == y) return TTBlockStatus.preivew;
+        if (coord.x == x && coord.y == y) return TTBlockStatus.shadow;
       }
     }
 

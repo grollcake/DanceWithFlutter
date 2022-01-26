@@ -12,6 +12,7 @@ import 'package:tetris/modules/swipe_controller.dart';
 import 'package:tetris/screens/settings_screen.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
 import 'package:tetris/screens/widgets/mini_block.dart';
+import 'package:tetris/screens/widgets/tttile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class GameScreen extends StatefulWidget {
@@ -303,16 +304,10 @@ class _GameScreenState extends State<GameScreen> {
               context: context,
               barrierDismissible: false,
               builder: (BuildContext context) {
-                // return GameDialog(
-                //   title: 'TETRIS by Era',
-                //   content:
-                //       Text('Toy project just for fun & study', style: TextStyle(fontSize: 14, color: Colors.white)),
-                //   btnText: 'Close',
-                //   onPressed: () => _pauseControll(false),
-                // );
                 return SettingsScreen();
               },
             );
+            setState(() {});
             _pauseControll(false);
           },
           icon: Icon(
@@ -395,33 +390,23 @@ class _GameScreenState extends State<GameScreen> {
               // itemCount: kTetrisMatrixWidth,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: kTetrisMatrixWidth,
-                crossAxisSpacing: 0.5,
-                mainAxisSpacing: 0.5,
+                crossAxisSpacing: 1.0,
+                mainAxisSpacing: 1.0,
               ),
               itemBuilder: (BuildContext context, int index) {
                 int gridX = index % kTetrisMatrixWidth;
                 int gridY = index ~/ kTetrisMatrixWidth;
 
-                Color color = AppStyle.bgColorAccent;
+                TTBlockID? blockId = ttBoard.getBlockId(gridX, gridY);
+                TTBlockStatus blockStatus = ttBoard.getBlockStatus(gridX, gridY);
 
-                TTBlockID? id = ttBoard.getBlockId(gridX, gridY);
-                if (id != null) {
-                  if (_isFlikering && ttBoard.isCompletedTile(gridX, gridY)) {
-                    color = bgTileColor;
-                  } else {
-                    color = getBlockColor(id);
-
-                    // Drop될 위치의 미리보기 블록은 흐릿하게 표시
-                    if (ttBoard.getBlockStatus(gridX, gridY) == TTBlockStatus.preivew) {
-                      color = color.withOpacity(0.20);
-                    }
-                  }
+                if (blockId == null || (_isFlikering && blockStatus == TTBlockStatus.completed)) {
+                  return Container(
+                    color: AppStyle.bgColorAccent,
+                  );
                 }
 
-                return Container(
-                  margin: EdgeInsets.all(0.5),
-                  color: color,
-                );
+                return TTTile(blockId: blockId, status: blockStatus);
               },
             ),
           ),

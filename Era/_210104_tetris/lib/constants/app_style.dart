@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tetris/models/enums.dart';
+import 'package:tetris/screens/widgets/tttile.dart';
 
 class AppStyle {
   // 기본 색상 테마
@@ -14,6 +15,7 @@ class AppStyle {
   // 테트리스 블록 색상 테마
   static int colorSetId = 0;
   static List<List<Color>> colorSets = [
+    // Color set #1
     [
       Colors.red.shade400,
       Colors.orange.shade400,
@@ -22,42 +24,57 @@ class AppStyle {
       Colors.blue.shade400,
       Colors.indigo.shade400,
       Colors.purple.shade400
+    ],
+    [
+      Color(0xff8ecae6),
+      Color(0xff219ebc),
+      Color(0xff126782),
+      Color(0xff023047),
+      Color(0xffffb703),
+      Color(0xfffd9e02),
+      Color(0xfffb8500)
+    ],
+    [
+      Color(0xff84e3c8),
+      Color(0xffa8e6cf),
+      Color(0xffdcedc1),
+      Color(0xffffd3b6),
+      Color(0xffffaaa5),
+      Color(0xffff8b94),
+      Color(0xffff7480)
+    ],
+    [
+      Color(0xfff26b21),
+      Color(0xfff78e31),
+      Color(0xfffbb040),
+      Color(0xfffcec52),
+      Color(0xffcbdb47),
+      Color(0xff99ca3c),
+      Color(0xff208b3a)
+    ],
+    [
+      Color(0xfff3eaf9),
+      Color(0xfff1e3fc),
+      Color(0xffecd6fc),
+      Color(0xffe9ccfc),
+      Color(0xffe6c1ff),
+      Color(0xffe1b7ff),
+      Color(0xffdbaaff)
+    ],
+    [
+      Color(0xff264653),
+      Color(0xff287271),
+      Color(0xff2a9d8f),
+      Color(0xff8ab17d),
+      Color(0xffe9c46a),
+      Color(0xfff4a261),
+      Color(0xffe76f51)
     ]
   ];
 
   // 테트리스 블록 타일의 모양 테마
-  static int tileShapeId = 0;
-  static List<Widget> tileShapes = [
-    Container(
-      width: 20,
-      height: 20,
-      decoration: BoxDecoration(
-        color: Colors.indigo,
-        borderRadius: BorderRadius.circular(6),
-      ),
-    ),
-    Container(
-      width: 20,
-      height: 20,
-      decoration: BoxDecoration(
-        color: Colors.indigo,
-        shape: BoxShape.circle,
-      ),
-    ),
-    Container(
-      width: 20,
-      height: 20,
-      decoration: BoxDecoration(
-        color: Colors.indigo,
-        border: Border.all(
-          width: 2.0,
-          color: Colors.indigo.shade300,
-        ),
-      ),
-    ),
-  ];
+  // static Widget tileShape = TTTile(blockId: 0);
 
   // 정보 조회
-  static Color blockColor(TTBlockID blockID) => colorSets[colorSetId][blockID.index];
-  static Widget get tileShape => tileShapes[tileShapeId];
+  static Color tileColor(TTBlockID blockID) => colorSets[colorSetId][blockID.index];
 }
