@@ -28,13 +28,10 @@ class TTTile extends StatelessWidget {
         );
       case 1:
         return Container(
-          color: AppStyle.bgColorAccent,
-          child: Container(
-            margin: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+          margin: EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
           ),
         );
       case 2:
@@ -44,7 +41,7 @@ class TTTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             border: Border.all(
               width: 2.0,
-              color: Colors.grey.shade800,
+              color: Colors.grey.shade800, // todo 여기 색상을 color와 연관있는 것으로 바꿔야 해
             ),
           ),
         );

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 import 'package:tetris/constants/app_style.dart';
-import 'package:tetris/constants/blockColor.dart';
 import 'package:tetris/constants/constants.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
@@ -223,7 +222,7 @@ class _GameScreenState extends State<GameScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage('assets/images/bg01.png'), fit: BoxFit.cover),
+        image: DecorationImage(image: AssetImage(AppStyle.backgroundImages[AppStyle.backgroundImageId]), fit: BoxFit.cover),
       ),
       child: Column(
         children: [
@@ -286,16 +285,6 @@ class _GameScreenState extends State<GameScreen> {
       actions: [
         IconButton(
           onPressed: () async {
-            if (!await launch(
-              kGithubUrl,
-              forceSafariVC: false,
-              forceWebView: false,
-            )) throw 'Could not launch $kGithubUrl';
-          },
-          icon: Icon(FontAwesomeIcons.code, size: 18, color: AppStyle.lightTextColor),
-        ),
-        IconButton(
-          onPressed: () async {
             // 타이머들 일시 정지
             _pauseControll(true);
 
@@ -311,7 +300,7 @@ class _GameScreenState extends State<GameScreen> {
             _pauseControll(false);
           },
           icon: Icon(
-            FontAwesomeIcons.info,
+            FontAwesomeIcons.bars,
             size: 18,
             color: AppStyle.lightTextColor,
           ),
@@ -406,7 +395,10 @@ class _GameScreenState extends State<GameScreen> {
                   );
                 }
 
-                return TTTile(blockId: blockId, status: blockStatus);
+                return Container(
+                  color: AppStyle.bgColorAccent,
+                  child: TTTile(blockId: blockId, status: blockStatus),
+                );
               },
             ),
           ),

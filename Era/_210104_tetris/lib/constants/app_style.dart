@@ -12,6 +12,17 @@ class AppStyle {
   static const Color darkTextColor = Colors.black87;
   static const Color lightTextColor = Colors.white;
 
+  // 배경화면 테마
+  static int backgroundImageId = 0;
+  static List<String> backgroundImages = [
+    'assets/images/bg01.png',
+    'assets/images/bg02.jpg',
+    'assets/images/bg03.jpg',
+    'assets/images/bg04.jpg',
+    'assets/images/bg05.jpg',
+    'assets/images/bg06.jpg'
+  ];
+
   // 테트리스 블록 색상 테마
   static int colorSetId = 0;
   static List<List<Color>> colorSets = [

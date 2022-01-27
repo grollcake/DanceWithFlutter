@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tetris/constants/app_style.dart';
-import 'package:tetris/models/enums.dart';
 import 'package:tetris/screens/widgets/settings_details.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -66,7 +65,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       },
                     ),
                   ),
-                  VerticalDivider(color: Colors.grey.shade700),
+                  VerticalDivider(color: Colors.grey.shade700, width: 2),
                   Expanded(
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 21),
@@ -88,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       children: [
         Align(
           alignment: Alignment.center,
-          child: Text('Settings', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
+          child: Text('T E T R I S', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
         ),
         Align(
           alignment: Alignment(1, 0),

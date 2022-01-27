@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tetris/constants/app_style.dart';
+import 'package:tetris/constants/constants.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/screens/widgets/selectedItem.dart';
 import 'package:tetris/screens/widgets/tttile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsDetailTheme extends StatefulWidget {
   const SettingsDetailTheme({
@@ -16,11 +19,36 @@ class SettingsDetailTheme extends StatefulWidget {
 class _SettingsDetailThemeState extends State<SettingsDetailTheme> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Not yet developed', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SettingsSubtitle(title: 'Background'),
+      GridView.builder(
+        shrinkWrap: true,
+        itemCount: AppStyle.backgroundImages.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 1 / 1.3,
+        ),
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                AppStyle.backgroundImageId = index;
+              });
+            },
+            child: SelectedItem(
+              selected: index == AppStyle.backgroundImageId,
+              child: Container(
+                margin: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    image: DecorationImage(image: AssetImage(AppStyle.backgroundImages[index]), fit: BoxFit.cover)),
+              ),
+            ),
+          );
+        },
       ),
-    );
+    ]);
   }
 }
 
@@ -118,7 +146,7 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
           margin: EdgeInsets.only(right: 10),
           padding: EdgeInsets.all(5),
           alignment: Alignment.center,
-          color: AppStyle.bgColorAccent,
+          // color: AppStyle.bgColorAccent,
           child: Column(
             children: List.generate(_previewMatrix.length, (row) {
               return Row(
@@ -172,10 +200,29 @@ class SettingsDetailCode extends StatefulWidget {
 class _SettingsDetailCodeState extends State<SettingsDetailCode> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Not yet developed', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
-      ),
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 4),
+          child: Image.asset('assets/images/code.png'),
+        ),
+        SizedBox(height: 40),
+        ElevatedButton.icon(
+          icon: Icon(FontAwesomeIcons.github, color: AppStyle.darkTextColor, size: 16),
+          onPressed: () async {
+            if (!await launch(
+              kGithubUrl,
+              forceSafariVC: false,
+              forceWebView: false,
+            )) throw 'Could not launch $kGithubUrl';
+          },
+          label: Text('Github', style: TextStyle(fontSize: 16, color: AppStyle.darkTextColor)),
+          style: ElevatedButton.styleFrom(
+            primary: AppStyle.accentColor,
+            minimumSize: Size(160, 34),
+          ),
+        ),
+      ],
     );
   }
 }

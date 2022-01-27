@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:tetris/constants/app_style.dart';
-import 'package:tetris/constants/blockColor.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/screens/game_screen.dart';
 import 'package:tetris/screens/widgets/mini_block.dart';
@@ -119,7 +118,7 @@ class _IntroScreenState extends State<IntroScreen> {
               child: MiniBlock(
                 blockID: TTBlockID.T,
                 size: tileSize,
-                color: getBlockColor(TTBlockID.T),
+                color: AppStyle.tileColor(TTBlockID.T),
               ),
             ),
           ),
@@ -133,7 +132,7 @@ class _IntroScreenState extends State<IntroScreen> {
               child: MiniBlock(
                 blockID: TTBlockID.S,
                 size: tileSize,
-                color: getBlockColor(TTBlockID.S),
+                color: AppStyle.tileColor(TTBlockID.S),
               ),
             ),
           ),
@@ -147,7 +146,7 @@ class _IntroScreenState extends State<IntroScreen> {
               child: MiniBlock(
                 blockID: TTBlockID.J,
                 size: tileSize,
-                color: getBlockColor(TTBlockID.J),
+                color: AppStyle.tileColor(TTBlockID.J),
               ),
             ),
           ),
