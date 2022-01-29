@@ -1,6 +1,8 @@
+import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tetris/models/enums.dart';
-import 'package:tetris/screens/widgets/tttile.dart';
 
 class AppStyle {
   // 기본 색상 테마
@@ -13,7 +15,14 @@ class AppStyle {
   static const Color lightTextColor = Colors.white;
 
   // 배경화면 테마
-  static int backgroundImageId = 0;
+  static int _backgroundImageId = 0;
+  static int get backgroundImageId => _backgroundImageId;
+
+  static set backgroundImageId(int value) {
+    _backgroundImageId = value;
+    saveSettings();
+  }
+
   static List<String> backgroundImages = [
     'assets/images/bg01.png',
     'assets/images/bg02.jpg',
@@ -24,7 +33,14 @@ class AppStyle {
   ];
 
   // 테트리스 블록 색상 테마
-  static int colorSetId = 0;
+  static int _colorSetId = 0;
+
+  static int get colorSetId => _colorSetId;
+  static set colorSetId(int value) {
+    colorSetId = value;
+    saveSettings();
+  }
+
   static List<List<Color>> colorSets = [
     // Color set #1
     [
@@ -84,8 +100,49 @@ class AppStyle {
   ];
 
   // 테트리스 블록 타일의 모양 테마
-  // static Widget tileShape = TTTile(blockId: 0);
+  static int _tileTypeId = 0;
+
+  static int get tileTypeId => _tileTypeId;
+  static set tileTypeId(int value) {
+    _tileTypeId = value;
+    saveSettings();
+  }
 
   // 정보 조회
-  static Color tileColor(TTBlockID blockID) => colorSets[colorSetId][blockID.index];
+  static Color tileColor(TTBlockID blockID) => colorSets[_colorSetId][blockID.index];
+
+  // 설정 정보를 기기에 저장
+  static Future<bool> saveSettings() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    Map<String, dynamic> settings = {
+      'backgroundImageId': _backgroundImageId,
+      'colorSetId': _colorSetId,
+      'tileTypeId': _tileTypeId
+    };
+    String settingsString = jsonEncode(settings);
+    bool result = await preferences.setString('settings', settingsString);
+    if (result) {
+      debugPrint('Setting saved successfully');
+      debugPrint(settingsString);
+    }
+    return result;
+  }
+
+  // 설정 정보를 불러오기
+  static Future<bool> loadSettings() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? settingsString = preferences.getString('settings');
+    if (settingsString != null) {
+      debugPrint('Successfully loaded settings');
+      debugPrint(settingsString);
+      Map<String, dynamic> settings = jsonDecode(settingsString);
+
+      _backgroundImageId = settings['backgroundImageId'] as int;
+      _colorSetId = settings['colorSetId'] as int;
+      _tileTypeId = settings['tileTypeId'] as int;
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

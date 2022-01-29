@@ -7,7 +7,7 @@ class TTTile extends StatelessWidget {
   final TTBlockID blockId;
   final TTBlockStatus status;
   static const typeCount = 3;
-  static int typeId = 0;
+  // static int typeId = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class TTTile extends StatelessWidget {
     if (status == TTBlockStatus.shadow) {
       color = color.withOpacity(0.2);
     }
-    return _getShape(typeId, color);
+    return _getShape(AppStyle.tileTypeId, color);
   }
 
   static Widget _getShape(int id, [Color color = AppStyle.accentColor]) {

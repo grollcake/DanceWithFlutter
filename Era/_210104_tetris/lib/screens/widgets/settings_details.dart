@@ -124,11 +124,11 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
             (index) => GestureDetector(
               onTap: () {
                 setState(() {
-                  TTTile.typeId = index;
+                  AppStyle.tileTypeId = index;
                 });
               },
               child: SelectedItem(
-                selected: index == TTTile.typeId,
+                selected: index == AppStyle.tileTypeId,
                 child: Container(
                   width: 40,
                   height: 40,
