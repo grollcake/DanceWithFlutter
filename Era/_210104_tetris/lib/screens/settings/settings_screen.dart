@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tetris/constants/app_style.dart';
-import 'package:tetris/screens/widgets/settings_details.dart';
+import 'package:tetris/screens/settings/pages/settings_about.dart';
+import 'package:tetris/screens/settings/pages/settings_block.dart';
+import 'package:tetris/screens/settings/pages/settings_code.dart';
+import 'package:tetris/screens/settings/pages/settings_misc.dart';
+import 'package:tetris/screens/settings/pages/settings_swipe.dart';
+import 'package:tetris/screens/settings/pages/settings_theme.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -11,13 +16,13 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   static const defalutPadding = 12.0;
-  List<String> menus = ['Theme', 'Block', 'Swipe', 'Code', 'About'];
+  List<String> menus = ['Theme', 'Block', 'Misc', 'Code', 'About'];
   int selectedMenuIndex = 0;
 
   final List _settingsDetailPage = [
     SettingsDetailTheme(),
     SettingsDetailBlock(),
-    SettingsDetailSwipe(),
+    SettingsDetailMisc(),
     SettingsDetailCode(),
     SettingsDetailAbout(),
   ];

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tetris/constants/app_style.dart';
-import 'package:tetris/screens/intro_screen.dart';
+import 'package:tetris/managers/app_settings.dart';
+import 'package:tetris/screens/intro/intro_screen.dart';
 
 // Done GameStart dialog 화면
 // Done 가로크기를 11로 했을 때 블록 생성이 잘 못되는 문제 수정
@@ -45,12 +45,15 @@ import 'package:tetris/screens/intro_screen.dart';
 // Done (설정화면) github 연결 페이지
 // Done 타일을 더 이쁘게 그리기 위해 별도 위젯(TTTile)으로 분리
 // Done 설정 내용을 기기에 저장
+// Done (설정화면) 가이드라인, 그림자 블록
+// Done 효과음 추가 - 일단 소리는 난다
+// todo 배경음악 추가
+// todo 타일 디자인 새로하기
+// todo 점수판 구현 (파이어스토어)
+// todo 피드백 보내기 기능
+// todo (설정화면) 조작방법 설명
 // todo (설정화면) 스와이프 감도 설정 화면 구현 (미니 블록으로 직접 스와이핑 하면서 감도 설정)
 // todo 블록 회전 후 위치 조정 (기준점과의 거리를 계산으로 최적 위치 선정)
-// todo 블록 down, drop 시 트랜지션(애니메이션) 처리
-// todo 효과음 추가
-// todo 배경음악 추가
-// todo 점수판 구현 (파이어스토어)
 // todo 새로운 기록 갱신 시 push 알림
 
 void main() async {
@@ -62,7 +65,7 @@ class TetrisApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppStyle.loadSettings(); // 설정 정보 읽어오기
+    AppSettings.loadSettings(); // 설정 정보 읽어오기
     return MaterialApp(
       title: 'Tetris',
       debugShowCheckedModeBanner: false,

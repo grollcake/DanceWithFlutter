@@ -4,15 +4,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/constants/constants.dart';
+import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/modules/shaker_widget.dart';
+import 'package:tetris/modules/sound_player.dart';
 import 'package:tetris/modules/swipe_controller.dart';
-import 'package:tetris/screens/settings_screen.dart';
+import 'package:tetris/screens/settings/settings_screen.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
 import 'package:tetris/screens/widgets/mini_block.dart';
 import 'package:tetris/screens/widgets/tttile.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -29,12 +30,20 @@ class _GameScreenState extends State<GameScreen> {
   bool _isFlikering = false;
   bool _isPaused = false;
 
+  final _soundPlayer = SoundPlayer();
+
   GlobalKey<ShakeWidgetState> shakeKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
+    _soundPlayer.init();
     Future.delayed(Duration(milliseconds: 1000), () => _startGame(reset: true));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   // 게임 시작
@@ -117,6 +126,9 @@ class _GameScreenState extends State<GameScreen> {
         break;
       case 'ROTATE':
         isChanged = ttBoard.rotate();
+        if (isChanged) {
+          _soundPlayer.rotateSound();
+        }
         break;
     }
     if (isChanged) {
@@ -132,6 +144,7 @@ class _GameScreenState extends State<GameScreen> {
   // 블록 떨어뜨리기
   void _dropBlock() {
     if (ttBoard.dropBlock()) {
+      _soundPlayer.dropSound();
       shakeKey.currentState!.shake();
       _fixingBlockPosition();
     }
@@ -222,7 +235,8 @@ class _GameScreenState extends State<GameScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage(AppStyle.backgroundImages[AppStyle.backgroundImageId]), fit: BoxFit.cover),
+        image: DecorationImage(
+            image: AssetImage(AppSettings.backgroundImages[AppSettings.backgroundImageId]), fit: BoxFit.cover),
       ),
       child: Column(
         children: [
@@ -368,7 +382,7 @@ class _GameScreenState extends State<GameScreen> {
         padding: EdgeInsets.all(2),
         color: Colors.white,
         child: Container(
-          color: AppStyle.bgColor,
+          color: AppSettings.showGridLine ? AppStyle.bgColor : AppStyle.bgColorAccent,
           child: MediaQuery.removePadding(
             removeTop: true,
             context: context,
@@ -388,6 +402,13 @@ class _GameScreenState extends State<GameScreen> {
 
                 TTBlockID? blockId = ttBoard.getBlockId(gridX, gridY);
                 TTBlockStatus blockStatus = ttBoard.getBlockStatus(gridX, gridY);
+
+                // shadow 블록 미표시
+                if (blockStatus == TTBlockStatus.shadow && !AppSettings.showShadowBlock) {
+                  return Container(
+                    color: AppStyle.bgColorAccent,
+                  );
+                }
 
                 if (blockId == null || (_isFlikering && blockStatus == TTBlockStatus.completed)) {
                   return Container(
