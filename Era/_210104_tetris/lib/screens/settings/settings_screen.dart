@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tetris/constants/app_style.dart';
+import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/screens/settings/pages/settings_about.dart';
 import 'package:tetris/screens/settings/pages/settings_block.dart';
 import 'package:tetris/screens/settings/pages/settings_code.dart';
 import 'package:tetris/screens/settings/pages/settings_misc.dart';
-import 'package:tetris/screens/settings/pages/settings_swipe.dart';
 import 'package:tetris/screens/settings/pages/settings_theme.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -17,7 +17,6 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   static const defalutPadding = 12.0;
   List<String> menus = ['Theme', 'Block', 'Misc', 'Code', 'About'];
-  int selectedMenuIndex = 0;
 
   final List _settingsDetailPage = [
     SettingsDetailTheme(),
@@ -55,15 +54,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         return ListTile(
                           onTap: () {
                             setState(() {
-                              selectedMenuIndex = index;
+                              AppSettings.selectedMenuIndex = index;
                             });
                           },
                           title: Text(
                             menus[index],
                             style: TextStyle(
                               fontSize: 14,
-                              color: index == selectedMenuIndex ? Colors.yellowAccent : Colors.grey,
-                              fontWeight: index == selectedMenuIndex ? FontWeight.w700 : FontWeight.w500,
+                              color: index == AppSettings.selectedMenuIndex ? Colors.yellowAccent : Colors.grey,
+                              fontWeight: index == AppSettings.selectedMenuIndex ? FontWeight.w700 : FontWeight.w500,
                             ),
                           ),
                         );
@@ -75,7 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 21),
                       // color: AppStyle.bgColor.withOpacity(0.95),
-                      child: _settingsDetailPage[selectedMenuIndex],
+                      child: _settingsDetailPage[AppSettings.selectedMenuIndex],
                     ),
                   ),
                 ],

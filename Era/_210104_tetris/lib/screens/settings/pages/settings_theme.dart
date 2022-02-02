@@ -15,35 +15,41 @@ class SettingsDetailTheme extends StatefulWidget {
 class _SettingsDetailThemeState extends State<SettingsDetailTheme> {
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      SettingsSubtitle(title: 'Background'),
-      GridView.builder(
-        shrinkWrap: true,
-        itemCount: AppSettings.backgroundImages.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: 1 / 1.3,
-        ),
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                AppSettings.backgroundImageId = index;
-              });
-            },
-            child: SelectedItem(
-              selected: index == AppSettings.backgroundImageId,
-              child: Container(
-                margin: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    image: DecorationImage(image: AssetImage(AppSettings.backgroundImages[index]), fit: BoxFit.cover)),
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SettingsSubtitle(title: 'Background'),
+        Flexible(
+          child: GridView.builder(
+            shrinkWrap: true,
+            itemCount: AppSettings.backgroundImages.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 1 / 1.3,
             ),
-          );
-        },
-      ),
-    ]);
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    AppSettings.backgroundImageId = index;
+                  });
+                },
+                child: SelectedItem(
+                  selected: index == AppSettings.backgroundImageId,
+                  child: Container(
+                    margin: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        image:
+                            DecorationImage(image: AssetImage(AppSettings.backgroundImages[index]), fit: BoxFit.cover)),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

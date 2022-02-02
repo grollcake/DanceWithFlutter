@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pausable_timer/pausable_timer.dart';
@@ -8,7 +9,8 @@ import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/modules/shaker_widget.dart';
-import 'package:tetris/modules/sound_player.dart';
+import 'package:tetris/modules/sound_effect.dart';
+import 'package:tetris/modules/bgm_player.dart';
 import 'package:tetris/modules/swipe_controller.dart';
 import 'package:tetris/screens/settings/settings_screen.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
@@ -30,20 +32,24 @@ class _GameScreenState extends State<GameScreen> {
   bool _isFlikering = false;
   bool _isPaused = false;
 
-  final _soundPlayer = SoundPlayer();
+  final _bgmPlayer = BgmPlayer();
+  final _soundEffect = SoundEffect();
 
   GlobalKey<ShakeWidgetState> shakeKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    _soundPlayer.init();
+    _bgmPlayer.init();
+    _soundEffect.init();
     Future.delayed(Duration(milliseconds: 1000), () => _startGame(reset: true));
   }
 
   @override
   void dispose() {
     super.dispose();
+    _bgmPlayer.dispose();
+    _soundEffect.dispose();
   }
 
   // 게임 시작
@@ -52,6 +58,9 @@ class _GameScreenState extends State<GameScreen> {
       ttBoard.reset();
     } else {
       ttBoard.levelUp();
+    }
+    if (AppSettings.backgroundMusic) {
+      _bgmPlayer.startBGM();
     }
     _generateNewBlock();
   }
@@ -90,6 +99,7 @@ class _GameScreenState extends State<GameScreen> {
 
   // 다음 레벨 이동
   void _showNextLevelDialog() {
+    _bgmPlayer.stopBGM();
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -101,6 +111,7 @@ class _GameScreenState extends State<GameScreen> {
 
   // 게임종료 Dialog
   void _showGameEndDialog() {
+    _bgmPlayer.stopBGM();
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -127,7 +138,8 @@ class _GameScreenState extends State<GameScreen> {
       case 'ROTATE':
         isChanged = ttBoard.rotate();
         if (isChanged) {
-          _soundPlayer.rotateSound();
+          // _soundPlayer.rotateSound();
+          _soundEffect.rotateSound();
         }
         break;
     }
@@ -144,9 +156,12 @@ class _GameScreenState extends State<GameScreen> {
   // 블록 떨어뜨리기
   void _dropBlock() {
     if (ttBoard.dropBlock()) {
-      _soundPlayer.dropSound();
-      shakeKey.currentState!.shake();
-      _fixingBlockPosition();
+      // 효과음 지연을 상쇄하기 위해 블록 이동을 약간 늦게 처리한다.
+      _soundEffect.dropSound();
+      Future.delayed(Duration(milliseconds: 100), () {
+        shakeKey.currentState!.shake();
+        _fixingBlockPosition();
+      });
     }
   }
 
@@ -196,6 +211,10 @@ class _GameScreenState extends State<GameScreen> {
   void _pauseControll(bool isPausing) {
     // 일시정지 처리
     if (isPausing) {
+      if (AppSettings.backgroundMusic) {
+        _bgmPlayer.pauseBGM();
+      }
+
       // 블록 자동이동 timer 일시정지
       _timer?.pause();
       // ttboard의 플레이타임 타이머 일시정지
@@ -206,6 +225,14 @@ class _GameScreenState extends State<GameScreen> {
     }
     // 게임 재개 처리
     else {
+      if (AppSettings.backgroundMusic) {
+        if (_bgmPlayer.bgmStatus == PlayerState.PAUSED) {
+          _bgmPlayer.resumeBGM();
+        } else {
+          _bgmPlayer.startBGM();
+        }
+      }
+
       _isPaused = false;
       // 블록 자동이동 타이머 재개
       _timer?.start();

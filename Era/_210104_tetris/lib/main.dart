@@ -47,7 +47,11 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done 설정 내용을 기기에 저장
 // Done (설정화면) 가이드라인, 그림자 블록
 // Done 효과음 추가 - 일단 소리는 난다
-// todo 배경음악 추가
+// Done 마지막으로 봤던 설정화면 유지
+// Done 배경음악 추가
+// todo 배경음악 변경
+// todo 효과음 추가 - clearning, hold, game-end, level-up
+// todo (설정화면) About - 나의 프로파일, github 연결, 이미지/사운드 credit 노출
 // todo 타일 디자인 새로하기
 // todo 점수판 구현 (파이어스토어)
 // todo 피드백 보내기 기능
