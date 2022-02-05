@@ -69,7 +69,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       },
                     ),
                   ),
-                  VerticalDivider(color: Colors.grey.shade700, width: 2),
+                  Container(
+                    width: 1,
+                    height: double.infinity,
+                    color: Colors.grey.shade700,
+                  ),
                   Expanded(
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 21),

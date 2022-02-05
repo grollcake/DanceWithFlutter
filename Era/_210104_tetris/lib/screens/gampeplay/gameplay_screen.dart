@@ -100,6 +100,7 @@ class _GameScreenState extends State<GameScreen> {
   // 다음 레벨 이동
   void _showNextLevelDialog() {
     _bgmPlayer.stopBGM();
+    _soundEffect.levelUpSound();
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -112,6 +113,7 @@ class _GameScreenState extends State<GameScreen> {
   // 게임종료 Dialog
   void _showGameEndDialog() {
     _bgmPlayer.stopBGM();
+    _soundEffect.gameEndSound();
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -156,18 +158,16 @@ class _GameScreenState extends State<GameScreen> {
   // 블록 떨어뜨리기
   void _dropBlock() {
     if (ttBoard.dropBlock()) {
-      // 효과음 지연을 상쇄하기 위해 블록 이동을 약간 늦게 처리한다.
       _soundEffect.dropSound();
-      Future.delayed(Duration(milliseconds: 100), () {
-        shakeKey.currentState!.shake();
-        _fixingBlockPosition();
-      });
+      shakeKey.currentState!.shake();
+      _fixingBlockPosition();
     }
   }
 
   // 블록 홀드
   void _holdBlock() {
     if (ttBoard.holdBlock()) {
+      _soundEffect.holdSound();
       setState(() {});
     }
   }
@@ -181,6 +181,7 @@ class _GameScreenState extends State<GameScreen> {
 
     // 완성된 줄이 있는 경우, 깜빡이다가 지우기
     if (ttBoard.hasCompleteRow()) {
+      _soundEffect.clearningSound();
       // 줄 삭제전 깜빡임 이벤트 보여주기
       for (int i = 0; i < 4; i++) {
         await Future.delayed(Duration(milliseconds: 100));

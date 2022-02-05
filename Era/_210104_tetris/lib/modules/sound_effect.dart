@@ -6,18 +6,34 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class SoundEffect {
   Soundpool? _soundpool;
   SoundpoolOptions _soundpoolOptions = SoundpoolOptions();
-  int dropSoundId = 0;
-  int rotateSoundId = 0;
+  int dropSoundId = 0; // 블록 떨어뜨리기
+  int rotateSoundId = 0; // 블록 회전
+  int clearningSoundId = 0; // 완성줄 삭제
+  int holdSoundId = 0; // 블록 보관
+  int gameEndSoundId = 0; // 게임종료
+  int levelUpSoundId = 0; // 현재 레벨 완료
 
   Future<void> init() async {
     _soundpool = Soundpool.fromOptions(options: _soundpoolOptions);
     if (!kIsWeb) {}
-    var asset1 = await rootBundle.load('assets/sound/drop.wav');
-    dropSoundId = await _soundpool!.load(asset1);
 
-    var asset2 = await rootBundle.load('assets/sound/rotate.wav');
-    rotateSoundId = await _soundpool!.load(asset2);
-    debugPrint('Soundpool is initialized successfully');
+    var asset = await rootBundle.load('assets/sound/rotate3.wav');
+    rotateSoundId = await _soundpool!.load(asset);
+
+    asset = await rootBundle.load('assets/sound/drop2.wav');
+    dropSoundId = await _soundpool!.load(asset);
+
+    asset = await rootBundle.load('assets/sound/clearning2.wav');
+    clearningSoundId = await _soundpool!.load(asset);
+
+    asset = await rootBundle.load('assets/sound/hold.wav');
+    holdSoundId = await _soundpool!.load(asset);
+
+    asset = await rootBundle.load('assets/sound/game-end.wav');
+    gameEndSoundId = await _soundpool!.load(asset);
+
+    asset = await rootBundle.load('assets/sound/level-up.wav');
+    levelUpSoundId = await _soundpool!.load(asset);
   }
 
   Future<void> dispose() async {
@@ -28,19 +44,17 @@ class SoundEffect {
     _soundpool!.dispose();
   }
 
-  Future<int> dropSound() async {
+  Future<int> _sound(int soundId) async {
     if (_soundpool == null) {
       return 0;
     }
-    int streamId = await _soundpool!.play(dropSoundId);
-    return streamId;
+    return await _soundpool!.play(soundId);
   }
 
-  Future<int> rotateSound() async {
-    if (_soundpool == null) {
-      return 0;
-    }
-    int streamId = await _soundpool!.play(rotateSoundId);
-    return streamId;
-  }
+  Future<int> rotateSound() async => _sound(rotateSoundId);
+  Future<int> dropSound() async => _sound(dropSoundId);
+  Future<int> clearningSound() async => _sound(clearningSoundId);
+  Future<int> holdSound() async => _sound(holdSoundId);
+  Future<int> gameEndSound() async => _sound(gameEndSoundId);
+  Future<int> levelUpSound() async => _sound(levelUpSoundId);
 }
