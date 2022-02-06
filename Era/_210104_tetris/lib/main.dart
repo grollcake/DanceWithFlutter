@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/screens/intro/intro_screen.dart';
@@ -52,8 +53,12 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done 타일 디자인 새로하기
 // Done 배경음악 변경
 // Done 효과음 추가 - clearning, hold, game-end, level-up
+// Done Firestore에 scoreboard db 생성
+// Done Scoreboard 보기 화면
+// Done 새로운 개인 기록 갱신 시에만 점수 업데이트
+// todo (설정화면) 이름 변경
+// todo 최초 점수 등록 시 이름 물어보기
 // todo (설정화면) About - 나의 프로파일, github 연결, 이미지/사운드 credit 노출
-// todo 점수판 구현 (파이어스토어)
 // todo 피드백 보내기 기능
 // todo (설정화면) 조작방법 설명
 // todo (설정화면) 스와이프 감도 설정 화면 구현 (미니 블록으로 직접 스와이핑 하면서 감도 설정)
@@ -61,6 +66,8 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // todo 새로운 기록 갱신 시 push 알림
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   return runApp(TetrisApp());
 }
 

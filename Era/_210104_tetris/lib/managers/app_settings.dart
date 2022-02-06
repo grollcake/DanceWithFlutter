@@ -108,6 +108,23 @@ class AppSettings {
   }
 
   ////////////////////////////////////////////////////////////////////////
+  // 사용자 정보
+  ////////////////////////////////////////////////////////////////////////
+  static String? _userId;
+  static String? get userId => _userId;
+  static set userId(String? id) {
+    _userId = id;
+    saveSettings();
+  }
+
+  static String? _username;
+  static String? get username => _username;
+  static set username(String? name) {
+    _username = name;
+    saveSettings();
+  }
+
+  ////////////////////////////////////////////////////////////////////////
   // 기타 설정
   ////////////////////////////////////////////////////////////////////////
   static bool _backgroundMusic = true;
@@ -144,6 +161,8 @@ class AppSettings {
       'backgroundImageId': _backgroundImageId,
       'colorSetId': _colorSetId,
       'tileTypeId': _tileTypeId,
+      'userId': _userId,
+      'username': _username,
       'backgroundMusic': _backgroundMusic,
       'showGridLine': _showGridLine,
       'showShadowBlock': _showShadowBlock,
@@ -169,6 +188,8 @@ class AppSettings {
       _backgroundImageId = settings['backgroundImageId'] as int;
       _colorSetId = settings['colorSetId'] as int;
       _tileTypeId = settings['tileTypeId'] as int;
+      _userId = settings['userId'] as String;
+      _username = settings['username'] as String;
       _backgroundMusic = settings['backgroundMusic'] as bool;
       _showGridLine = settings['showGridLine'] as bool;
       _showShadowBlock = settings['showShadowBlock'] as bool;

@@ -6,12 +6,14 @@ import 'package:pausable_timer/pausable_timer.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/constants/constants.dart';
 import 'package:tetris/managers/app_settings.dart';
+import 'package:tetris/managers/scoreboard.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/modules/shaker_widget.dart';
 import 'package:tetris/modules/sound_effect.dart';
 import 'package:tetris/modules/bgm_player.dart';
 import 'package:tetris/modules/swipe_controller.dart';
+import 'package:tetris/screens/scoreboard/scoreboard_screen.dart';
 import 'package:tetris/screens/settings/settings_screen.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
 import 'package:tetris/screens/widgets/mini_block.dart';
@@ -114,6 +116,7 @@ class _GameScreenState extends State<GameScreen> {
   void _showGameEndDialog() {
     _bgmPlayer.stopBGM();
     _soundEffect.gameEndSound();
+    ScoreBoard().updateScore(score: ttBoard.getScore, level: ttBoard.getLevel);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -325,6 +328,28 @@ class _GameScreenState extends State<GameScreen> {
       elevation: 0.0,
       automaticallyImplyLeading: false,
       actions: [
+        IconButton(
+          onPressed: () async {
+            // 타이머들 일시 정지
+            _pauseControll(true);
+
+            // 일시정지 다이얼로그 노출
+            await showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return ScoreBoardScreen();
+              },
+            );
+            setState(() {});
+            _pauseControll(false);
+          },
+          icon: Icon(
+            FontAwesomeIcons.trophy,
+            size: 18,
+            color: AppStyle.lightTextColor,
+          ),
+        ),
         IconButton(
           onPressed: () async {
             // 타이머들 일시 정지
