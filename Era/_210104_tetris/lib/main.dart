@@ -61,14 +61,13 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done Scoreboard에서 이름 변경
 // Done Web 버전에서 firestore 작동하도록 하기
 // Done Scoreboard의 내 점수 위치로 자동 스크롤
-// Done web 버전에서 사용자명 변경이 안되는 오류 수정
+// todo pwa 버전에서 사용자명 변경이 안되는 오류 수정
 // todo 최초 점수 등록 시 이름 물어보기
 // todo gameend dialog에서 새로운 기록 알림 및 scoreboard 바로가기 추가
 // todo (설정화면) About - 나의 프로파일, github 연결, 이미지/사운드 credit 노출
 // todo 피드백 보내기 기능
 // todo (설정화면) 조작방법 설명
 // todo (설정화면) 스와이프 감도 설정 화면 구현 (미니 블록으로 직접 스와이핑 하면서 감도 설정)
-// todo 블록 회전 후 위치 조정 (기준점과의 거리를 계산으로 최적 위치 선정)
 // todo 새로운 기록 갱신 시 push 알림
 
 void main() async {
