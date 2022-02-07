@@ -12,6 +12,26 @@ class ScoreBoardScreen extends StatefulWidget {
 }
 
 class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
+  late ScoreBoard scoreBoard;
+  late ScrollController scrollController;
+  late TextEditingController textEditingcontroller;
+  var myScoreKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    scoreBoard = ScoreBoard();
+    scrollController = ScrollController();
+    textEditingcontroller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+    textEditingcontroller.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -34,40 +54,40 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   }
 
   Widget buildScoreBoard() {
-    ScoreBoard scoreBoard = ScoreBoard();
     return Expanded(
-      child: SingleChildScrollView(
-        child: FutureBuilder(
-          future: scoreBoard.fetchAllScores(),
-          builder: (BuildContext context, AsyncSnapshot<List<Score>> snapshot) {
-            print(snapshot.connectionState);
-            if (snapshot.hasError) {
-              return Center(child: Text("Something went wrong"));
+      child: FutureBuilder(
+        future: scoreBoard.fetchAllScores(),
+        builder: (BuildContext context, AsyncSnapshot<List<Score>> snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text("Something went wrong"));
+          }
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+                Scrollable.ensureVisible(myScoreKey.currentContext!);
+              });
             }
-            if (snapshot.connectionState != ConnectionState.done) {
-              return Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.hasData) {
-              List<Score> allScores = snapshot.data!;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+            List<Score> allScores = snapshot.data!;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(allScores.length, (index) {
-                    return buildScoreRow(index + 1, allScores[index]);
-                  }),
-                ),
-              );
-            }
-            return SizedBox();
-          },
-        ),
+                    children: List.generate(allScores.length, (index) => buildScoreRow(index + 1, allScores[index]))),
+              ),
+            );
+          }
+          return SizedBox();
+        },
       ),
     );
   }
 
   Widget buildScoreRow(int rank, Score score) {
     return Container(
+      key: score.userId == AppSettings.userId ? myScoreKey : null,
       height: 30,
       margin: EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
@@ -176,11 +196,12 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   }
 
   Future<String?> usernameDialog() async {
+    textEditingcontroller.text = AppSettings.username ?? '';
+
     return await showDialog<String>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        TextEditingController controller = TextEditingController(text: AppSettings.username);
         return AlertDialog(
           backgroundColor: AppStyle.bgColor,
           title: Text(r'What is your name?',
@@ -191,9 +212,9 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextField(
-              controller: controller,
+              controller: textEditingcontroller,
               autofocus: true,
-              onSubmitted: (value) => Navigator.of(context).pop(controller.text),
+              onSubmitted: (value) => Navigator.of(context).pop(textEditingcontroller.text),
               style: TextStyle(
                 color: AppStyle.accentColor,
                 fontSize: 16,
@@ -207,7 +228,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(controller.text),
+              onPressed: () => Navigator.of(context).pop(textEditingcontroller.text),
               child: Text('Submit'),
             ),
             TextButton(

@@ -60,6 +60,8 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done 기기UUID, platform 정보 획득하여 scoreboard db에 저장
 // Done Scoreboard에서 이름 변경
 // Done Web 버전에서 firestore 작동하도록 하기
+// Done Scoreboard의 내 점수 위치로 자동 스크롤
+// Done web 버전에서 사용자명 변경이 안되는 오류 수정
 // todo 최초 점수 등록 시 이름 물어보기
 // todo gameend dialog에서 새로운 기록 알림 및 scoreboard 바로가기 추가
 // todo (설정화면) About - 나의 프로파일, github 연결, 이미지/사운드 credit 노출

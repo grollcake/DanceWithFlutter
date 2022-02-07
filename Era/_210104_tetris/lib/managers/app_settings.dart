@@ -188,7 +188,7 @@ class AppSettings {
       _backgroundImageId = settings['backgroundImageId'] as int;
       _colorSetId = settings['colorSetId'] as int;
       _tileTypeId = settings['tileTypeId'] as int;
-      _userId = settings['userId'] as String;
+      _userId = (settings['userId'] ?? '') as String;
       _username = (settings['username'] ?? '') as String;
       _backgroundMusic = settings['backgroundMusic'] as bool;
       _showGridLine = settings['showGridLine'] as bool;
