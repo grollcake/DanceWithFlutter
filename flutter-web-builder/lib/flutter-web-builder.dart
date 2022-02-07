@@ -43,7 +43,7 @@ class FlutterWebBuilder {
       dart --version
 
       # Web skeleton file generate
-      flutter create .
+      flutter create . --org appName
 
       # Web build
       flutter build web --base-href="/projects/$projectName/"

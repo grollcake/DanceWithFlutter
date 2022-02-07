@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/models/score.dart';
 
@@ -36,8 +38,8 @@ class ScoreBoard {
         level: level,
         dateTime: DateTime.now(),
         playCount: 1,
-        deviceUUID: 'unknown',
-        platform: 'unknown');
+        deviceUUID: await PlatformDeviceId.getDeviceId,
+        platform: defaultTargetPlatform.toString());
 
     await scoreDoc.set(newScore.toJson());
     return;

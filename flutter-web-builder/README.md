@@ -25,7 +25,7 @@
 * `.gitignore`에서 `/build/`를 미리 주석처리한다. (빌드된 결과물이 버전관리에 포함될 수 있도록 미리 조치)
 * flutter web app build 명령어 실행
     ```
-    flutter create .
+    flutter create . --org appName
     flutter build web
     ```
 * web app을 버전관리에 추가: `git add build/web/*`

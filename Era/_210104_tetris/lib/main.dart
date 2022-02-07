@@ -56,6 +56,7 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done Firestore에 scoreboard db 생성
 // Done Scoreboard 보기 화면
 // Done 새로운 개인 기록 갱신 시에만 점수 업데이트
+// Done 기기UUID, platform 정보 획득하여 scoreboard db에 저장
 // todo (설정화면) 이름 변경
 // todo 최초 점수 등록 시 이름 물어보기
 // todo (설정화면) About - 나의 프로파일, github 연결, 이미지/사운드 credit 노출
