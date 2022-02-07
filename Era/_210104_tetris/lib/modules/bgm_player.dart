@@ -2,7 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 
 class BgmPlayer {
   static const _bgmFile = 'sound/background.wav';
-  static const _bgmVolume = 0.5;
+  static const _bgmVolume = 0.3;
 
   late AudioPlayer _audioPlayer;
   late AudioCache _audioCache;

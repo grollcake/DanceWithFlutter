@@ -253,6 +253,7 @@ class _GameScreenState extends State<GameScreen> {
         return false;
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: AppStyle.bgColor,
         extendBodyBehindAppBar: true,
         appBar: buildAppBar(),

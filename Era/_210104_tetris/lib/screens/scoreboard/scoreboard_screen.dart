@@ -16,26 +16,17 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
+        height: 600,
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         decoration: BoxDecoration(color: AppStyle.bgColor.withOpacity(1.0)),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              height: 40,
-              child: Center(
-                child: Text('S C O R E  B O A R D',
-                    style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
-              ),
-            ),
+            buildTitleBar(),
             SizedBox(height: 20),
             buildScoreBoard(),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Close'),
-            )
+            changeUsername(),
           ],
         ),
       ),
@@ -58,14 +49,17 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
             }
             if (snapshot.hasData) {
               List<Score> allScores = snapshot.data!;
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: List.generate(allScores.length, (index) {
-                  return buildScoreRow(index + 1, allScores[index]);
-                }),
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(allScores.length, (index) {
+                    return buildScoreRow(index + 1, allScores[index]);
+                  }),
+                ),
               );
             }
-            return Container();
+            return SizedBox();
           },
         ),
       ),
@@ -73,8 +67,6 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   }
 
   Widget buildScoreRow(int rank, Score score) {
-    String dateString = '${score.dateTime!.year ~/ 100}.${score.dateTime!.month}.${score.dateTime!.day}';
-
     return Container(
       height: 30,
       margin: EdgeInsets.symmetric(vertical: 4),
@@ -90,7 +82,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
         // crossAxisAlignment: CrossAxisAlignment.baseline,
         children: [
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Text(
               '$rank',
               style: TextStyle(fontSize: 16, color: AppStyle.lightTextColor),
@@ -98,10 +90,11 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
             ),
           ),
           Expanded(
-            flex: 5,
+            flex: 6,
             child: Text(
-              score.username ?? 'Unknown',
+              (score.username == null || score.username!.isEmpty) ? 'Unknown' : score.username!,
               style: TextStyle(fontSize: 16, color: AppStyle.lightTextColor),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           Expanded(
@@ -113,7 +106,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 2,
             child: Text(
               'Lvl.${score.level}',
               style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor),
@@ -122,6 +115,111 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildTitleBar() {
+    return SizedBox(
+      height: 40,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Text('S C O R E  B O A R D',
+                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+          Align(
+            alignment: Alignment(1, 0),
+            child: ClipOval(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.close,
+                      size: 24,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget changeUsername() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      alignment: Alignment.centerRight,
+      child: TextButton(
+        onPressed: () async {
+          String? username = await usernameDialog();
+          if (username != null) {
+            await ScoreBoard().updateUsername(username);
+            setState(() {});
+          }
+        },
+        child: Text(
+          'Change my name',
+          style: TextStyle(fontSize: 14, color: AppStyle.accentColor),
+        ),
+      ),
+    );
+  }
+
+  Future<String?> usernameDialog() async {
+    return await showDialog<String>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        TextEditingController controller = TextEditingController(text: AppSettings.username);
+        return AlertDialog(
+          backgroundColor: AppStyle.bgColor,
+          title: Text(r'What is your name?',
+              style: TextStyle(fontSize: 18, color: AppStyle.lightTextColor, fontWeight: FontWeight.bold)),
+          content: Container(
+            decoration: BoxDecoration(
+              color: AppStyle.bgColorWeak,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: TextField(
+              controller: controller,
+              autofocus: true,
+              onSubmitted: (value) => Navigator.of(context).pop(controller.text),
+              style: TextStyle(
+                color: AppStyle.accentColor,
+                fontSize: 16,
+              ),
+              decoration: InputDecoration(
+                isDense: true,
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(10),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(controller.text),
+              child: Text('Submit'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:tetris/models/score.dart';
 
 class ScoreBoard {
   int _rank = 0;
+
   int get rank => _rank;
 
   // 점수 등록
@@ -27,22 +28,21 @@ class ScoreBoard {
     }
 
     // Firestore에 정보가 없다면 신규로 생성한다.
-    final scoreDoc = FirebaseFirestore.instance.collection('scoreboards').doc();
-    AppSettings.userId = scoreDoc.id;
-    print('New userId is generated: ${AppSettings.userId}');
-
-    Score newScore = Score(
-        userId: scoreDoc.id,
-        username: AppSettings.username,
-        score: score,
-        level: level,
-        dateTime: DateTime.now(),
-        playCount: 1,
-        deviceUUID: await PlatformDeviceId.getDeviceId,
-        platform: defaultTargetPlatform.toString());
-
-    await scoreDoc.set(newScore.toJson());
+    await _createNewScore(score, level);
     return;
+  }
+
+  Future<void> updateUsername(String username) async {
+    AppSettings.username = username;
+    Score? remoteScore = await _firestoreFetch();
+    if (remoteScore != null) {
+      remoteScore.username = username;
+      final DocumentReference docRef = FirebaseFirestore.instance.collection('scoreboards').doc(remoteScore.userId);
+      await docRef.update(remoteScore.toJson());
+      return;
+    } else {
+      await _createNewScore(0, 0);
+    }
   }
 
   // 모든 유저의 점수 조회
@@ -73,5 +73,26 @@ class ScoreBoard {
       return null;
     }
     return Score.fromJson(scoreSnapshot.data() as Map<String, dynamic>);
+  }
+
+  // 파이어스토어에 새로운 데이터를 생성한다.
+  Future<Score> _createNewScore(int score, int level) async {
+    final scoreDoc = FirebaseFirestore.instance.collection('scoreboards').doc();
+    AppSettings.userId = scoreDoc.id;
+    print('New userId is generated: ${AppSettings.userId}');
+
+    Score newScore = Score(
+      userId: scoreDoc.id,
+      username: AppSettings.username,
+      score: score,
+      level: level,
+      dateTime: DateTime.now(),
+      playCount: 1,
+      deviceUUID: await PlatformDeviceId.getDeviceId,
+      platform: defaultTargetPlatform.toString(),
+    );
+
+    await scoreDoc.set(newScore.toJson());
+    return newScore;
   }
 }

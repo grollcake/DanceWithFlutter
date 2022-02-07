@@ -32,14 +32,16 @@ class Score {
         'platform': platform,
       };
 
-  static Score fromJson(Map<String, dynamic> json) => Score(
-        userId: json['userId'],
-        username: json['username'],
-        score: json['score'],
-        dateTime: ((json['datetime'] ?? Timestamp.now()) as Timestamp).toDate(),
-        level: json['level'],
-        playCount: json['playCount'],
-        deviceUUID: json['deviceUUID'],
-        platform: json['platform'],
-      );
+  factory Score.fromJson(Map<String, dynamic> json) {
+    return Score(
+      userId: json['userId'],
+      username: json['username'],
+      score: json['score'],
+      dateTime: json['datetime'] == null ? null : (json['datetime'] as Timestamp).toDate(),
+      level: json['level'],
+      playCount: json['playCount'],
+      deviceUUID: json['deviceUUID'],
+      platform: json['platform'],
+    );
+  }
 }

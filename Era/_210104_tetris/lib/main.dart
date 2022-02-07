@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
@@ -57,8 +58,10 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done Scoreboard 보기 화면
 // Done 새로운 개인 기록 갱신 시에만 점수 업데이트
 // Done 기기UUID, platform 정보 획득하여 scoreboard db에 저장
-// todo (설정화면) 이름 변경
+// Done Scoreboard에서 이름 변경
+// Done Web 버전에서 firestore 작동하도록 하기
 // todo 최초 점수 등록 시 이름 물어보기
+// todo gameend dialog에서 새로운 기록 알림 및 scoreboard 바로가기 추가
 // todo (설정화면) About - 나의 프로파일, github 연결, 이미지/사운드 credit 노출
 // todo 피드백 보내기 기능
 // todo (설정화면) 조작방법 설명
@@ -68,7 +71,20 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
+
+  if (kIsWeb) {
+    Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: 'AIzaSyD58BWL2DUmhOxrA9FnmH1xvfnN0i0woco',
+        appId: '1:652156923882:web:cf16fcdec83661f4724c93',
+        messagingSenderId: '652156923882',
+        projectId: 'tetris-2022',
+      ),
+    );
+  } else {
+    Firebase.initializeApp();
+  }
+
   return runApp(TetrisApp());
 }
 

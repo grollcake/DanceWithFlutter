@@ -90,7 +90,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Stack buildTitleBar() {
+  Widget buildTitleBar() {
     return Stack(
       children: [
         Align(
