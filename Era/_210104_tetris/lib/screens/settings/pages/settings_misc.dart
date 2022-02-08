@@ -18,7 +18,25 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Background Music
-        SettingsSubtitle(title: 'Background music'),
+        buildBackgroundMusicChoice(),
+        SizedBox(height: 30),
+        // Sound effect
+        buildSoundEffectChoice(),
+        SizedBox(height: 30),
+        // GridLine
+        buildGridlineChoice(),
+        SizedBox(height: 30),
+        // Shadow block
+        buildShadowBlockChoice(),
+      ],
+    );
+  }
+
+  Widget buildBackgroundMusicChoice() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SettingsSubtitle(title: '배경음악'),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -52,10 +70,57 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
             ),
           ],
         ),
-        SizedBox(height: 30),
+      ],
+    );
+  }
 
-        // GridLine
-        SettingsSubtitle(title: 'Grid line'),
+  Widget buildSoundEffectChoice() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SettingsSubtitle(title: '효과음'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            GestureDetector(
+              onTap: () => setState(() {
+                AppSettings.soundEffect = true;
+              }),
+              child: SelectedItem(
+                selected: AppSettings.soundEffect,
+                child: Container(
+                  width: 50,
+                  height: 30,
+                  alignment: Alignment.center,
+                  child: Text('On', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => setState(() {
+                AppSettings.soundEffect = false;
+              }),
+              child: SelectedItem(
+                selected: !AppSettings.soundEffect,
+                child: Container(
+                  width: 50,
+                  height: 30,
+                  alignment: Alignment.center,
+                  child: Text('Off', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildGridlineChoice() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SettingsSubtitle(title: '안내선'),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -89,9 +154,15 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
             ),
           ],
         ),
-        SizedBox(height: 30),
-        // Shadow block
-        SettingsSubtitle(title: 'Shadow block'),
+      ],
+    );
+  }
+
+  Widget buildShadowBlockChoice() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SettingsSubtitle(title: '그림자 블록'),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [

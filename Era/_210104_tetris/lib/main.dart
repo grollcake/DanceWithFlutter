@@ -63,11 +63,12 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done Scoreboard의 내 점수 위치로 자동 스크롤
 // Done Scoreboard를 stream으로 변경
 // Done Scoreboard 화면 처음 접근 시 이름 물어보기
-// todo About 화면에 lottie 애니메이션 사용
-// todo pwa 버전에서 사용자명 변경이 안되는 오류 수정
+// Done 타일의 명암표현 개선
+// Done About 페이지 완성 (lottie 애니메이션 사용)
+// Done 피드백 보내기 기능
+// Done sound effect 옵션 처리
+// todo iOS PWA 버전에서 사용자명 변경이 안되는 오류 수정
 // todo gameend dialog에서 새로운 기록 알림 및 scoreboard 바로가기 추가
-// todo (설정화면) About - 나의 프로파일, github 연결, 이미지/사운드 credit 노출
-// todo 피드백 보내기 기능
 // todo (설정화면) 조작방법 설명
 // todo (설정화면) 스와이프 감도 설정 화면 구현 (미니 블록으로 직접 스와이핑 하면서 감도 설정)
 // todo 새로운 기록 갱신 시 push 알림

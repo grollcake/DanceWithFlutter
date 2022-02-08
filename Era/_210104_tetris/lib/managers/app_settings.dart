@@ -134,6 +134,13 @@ class AppSettings {
     saveSettings();
   }
 
+  static bool _soundEffect = true;
+  static bool get soundEffect => _soundEffect;
+  static set soundEffect(bool value) {
+    _soundEffect = value;
+    saveSettings();
+  }
+
   static bool _showGridLine = true;
   static bool get showGridLine => _showGridLine;
   static set showGridLine(bool value) {
@@ -164,6 +171,7 @@ class AppSettings {
       'userId': _userId,
       'username': _username,
       'backgroundMusic': _backgroundMusic,
+      'soundEffect': _soundEffect,
       'showGridLine': _showGridLine,
       'showShadowBlock': _showShadowBlock,
     };
@@ -191,6 +199,7 @@ class AppSettings {
       _userId = (settings['userId'] ?? '') as String;
       _username = (settings['username'] ?? '') as String;
       _backgroundMusic = settings['backgroundMusic'] as bool;
+      _soundEffect = (settings['soundEffect'] ?? false) as bool;
       _showGridLine = settings['showGridLine'] as bool;
       _showShadowBlock = settings['showShadowBlock'] as bool;
 

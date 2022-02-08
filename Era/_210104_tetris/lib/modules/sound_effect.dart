@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:soundpool/soundpool.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:tetris/managers/app_settings.dart';
 
 class SoundEffect {
   Soundpool? _soundpool;
@@ -44,7 +45,7 @@ class SoundEffect {
   }
 
   Future<int> _sound(int soundId) async {
-    if (_soundpool == null) {
+    if (_soundpool == null || !AppSettings.soundEffect) {
       return 0;
     }
     return await _soundpool!.play(soundId);

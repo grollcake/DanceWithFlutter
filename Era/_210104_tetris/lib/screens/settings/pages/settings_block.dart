@@ -27,9 +27,23 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Color label
-        SettingsSubtitle(title: 'Color set'),
         // BlockColorSets
+        buildColorChoice(),
+        SizedBox(height: 30),
+        // Tile Shapes
+        buildShapeChoice(),
+        SizedBox(height: 30),
+        // Preview label
+        buildPreview(),
+      ],
+    );
+  }
+
+  Widget buildColorChoice() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SettingsSubtitle(title: '색상'),
         GridView.builder(
           shrinkWrap: true,
           itemCount: AppSettings.colorSets.length,
@@ -64,10 +78,15 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
             );
           },
         ),
-        SizedBox(height: 40),
-        // Shape label
-        SettingsSubtitle(title: 'Shape'),
-        // Tile Shapes
+      ],
+    );
+  }
+
+  Widget buildShapeChoice() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SettingsSubtitle(title: '모양'),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(
@@ -90,9 +109,15 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
             ),
           ),
         ),
-        SizedBox(height: 40),
-        // Preview label
-        SettingsSubtitle(title: 'Preview'),
+      ],
+    );
+  }
+
+  Widget buildPreview() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SettingsSubtitle(title: '미리보기'),
         Container(
           margin: EdgeInsets.only(right: 10),
           padding: EdgeInsets.all(5),

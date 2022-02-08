@@ -62,8 +62,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
         children: [
           Align(
             alignment: Alignment.center,
-            child: Text('S C O R E  B O A R D',
-                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('점 수 표', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
           ),
           Align(
             alignment: Alignment(1, 0),
@@ -244,7 +243,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
       child: TextButton(
         onPressed: () async => setUsername(await usernameDialog()),
         child: Text(
-          'Change my name',
+          '이름 변경',
           style: TextStyle(fontSize: 14, color: AppStyle.accentColor),
         ),
       ),

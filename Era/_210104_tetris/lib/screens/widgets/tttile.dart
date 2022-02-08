@@ -50,20 +50,23 @@ class TTTile extends StatelessWidget {
 
 class TileType3 extends StatelessWidget {
   const TileType3({Key? key, required this.color}) : super(key: key);
-  final _adjustRatio = 0.30;
+  final _adjustRatio = 0.10;
 
   final Color color;
 
   @override
   Widget build(BuildContext context) {
-    final lightValue = min(HSVColor.fromColor(color).value * (_adjustRatio + 1), 1.0);
+    final currentValue = HSVColor.fromColor(color).value;
+    final lightValue = min(currentValue + _adjustRatio, 1.0);
     Color lightColor = HSVColor.fromColor(color).withValue(lightValue).toColor();
+    Color darkColor = lightValue < 1.0 ? color : HSVColor.fromColor(color).withValue(1 - _adjustRatio).toColor();
+
     return Stack(
       children: [
         ClipPath(
           clipper: TileType3Clipper(clippingSide: 'LB'),
           child: Container(
-            color: color,
+            color: darkColor,
           ),
         ),
         ClipPath(
@@ -104,16 +107,17 @@ class TileType3Clipper extends CustomClipper<Path> {
 
 class TileType4 extends StatelessWidget {
   const TileType4({Key? key, required this.color}) : super(key: key);
+  final _adjustRatio = 0.10;
   final Color color;
 
   @override
   Widget build(BuildContext context) {
     final Color lightColor = HSVColor.fromColor(color).withValue(1).toColor();
 
-    var lightValue = max(HSVColor.fromColor(color).value - 0.15, 0.0);
+    var lightValue = max(HSVColor.fromColor(color).value - _adjustRatio, 0.0);
     final Color mediumColor = HSVColor.fromColor(color).withValue(lightValue).toColor();
 
-    lightValue = max(HSVColor.fromColor(color).value - 0.3, 0.0);
+    lightValue = max(HSVColor.fromColor(color).value - _adjustRatio * 2, 0.0);
     final Color darkColor = HSVColor.fromColor(color).withValue(lightValue).toColor();
 
     return Stack(

@@ -73,35 +73,6 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
-  // Widget buildLogo2() {
-  //   double tileSize = 30;
-  //   List<Color> colors = [Colors.yellow.shade800, Colors.blue.shade800, Colors.red.shade800, Colors.green.shade800];
-  //   return SizedBox(
-  //     width: tileSize * 2,
-  //     height: tileSize * 2,
-  //     child: MediaQuery.removePadding(
-  //       removeTop: true,
-  //       context: context,
-  //       child: GridView.builder(
-  //         itemCount: 4,
-  //         // physics: NeverScrollableScrollPhysics(),
-  //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //           crossAxisCount: 2,
-  //         ),
-  //         itemBuilder: (context, index) {
-  //           return Container(
-  //             margin: EdgeInsets.all(1.5),
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.only(topLeft: Radius.circular(4)),
-  //               color: colors[index],
-  //             ),
-  //           );
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
-
   // 테트리스 블록 3개가 겹쳐진 로고 그리기
   Widget buildLogo() {
     double tileSize = 26;

@@ -195,8 +195,7 @@ class _GameScreenState extends State<GameScreen> {
 
       // 줄 삭제
       setState(() {
-        int tileCnt = ttBoard.clearing();
-        print(tileCnt);
+        ttBoard.clearing();
       });
     }
 
