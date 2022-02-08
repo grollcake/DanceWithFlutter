@@ -19,22 +19,12 @@ class TTTile extends StatelessWidget {
     return _getShape(AppSettings.tileTypeId, color);
   }
 
-  static Widget _getShape(int id, [Color color = AppStyle.accentColor]) {
+  static Widget _getShape(int id, [Color color = Colors.green]) {
     switch (id) {
       case 0:
-        return Container(
-          decoration: BoxDecoration(
-            color: color,
-          ),
-        );
+        return TileType1(color: color);
       case 1:
-        return Container(
-          margin: EdgeInsets.all(3),
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
-        );
+        return TileType2(color: color);
       case 2:
         return TileType3(color: color);
       case 3:
@@ -48,8 +38,8 @@ class TTTile extends StatelessWidget {
   }
 }
 
-class TileType3 extends StatelessWidget {
-  const TileType3({Key? key, required this.color}) : super(key: key);
+class TileType1 extends StatelessWidget {
+  const TileType1({Key? key, required this.color}) : super(key: key);
   final _adjustRatio = 0.10;
 
   final Color color;
@@ -64,13 +54,13 @@ class TileType3 extends StatelessWidget {
     return Stack(
       children: [
         ClipPath(
-          clipper: TileType3Clipper(clippingSide: 'LB'),
+          clipper: TileType1Clipper(clippingSide: 'LB'),
           child: Container(
             color: darkColor,
           ),
         ),
         ClipPath(
-          clipper: TileType3Clipper(clippingSide: 'RT'),
+          clipper: TileType1Clipper(clippingSide: 'RT'),
           child: Container(
             color: lightColor,
           ),
@@ -80,11 +70,11 @@ class TileType3 extends StatelessWidget {
   }
 }
 
-class TileType3Clipper extends CustomClipper<Path> {
+class TileType1Clipper extends CustomClipper<Path> {
   // 조각대상: LB-LeftBottom, RT-RightTop
   final String clippingSide;
 
-  TileType3Clipper({required this.clippingSide});
+  TileType1Clipper({required this.clippingSide});
 
   @override
   Path getClip(Size size) {
@@ -105,8 +95,8 @@ class TileType3Clipper extends CustomClipper<Path> {
   }
 }
 
-class TileType4 extends StatelessWidget {
-  const TileType4({Key? key, required this.color}) : super(key: key);
+class TileType2 extends StatelessWidget {
+  const TileType2({Key? key, required this.color}) : super(key: key);
   final _adjustRatio = 0.10;
   final Color color;
 
@@ -126,25 +116,25 @@ class TileType4 extends StatelessWidget {
           child: Container(
             color: mediumColor,
           ),
-          clipper: TileType4Clipper(clippingSide: 'Left'),
+          clipper: TileType2Clipper(clippingSide: 'Left'),
         ),
         ClipPath(
           child: Container(
             color: mediumColor,
           ),
-          clipper: TileType4Clipper(clippingSide: 'Right'),
+          clipper: TileType2Clipper(clippingSide: 'Right'),
         ),
         ClipPath(
           child: Container(
             color: lightColor,
           ),
-          clipper: TileType4Clipper(clippingSide: 'Up'),
+          clipper: TileType2Clipper(clippingSide: 'Up'),
         ),
         ClipPath(
           child: Container(
             color: darkColor,
           ),
-          clipper: TileType4Clipper(clippingSide: 'Down'),
+          clipper: TileType2Clipper(clippingSide: 'Down'),
         ),
         LayoutBuilder(builder: (context, size) {
           return Container(
@@ -157,10 +147,10 @@ class TileType4 extends StatelessWidget {
   }
 }
 
-class TileType4Clipper extends CustomClipper<Path> {
+class TileType2Clipper extends CustomClipper<Path> {
   final String clippingSide;
 
-  TileType4Clipper({required this.clippingSide});
+  TileType2Clipper({required this.clippingSide});
 
   @override
   Path getClip(Size size) {
@@ -191,5 +181,45 @@ class TileType4Clipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
     return false;
+  }
+}
+
+class TileType3 extends StatelessWidget {
+  const TileType3({Key? key, required this.color}) : super(key: key);
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+      ),
+    );
+  }
+}
+
+class TileType4 extends StatelessWidget {
+  const TileType4({Key? key, required this.color}) : super(key: key);
+  final Color color;
+  final _adjustRatio = 0.25;
+
+  @override
+  Widget build(BuildContext context) {
+    final currentValue = HSVColor.fromColor(color).value;
+    final lightValue = min(currentValue + _adjustRatio, 1.0);
+    Color lightColor = HSVColor.fromColor(color).withValue(lightValue).toColor();
+    Color darkColor = lightValue < 1.0 ? color : HSVColor.fromColor(color).withValue(1 - _adjustRatio).toColor();
+
+    return Container(
+      margin: EdgeInsets.all(1),
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        gradient: RadialGradient(
+          colors: [lightColor, darkColor],
+          center: Alignment.center,
+        ),
+      ),
+    );
   }
 }

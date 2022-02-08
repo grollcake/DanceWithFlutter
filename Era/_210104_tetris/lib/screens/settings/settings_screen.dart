@@ -82,7 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Expanded(
             child: Container(
-              padding: EdgeInsets.only(left: defalutPadding, right: defalutPadding, top: defalutPadding),
+              padding: EdgeInsets.only(left: defalutPadding * 2, right: defalutPadding * 2, top: defalutPadding),
               child: _settingsDetailPage[AppSettings.selectedMenuIndex],
             ),
           ),

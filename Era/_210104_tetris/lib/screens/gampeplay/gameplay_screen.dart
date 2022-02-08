@@ -48,6 +48,13 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    // 이렇게하면 배경 이미지 로딩 속도가 높아진다고 한다. 실제로 빨라질지는 모르겠다.
+    precacheImage(AssetImage(AppSettings.backgroundImages[AppSettings.backgroundImageId]), context);
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _bgmPlayer.dispose();
