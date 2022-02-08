@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:platform_device_id/platform_device_id.dart';
@@ -32,6 +31,7 @@ class ScoreBoard {
     return;
   }
 
+  // 사용자 이름 변경
   Future<void> updateUsername(String username) async {
     AppSettings.username = username;
     Score? remoteScore = await _firestoreFetch();
@@ -45,8 +45,8 @@ class ScoreBoard {
     }
   }
 
-  // 모든 유저의 점수 조회
-  Future<List<Score>> fetchAllScores() async {
+  // 모든 사용자의 점수 조회
+  Future<List<Score>> fetchAllScores2() async {
     final allScores = await FirebaseFirestore.instance
         .collection('scoreboards')
         .orderBy('score', descending: true)
@@ -62,6 +62,14 @@ class ScoreBoard {
       return [];
     }
   }
+
+  // 모든 사용자의 점수 조회
+  Stream<List<Score>> fetchAllScores() => FirebaseFirestore.instance
+      .collection('scoreboards')
+      .orderBy('score', descending: true)
+      .orderBy('level', descending: true)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map((doc) => Score.fromJson(doc.data())).toList());
 
   // 파이어스토어에서 사용자의 데이터를 가져온다.
   Future<Score?> _firestoreFetch() async {

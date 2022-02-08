@@ -16,6 +16,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   late ScrollController scrollController;
   late TextEditingController textEditingcontroller;
   var myScoreKey = GlobalKey();
+  bool isValidUsername = false;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool hasName = AppSettings.username != null && AppSettings.username!.isNotEmpty;
     return Dialog(
       child: Container(
         height: 600,
@@ -44,9 +46,107 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
           children: [
             buildTitleBar(),
             SizedBox(height: 20),
-            buildScoreBoard(),
+            hasName ? buildScoreBoard() : buildRequestUsername(),
             SizedBox(height: 20),
-            changeUsername(),
+            if (hasName) changeUsername(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildTitleBar() {
+    return SizedBox(
+      height: 40,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Text('S C O R E  B O A R D',
+                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+          Align(
+            alignment: Alignment(1, 0),
+            child: ClipOval(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.close,
+                      size: 24,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildRequestUsername() {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            SizedBox(height: 50),
+            const Text(
+              '점수표를 보려면\n이름을 알려주셔야 합니다',
+              style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 50),
+            Container(
+              width: 200,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: AppStyle.bgColorAccent,
+              ),
+              child: TextField(
+                controller: textEditingcontroller,
+                autofocus: true,
+                style: TextStyle(color: AppStyle.accentColor),
+                onChanged: (value) {
+                  setState(() {
+                    isValidUsername = value.isNotEmpty && value.trim().length > 0;
+                  });
+                },
+                onSubmitted: (value) {
+                  setState(() {
+                    isValidUsername = value.isNotEmpty && value.trim().length > 0;
+                  });
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  isDense: true,
+                  hintText: '이름이 뭐에요?',
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ),
+            SizedBox(height: 100),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(100, 40),
+              ),
+              onPressed: isValidUsername
+                  ? () async {
+                      await setUsername(textEditingcontroller.text);
+                      setState(() {});
+                    }
+                  : null,
+              child: Text('등록'),
+            ),
           ],
         ),
       ),
@@ -55,21 +155,17 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
 
   Widget buildScoreBoard() {
     return Expanded(
-      child: FutureBuilder(
-        future: scoreBoard.fetchAllScores(),
+      child: StreamBuilder<List<Score>>(
+        stream: scoreBoard.fetchAllScores(),
         builder: (BuildContext context, AsyncSnapshot<List<Score>> snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text("Something went wrong"));
-          }
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasData) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-                Scrollable.ensureVisible(myScoreKey.currentContext!);
-              });
-            }
+            return Center(child: Text('Something went wrong'));
+          } else if (snapshot.hasData) {
+            print(snapshot.connectionState);
+            // 사용자의 점수가 제일 위에 나타나도록 스크롤 위치 조정
+            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+              Scrollable.ensureVisible(myScoreKey.currentContext!);
+            });
             List<Score> allScores = snapshot.data!;
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -78,8 +174,11 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
                     children: List.generate(allScores.length, (index) => buildScoreRow(index + 1, allScores[index]))),
               ),
             );
+          } else if (snapshot.connectionState != ConnectionState.done) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return Center(child: Text('Something wrong'));
           }
-          return SizedBox();
         },
       ),
     );
@@ -138,55 +237,12 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
     );
   }
 
-  Widget buildTitleBar() {
-    return SizedBox(
-      height: 40,
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: Text('S C O R E  B O A R D',
-                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
-          ),
-          Align(
-            alignment: Alignment(1, 0),
-            child: ClipOval(
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.close,
-                      size: 24,
-                      color: Colors.white70,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget changeUsername() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       alignment: Alignment.centerRight,
       child: TextButton(
-        onPressed: () async {
-          String? username = await usernameDialog();
-          if (username != null) {
-            await ScoreBoard().updateUsername(username);
-            setState(() {});
-          }
-        },
+        onPressed: () async => setUsername(await usernameDialog()),
         child: Text(
           'Change my name',
           style: TextStyle(fontSize: 14, color: AppStyle.accentColor),
@@ -204,8 +260,6 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: AppStyle.bgColor,
-          title: Text(r'What is your name?',
-              style: TextStyle(fontSize: 18, color: AppStyle.lightTextColor, fontWeight: FontWeight.bold)),
           content: Container(
             decoration: BoxDecoration(
               color: AppStyle.bgColorWeak,
@@ -229,18 +283,18 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(textEditingcontroller.text),
-              child: Text('Submit'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: Colors.grey),
-              ),
+              child: Text('변경'),
             ),
           ],
         );
       },
     );
+  }
+
+  Future<void> setUsername(String? name) async {
+    if (name != null && name.isNotEmpty && name.trim().length > 0) {
+      print('Changing username [${AppSettings.username}] => [$name]');
+      await ScoreBoard().updateUsername(name);
+    }
   }
 }
