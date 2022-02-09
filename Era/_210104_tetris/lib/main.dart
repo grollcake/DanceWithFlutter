@@ -75,7 +75,8 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // todo 새로운 기록 달성 시 toast 메시지로 안내
 // todo (문제해결) lottie 이미지가 깨짐
 // todo (문제해결) 사운드가 늦게 초기화되는 문제
-// todo iOS PWA 버전에서 사용자명 변경이 안되는 오류 수정
+// todo (문제해결) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제
+// todo (문제해결) iOS PWA 버전에서 사용자명 변경이 안되는 오류 수정
 // todo gameend dialog에서 새로운 기록 알림 및 scoreboard 바로가기 추가
 // todo (설정화면) 조작방법 설명
 // todo 새로운 기록 갱신 시 push 알림

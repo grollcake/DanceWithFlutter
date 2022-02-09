@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lottie/lottie.dart';
+// import 'package:lottie/lottie.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/constants/constants.dart';
 import 'package:tetris/managers/app_settings.dart';
@@ -21,7 +21,7 @@ class _SettingsDetailAboutState extends State<SettingsDetailAbout> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Lottie.asset('assets/animations/lottie-space.json'),
+        // Lottie.asset('assets/animations/lottie-space.json'),
         SizedBox(height: 30),
         Text('Developed by ERA, 2022',
             style: TextStyle(fontSize: 16, color: AppStyle.accentColor, fontWeight: FontWeight.bold)),
