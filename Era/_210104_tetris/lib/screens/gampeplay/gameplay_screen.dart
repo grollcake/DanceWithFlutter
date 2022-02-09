@@ -13,6 +13,7 @@ import 'package:tetris/modules/shaker_widget.dart';
 import 'package:tetris/modules/sound_effect.dart';
 import 'package:tetris/modules/bgm_player.dart';
 import 'package:tetris/modules/swipe_controller.dart';
+import 'package:tetris/modules/swipe_detector.dart';
 import 'package:tetris/screens/scoreboard/scoreboard_screen.dart';
 import 'package:tetris/screens/settings/settings_screen.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
@@ -289,39 +290,40 @@ class _GameScreenState extends State<GameScreen> {
           ),
           SizedBox(height: 6),
           // 메인 게임 패널
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              SizedBox(width: 60),
-              Expanded(
-                child: SwipeController(
+          SwipeDetector(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SizedBox(width: 60),
+                Expanded(
                   child: buildTetrisPanel(),
-                  onTap: () => _movenRotate('ROTATE'),
-                  onSwipeLeft: (int steps) {
-                    for (int i = 0; i < steps; i++) {
-                      _movenRotate('LEFT');
-                    }
-                  },
-                  onSwipeRight: (int steps) {
-                    for (int i = 0; i < steps; i++) {
-                      _movenRotate('RIGHT');
-                    }
-                  },
-                  onSwipeUp: () => _holdBlock(),
-                  onSwipeDown: (int steps) {
-                    for (int i = 0; i < steps; i++) {
-                      _movenRotate('DOWN');
-                    }
-                  },
-                  onSwipeDrop: () => _dropBlock(),
                 ),
-              ),
-              SizedBox(
-                width: 60,
-                child: buildPauseControll(),
-              ),
-            ],
+                SizedBox(
+                  width: 60,
+                  child: buildPauseControll(),
+                ),
+              ],
+            ),
+            onTap: () => _movenRotate('ROTATE'),
+            onSwipeLeft: (int steps) {
+              for (int i = 0; i < steps; i++) {
+                _movenRotate('LEFT');
+              }
+            },
+            onSwipeRight: (int steps) {
+              for (int i = 0; i < steps; i++) {
+                _movenRotate('RIGHT');
+              }
+            },
+            onSwipeUp: () => _holdBlock(),
+            onSwipeDown: (int steps) {
+              for (int i = 0; i < steps; i++) {
+                _movenRotate('DOWN');
+              }
+            },
+            onSwipeDrop: () => _dropBlock(),
           ),
+
           Spacer(),
         ],
       ),

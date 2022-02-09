@@ -38,6 +38,7 @@ class _SwipeControllerState extends State<SwipeController> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       child: widget.child,
       onTap: widget.onTap,
       onHorizontalDragStart: (DragStartDetails details) {
