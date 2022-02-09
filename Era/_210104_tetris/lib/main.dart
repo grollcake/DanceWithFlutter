@@ -70,13 +70,14 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done (문제해결) 배경화면이 늦게 나타나는 문제  -- release 모드 사용시 해결됨
 // Done 타일의 모양 개선
 // Done (문제해결) 낮은 터치 감도와 자연스러운 스와이프 추적
+// Done (문제해결) SwipeDrop, SwipeUp이 자주 발생함
+// Done (설정화면) 스와이프 감도 설정 화면 구현
 // todo 새로운 기록 달성 시 toast 메시지로 안내
 // todo (문제해결) lottie 이미지가 깨짐
 // todo (문제해결) 사운드가 늦게 초기화되는 문제
 // todo iOS PWA 버전에서 사용자명 변경이 안되는 오류 수정
 // todo gameend dialog에서 새로운 기록 알림 및 scoreboard 바로가기 추가
 // todo (설정화면) 조작방법 설명
-// todo (설정화면) 스와이프 감도 설정 화면 구현 (미니 블록으로 직접 스와이핑 하면서 감도 설정)
 // todo 새로운 기록 갱신 시 push 알림
 
 void main() async {

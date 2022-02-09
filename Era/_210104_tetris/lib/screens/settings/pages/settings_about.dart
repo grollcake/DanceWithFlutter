@@ -17,16 +17,11 @@ class SettingsDetailAbout extends StatefulWidget {
 class _SettingsDetailAboutState extends State<SettingsDetailAbout> {
   @override
   Widget build(BuildContext context) {
-    String platform = defaultTargetPlatform.toString().split('.')[1];
-    if (kIsWeb) {
-      platform = '$platform (web)';
-    }
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Lottie.asset('assets/animations/lottie-space.json', width: 140, height: 140),
+        Lottie.asset('assets/animations/lottie-space.json'),
         SizedBox(height: 30),
         Text('Developed by ERA, 2022',
             style: TextStyle(fontSize: 16, color: AppStyle.accentColor, fontWeight: FontWeight.bold)),
@@ -49,7 +44,19 @@ class _SettingsDetailAboutState extends State<SettingsDetailAbout> {
             minimumSize: Size(160, 34),
           ),
         ),
-        Spacer(),
+        // Spacer(),
+        // buildUserInfo(),
+      ],
+    );
+  }
+
+  Widget buildUserInfo() {
+    String platform = defaultTargetPlatform.toString().split('.')[1];
+    if (kIsWeb) {
+      platform = '$platform (web)';
+    }
+    return Column(
+      children: [
         Container(
           alignment: Alignment.centerLeft,
           margin: EdgeInsets.only(bottom: 6),

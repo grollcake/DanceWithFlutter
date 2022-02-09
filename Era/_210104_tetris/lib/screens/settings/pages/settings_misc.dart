@@ -28,6 +28,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
         SizedBox(height: 30),
         // Shadow block
         buildShadowBlockChoice(),
+        SizedBox(height: 30),
+        // 조작 감도
+        buildSensitivityChoice(),
       ],
     );
   }
@@ -194,6 +197,62 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
                 ),
               ),
             ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildSensitivityChoice() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SettingsSubtitle(title: '조작 감도'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            GestureDetector(
+              onTap: () => setState(() {
+                AppSettings.swipeSensitivity = 0;
+              }),
+              child: SelectedItem(
+                selected: AppSettings.swipeSensitivity == 0,
+                child: Container(
+                  width: 50,
+                  height: 30,
+                  alignment: Alignment.center,
+                  child: Text('보통', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => setState(() {
+                AppSettings.swipeSensitivity = 1;
+              }),
+              child: SelectedItem(
+                selected: AppSettings.swipeSensitivity == 1,
+                child: Container(
+                  width: 50,
+                  height: 30,
+                  alignment: Alignment.center,
+                  child: Text('느리게', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => setState(() {
+                AppSettings.swipeSensitivity = 2;
+              }),
+              child: SelectedItem(
+                selected: AppSettings.swipeSensitivity == 2,
+                child: Container(
+                  width: 50,
+                  height: 30,
+                  alignment: Alignment.center,
+                  child: Text('빠르게', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
+                ),
+              ),
+            )
           ],
         ),
       ],

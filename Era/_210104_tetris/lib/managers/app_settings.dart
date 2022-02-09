@@ -155,6 +155,13 @@ class AppSettings {
     saveSettings();
   }
 
+  static int _swipeSensitivity = 0; // 조작감도: 0-보통, 1-느리게, 2-빠르게
+  static int get swipeSensitivity => _swipeSensitivity;
+  static set swipeSensitivity(int value) {
+    _swipeSensitivity = value;
+    saveSettings();
+  }
+
   // 이건 기기설정에 저장하지는 않음
   static int selectedMenuIndex = 0;
 
@@ -174,6 +181,7 @@ class AppSettings {
       'soundEffect': _soundEffect,
       'showGridLine': _showGridLine,
       'showShadowBlock': _showShadowBlock,
+      'swipeSensitivity': _swipeSensitivity,
     };
     String settingsString = jsonEncode(settings);
     bool result = await preferences.setString('settings', settingsString);
@@ -202,6 +210,7 @@ class AppSettings {
       _soundEffect = (settings['soundEffect'] ?? false) as bool;
       _showGridLine = settings['showGridLine'] as bool;
       _showShadowBlock = settings['showShadowBlock'] as bool;
+      _swipeSensitivity = (settings['swipeSensitivity'] ?? 0) as int;
 
       return true;
     } else {
