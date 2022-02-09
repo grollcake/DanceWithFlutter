@@ -3,7 +3,7 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "765aa61fb3676f97143253290126315d",
+  "assets/AssetManifest.json": "9feabf06349c04223d70f392cce8bce9",
 "assets/assets/animations/lottie-dog-loading.json": "ee3bf01f617e0b898c960f37e9f1b48f",
 "assets/assets/animations/lottie-space.json": "05b099c29212cfde79d7a982560d6fa7",
 "assets/assets/images/bg01.png": "f9c6a4eea668aa83b33df998bc3f82a7",
@@ -13,6 +13,7 @@ const RESOURCES = {
 "assets/assets/images/bg05.jpg": "893685ba17d832e13590bc8444c474a3",
 "assets/assets/images/bg06.jpg": "fce9ac020e455c6680005851a4573386",
 "assets/assets/images/code.png": "d43032cbbf59c0ecc08c73de88524bc9",
+"assets/assets/images/space.gif": "3dc3c1b1b8b09431fae0f06c621f241e",
 "assets/assets/sound/background.wav": "3d15a89f45f772d8153a48d1285c958b",
 "assets/assets/sound/clearning.wav": "8fb75c98bb5ee8764a33b368b68caeb5",
 "assets/assets/sound/clearning2.wav": "57ae9b34e270e588a7f5b32e9fad1346",
@@ -41,9 +42,9 @@ const RESOURCES = {
 "icons/Icon-512.png": "168bea986290e053a1624a20221275fd",
 "icons/Icon-maskable-192.png": "5da8e1f83abbbefbc62f3d3fce69f7fc",
 "icons/Icon-maskable-512.png": "168bea986290e053a1624a20221275fd",
-"index.html": "0aa113431f81e3d7f063bedf7670783f",
-"/": "0aa113431f81e3d7f063bedf7670783f",
-"main.dart.js": "6fc7b1de0ba7948263cd01dc17876832",
+"index.html": "986938b98d059f14e9175f153853a1f1",
+"/": "986938b98d059f14e9175f153853a1f1",
+"main.dart.js": "bb4c15c06a37c154b0105ea667324233",
 "manifest.json": "b634c074dcb1c75ead7158e4675bebca",
 "version.json": "7b2471689c73be94afe1a6995c8601d3"
 };

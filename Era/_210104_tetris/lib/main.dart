@@ -72,8 +72,8 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done (문제해결) 낮은 터치 감도와 자연스러운 스와이프 추적
 // Done (문제해결) SwipeDrop, SwipeUp이 자주 발생함
 // Done (설정화면) 스와이프 감도 설정 화면 구현
+// Done (문제해결) lottie 이미지가 깨져서 gif로 교체
 // todo 새로운 기록 달성 시 toast 메시지로 안내
-// todo (문제해결) lottie 이미지가 깨짐
 // todo (문제해결) 사운드가 늦게 초기화되는 문제
 // todo (문제해결) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제
 // todo (문제해결) iOS PWA 버전에서 사용자명 변경이 안되는 오류 수정
