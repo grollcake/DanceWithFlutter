@@ -10,9 +10,9 @@ import 'package:tetris/managers/scoreboard.dart';
 import 'package:tetris/managers/ttboard.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/modules/shaker_widget.dart';
+import 'package:tetris/modules/show_toast.dart';
 import 'package:tetris/modules/sound_effect.dart';
 import 'package:tetris/modules/bgm_player.dart';
-import 'package:tetris/modules/swipe_controller.dart';
 import 'package:tetris/modules/swipe_detector.dart';
 import 'package:tetris/screens/scoreboard/scoreboard_screen.dart';
 import 'package:tetris/screens/settings/settings_screen.dart';
@@ -35,16 +35,21 @@ class _GameScreenState extends State<GameScreen> {
   bool _isFlikering = false;
   bool _isPaused = false;
 
-  final _bgmPlayer = BgmPlayer();
-  final _soundEffect = SoundEffect();
+  BgmPlayer? _bgmPlayer;
+  SoundEffect? _soundEffect;
 
   GlobalKey<ShakeWidgetState> shakeKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    _bgmPlayer.init();
-    _soundEffect.init();
+
+    // _bgmPlayer = BgmPlayer();
+    // _bgmPlayer!.init();
+    //
+    // _soundEffect = SoundEffect();
+    // _soundEffect!.init().then((value) => showToast('SoundEffect is initialized'));
+
     Future.delayed(Duration(milliseconds: 1000), () => _startGame(reset: true));
   }
 
@@ -58,8 +63,8 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void dispose() {
     super.dispose();
-    _bgmPlayer.dispose();
-    _soundEffect.dispose();
+    _bgmPlayer?.dispose();
+    _soundEffect?.dispose();
   }
 
   // 게임 시작
@@ -70,7 +75,7 @@ class _GameScreenState extends State<GameScreen> {
       ttBoard.levelUp();
     }
     if (AppSettings.backgroundMusic) {
-      _bgmPlayer.startBGM();
+      _bgmPlayer?.startBGM();
     }
     _generateNewBlock();
   }
@@ -109,8 +114,8 @@ class _GameScreenState extends State<GameScreen> {
 
   // 다음 레벨 이동
   void _showNextLevelDialog() {
-    _bgmPlayer.stopBGM();
-    _soundEffect.levelUpSound();
+    _bgmPlayer?.stopBGM();
+    _soundEffect?.levelUpSound();
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -122,8 +127,8 @@ class _GameScreenState extends State<GameScreen> {
 
   // 게임종료 Dialog
   void _showGameEndDialog() {
-    _bgmPlayer.stopBGM();
-    _soundEffect.gameEndSound();
+    _bgmPlayer?.stopBGM();
+    _soundEffect?.gameEndSound();
     ScoreBoard().updateScore(score: ttBoard.getScore, level: ttBoard.getLevel);
     showDialog(
       context: context,
@@ -152,7 +157,7 @@ class _GameScreenState extends State<GameScreen> {
         isChanged = ttBoard.rotate();
         if (isChanged) {
           // _soundPlayer.rotateSound();
-          _soundEffect.rotateSound();
+          _soundEffect?.rotateSound();
         }
         break;
     }
@@ -169,7 +174,7 @@ class _GameScreenState extends State<GameScreen> {
   // 블록 떨어뜨리기
   void _dropBlock() {
     if (ttBoard.dropBlock()) {
-      _soundEffect.dropSound();
+      _soundEffect?.dropSound();
       shakeKey.currentState!.shake();
       _fixingBlockPosition();
     }
@@ -178,7 +183,7 @@ class _GameScreenState extends State<GameScreen> {
   // 블록 홀드
   void _holdBlock() {
     if (ttBoard.holdBlock()) {
-      _soundEffect.holdSound();
+      _soundEffect?.holdSound();
       setState(() {});
     }
   }
@@ -192,7 +197,7 @@ class _GameScreenState extends State<GameScreen> {
 
     // 완성된 줄이 있는 경우, 깜빡이다가 지우기
     if (ttBoard.hasCompleteRow()) {
-      _soundEffect.clearningSound();
+      _soundEffect?.clearningSound();
       // 줄 삭제전 깜빡임 이벤트 보여주기
       for (int i = 0; i < 4; i++) {
         await Future.delayed(Duration(milliseconds: 100));
@@ -223,7 +228,7 @@ class _GameScreenState extends State<GameScreen> {
     // 일시정지 처리
     if (isPausing) {
       if (AppSettings.backgroundMusic) {
-        _bgmPlayer.pauseBGM();
+        _bgmPlayer?.pauseBGM();
       }
 
       // 블록 자동이동 timer 일시정지
@@ -237,10 +242,10 @@ class _GameScreenState extends State<GameScreen> {
     // 게임 재개 처리
     else {
       if (AppSettings.backgroundMusic) {
-        if (_bgmPlayer.bgmStatus == PlayerState.PAUSED) {
-          _bgmPlayer.resumeBGM();
+        if (_bgmPlayer?.bgmStatus == PlayerState.PAUSED) {
+          _bgmPlayer?.resumeBGM();
         } else {
-          _bgmPlayer.startBGM();
+          _bgmPlayer?.startBGM();
         }
       }
 
