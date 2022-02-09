@@ -34,6 +34,7 @@ class _GameScreenState extends State<GameScreen> {
   PausableTimer? _timer;
   bool _isFlikering = false;
   bool _isPaused = false;
+  bool _scoreBreakNotified = false;
 
   BgmPlayer? _bgmPlayer;
   SoundEffect? _soundEffect;
@@ -44,11 +45,11 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
 
-    // _bgmPlayer = BgmPlayer();
-    // _bgmPlayer!.init();
-    //
-    // _soundEffect = SoundEffect();
-    // _soundEffect!.init().then((value) => showToast('SoundEffect is initialized'));
+    _bgmPlayer = BgmPlayer();
+    _bgmPlayer!.init();
+
+    _soundEffect = SoundEffect();
+    _soundEffect!.init();
 
     Future.delayed(Duration(milliseconds: 1000), () => _startGame(reset: true));
   }
@@ -71,6 +72,7 @@ class _GameScreenState extends State<GameScreen> {
   void _startGame({bool reset = false}) {
     if (reset) {
       ttBoard.reset();
+      _scoreBreakNotified = false;
     } else {
       ttBoard.levelUp();
     }
@@ -120,23 +122,52 @@ class _GameScreenState extends State<GameScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return GameDialog(title: 'Congratulation!', btnText: 'Next level', onPressed: () => _startGame());
+        return GameDialog(title: 'Congratulation!', primaryText: 'Next level', primaryPressed: () => _startGame());
       },
     );
   }
 
   // 게임종료 Dialog
-  void _showGameEndDialog() {
-    _bgmPlayer?.stopBGM();
-    _soundEffect?.gameEndSound();
-    ScoreBoard().updateScore(score: ttBoard.getScore, level: ttBoard.getLevel);
+  void _showGameEndDialog([bool recursive = false]) {
+    // 재귀호출인 경우 몇가지는 생략한다.
+    if (!recursive) {
+      _bgmPlayer?.stopBGM();
+      _soundEffect?.gameEndSound();
+      ScoreBoard().updateScore(score: ttBoard.getScore, level: ttBoard.getLevel);
+    }
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return GameDialog(title: 'G A M E  E N D', btnText: 'Restart', onPressed: () => _startGame(reset: true));
+        return GameDialog(
+          title: 'G A M E  E N D',
+          primaryText: '재시작',
+          primaryPressed: () => _startGame(reset: true),
+          secondaryText: '점수표',
+          secondaryPressed: () async {
+            await showScoreboardDialog();
+            _showGameEndDialog(true);
+          },
+        );
       },
     );
+  }
+
+  // 점수표 보기
+  Future<void> showScoreboardDialog() async {
+    // 타이머들 일시 정지
+    _pauseControll(true);
+
+    // 일시정지 다이얼로그 노출
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return ScoreBoardScreen();
+      },
+    );
+    setState(() {});
+    _pauseControll(false);
   }
 
   // 블록 이동
@@ -195,7 +226,7 @@ class _GameScreenState extends State<GameScreen> {
       ttBoard.fixBlock();
     });
 
-    // 완성된 줄이 있는 경우, 깜빡이다가 지우기
+    // 완성 줄이 있는 경우, 깜빡이다가 지우기
     if (ttBoard.hasCompleteRow()) {
       _soundEffect?.clearningSound();
       // 줄 삭제전 깜빡임 이벤트 보여주기
@@ -206,10 +237,16 @@ class _GameScreenState extends State<GameScreen> {
         });
       }
 
-      // 줄 삭제
+      // 완성 줄 삭제
       setState(() {
         ttBoard.clearing();
       });
+
+      // 최고기록 경신 알림
+      if (AppSettings.highestScore > 0 && AppSettings.highestScore < ttBoard.getScore && !_scoreBreakNotified) {
+        _scoreBreakNotified = true;
+        showToast('직전 기록을 넘었습니다!');
+      }
     }
 
     await Future.delayed(ttBoard.getSpeed);
@@ -344,19 +381,7 @@ class _GameScreenState extends State<GameScreen> {
       actions: [
         IconButton(
           onPressed: () async {
-            // 타이머들 일시 정지
-            _pauseControll(true);
-
-            // 일시정지 다이얼로그 노출
-            await showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return ScoreBoardScreen();
-              },
-            );
-            setState(() {});
-            _pauseControll(false);
+            await showScoreboardDialog();
           },
           icon: Icon(
             FontAwesomeIcons.trophy,
@@ -512,7 +537,7 @@ class _GameScreenState extends State<GameScreen> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return GameDialog(title: 'P A U S E D', btnText: 'Resume', onPressed: () => _pauseControll(false));
+            return GameDialog(title: 'P A U S E D', primaryText: 'Resume', primaryPressed: () => _pauseControll(false));
           },
         );
       },

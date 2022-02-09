@@ -29,7 +29,7 @@ class SwipeDetector extends StatefulWidget {
 }
 
 class _SwipeDetectorState extends State<SwipeDetector> {
-  final double _xAxisThreadhold = 30.0;
+  final double _xAxisThreadhold = 40.0;
   final double _yAxisThreadhold = 20.0;
   final double _dropTriggerSpeed = 0.15; // 마지막 아래방향으로 이동속도가 이 이상이면 Drop으로 판정
   final int _dropCheckMillisecond = 50;
@@ -126,6 +126,11 @@ class _SwipeDetectorState extends State<SwipeDetector> {
       onPointerUp: (PointerUpEvent event) {
         handleMoveEvent(event.delta);
 
+        if (callBackCount == 0 && totalSwipeDistance <= 3) {
+          widget.onTap();
+          return;
+        }
+
         // Drop이 발생했는지 확인: 마지막 50ms 동안 아래로 움직인 속도 확인
         if (_isDropOccurred()) {
           // Drop 직전의 SwipeDown은 취소해버린다.
@@ -134,9 +139,25 @@ class _SwipeDetectorState extends State<SwipeDetector> {
             delayedSwipeDownStep = 0;
           }
           widget.onSwipeDrop();
-          callBackCount += 1;
-        } else if (callBackCount == 0) {
-          widget.onTap();
+          return;
+        }
+
+        // 여기까지 왔다면 너무 조금 움직여서 아무 이벤트도 발생하지 않은 경우이다
+        // 이벤트 하나는 발생시키고 종료하자
+        if (callBackCount == 0 && horizontalSwipeDistance != verticalSwipeDistance) {
+          if (horizontalSwipeDistance.abs() > verticalSwipeDistance.abs()) {
+            if (horizontalSwipeDistance > 0) {
+              widget.onSwipeRight(1);
+            } else {
+              widget.onSwipeLeft(1);
+            }
+          } else {
+            if (verticalSwipeDistance > 0) {
+              widget.onSwipeDown(1);
+            } else {
+              widget.onSwipeUp();
+            }
+          }
         }
       },
       onPointerMove: (PointerMoveEvent event) {

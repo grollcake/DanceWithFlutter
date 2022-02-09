@@ -12,6 +12,9 @@ class ScoreBoard {
 
   // 점수 등록
   Future<void> updateScore({required int score, required int level}) async {
+    // AppSettings에 최고 기록을 등록한다.
+    AppSettings.highestScore = max(score, AppSettings.highestScore);
+
     // Firestore에 이미 등록된 정보가 있는지 확인한다. (userId, username은 AppSettings에서 가져온다)
     Score? remoteScore = await _firestoreFetch();
     if (remoteScore != null) {

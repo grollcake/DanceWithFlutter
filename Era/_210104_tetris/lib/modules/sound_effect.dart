@@ -5,7 +5,6 @@ import 'package:tetris/managers/app_settings.dart';
 
 class SoundEffect {
   Soundpool? _soundpool;
-  SoundpoolOptions _soundpoolOptions = SoundpoolOptions();
   int dropSoundId = 0; // 블록 떨어뜨리기
   int rotateSoundId = 0; // 블록 회전
   int clearningSoundId = 0; // 완성줄 삭제
@@ -14,7 +13,7 @@ class SoundEffect {
   int levelUpSoundId = 0; // 현재 레벨 완료
 
   Future<void> init() async {
-    _soundpool = Soundpool.fromOptions(options: _soundpoolOptions);
+    _soundpool = Soundpool(streamType: StreamType.alarm);
     if (!kIsWeb) {}
 
     var asset = await rootBundle.load('assets/sound/rotate3.wav');

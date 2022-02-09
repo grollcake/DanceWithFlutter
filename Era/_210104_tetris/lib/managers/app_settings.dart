@@ -124,6 +124,13 @@ class AppSettings {
     saveSettings();
   }
 
+  static int _highestScore = 0;
+  static int get highestScore => _highestScore;
+  static set highestScore(int value) {
+    _highestScore = value;
+    saveSettings();
+  }
+
   ////////////////////////////////////////////////////////////////////////
   // 기타 설정
   ////////////////////////////////////////////////////////////////////////
@@ -177,6 +184,7 @@ class AppSettings {
       'tileTypeId': _tileTypeId,
       'userId': _userId,
       'username': _username,
+      'highestScore': _highestScore,
       'backgroundMusic': _backgroundMusic,
       'soundEffect': _soundEffect,
       'showGridLine': _showGridLine,
@@ -201,15 +209,16 @@ class AppSettings {
       debugPrint(settingsString);
       Map<String, dynamic> settings = jsonDecode(settingsString);
 
-      _backgroundImageId = settings['backgroundImageId'] as int;
-      _colorSetId = settings['colorSetId'] as int;
-      _tileTypeId = settings['tileTypeId'] as int;
+      _backgroundImageId = (settings['backgroundImageId'] ?? 0) as int;
+      _colorSetId = (settings['colorSetId'] ?? 0) as int;
+      _tileTypeId = (settings['tileTypeId'] ?? 0) as int;
       _userId = (settings['userId'] ?? '') as String;
       _username = (settings['username'] ?? '') as String;
-      _backgroundMusic = settings['backgroundMusic'] as bool;
-      _soundEffect = (settings['soundEffect'] ?? false) as bool;
-      _showGridLine = settings['showGridLine'] as bool;
-      _showShadowBlock = settings['showShadowBlock'] as bool;
+      _highestScore = (settings['highestScore'] ?? 0) as int;
+      _backgroundMusic = (settings['backgroundMusic'] ?? true) as bool;
+      _soundEffect = (settings['soundEffect'] ?? true) as bool;
+      _showGridLine = (settings['showGridLine'] ?? true) as bool;
+      _showShadowBlock = (settings['showShadowBlock'] ?? true) as bool;
       _swipeSensitivity = (settings['swipeSensitivity'] ?? 0) as int;
 
       return true;

@@ -73,12 +73,11 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done (문제해결) SwipeDrop, SwipeUp이 자주 발생함
 // Done (설정화면) 스와이프 감도 설정 화면 구현
 // Done (문제해결) lottie 이미지가 깨져서 gif로 교체
+// Done (문제해결) 미세한 스와이프 이동 감지
+// Done gameend dialog에서 scoreboard 바로가기 추가
+// Done 새로운 기록 달성 시 toast 메시지로 안내
 // todo (문제해결) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제 - sound 기능을 모두 끄고 테스트
-// todo 새로운 기록 달성 시 toast 메시지로 안내
 // todo (문제해결) 사운드가 늦게 초기화되는 문제
-// todo gameend dialog에서 새로운 기록 알림 및 scoreboard 바로가기 추가
-// todo (설정화면) 조작방법 설명
-// todo 새로운 기록 갱신 시 push 알림
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

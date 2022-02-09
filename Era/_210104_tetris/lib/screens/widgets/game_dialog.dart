@@ -3,11 +3,20 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class GameDialog extends StatelessWidget {
-  const GameDialog({Key? key, required this.onPressed, required this.title, required this.btnText, this.content})
+  const GameDialog(
+      {Key? key,
+      required this.primaryPressed,
+      required this.title,
+      required this.primaryText,
+      this.content,
+      this.secondaryPressed,
+      this.secondaryText})
       : super(key: key);
   final String title;
-  final String btnText;
-  final Function onPressed;
+  final String primaryText;
+  final Function primaryPressed;
+  final String? secondaryText;
+  final Function? secondaryPressed;
   final Widget? content;
 
   @override
@@ -41,15 +50,31 @@ class GameDialog extends StatelessWidget {
                 ),
                 actions: [
                   Center(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        onPressed();
-                      },
-                      child: Text(
-                        btnText,
-                        style: TextStyle(fontSize: 14, color: Colors.yellow),
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            primaryPressed();
+                          },
+                          child: Text(
+                            primaryText,
+                            style: TextStyle(fontSize: 14, color: Colors.yellow),
+                          ),
+                        ),
+                        if (secondaryText != null)
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              secondaryPressed!();
+                            },
+                            child: Text(
+                              secondaryText!,
+                              style: TextStyle(fontSize: 14, color: Colors.yellow),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],
