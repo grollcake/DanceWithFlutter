@@ -77,8 +77,11 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done gameend dialog에서 scoreboard 바로가기 추가
 // Done 새로운 기록 달성 시 toast 메시지로 안내
 // Done (문제해결) 이동거리가 2칸 미만인 경우 drop이 되지 않음
+// Done (문제해결) flutter 2.10 미대응으로 soundpool을 audio_play로 변경
+// Done Fixing 사운드 추가
+// todo Fixing 애니메이션 추가
 // todo (문제해결) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제 - sound 기능을 모두 끄고 테스트
-// todo (문제해결) 사운드가 늦게 초기화되는 문제
+// todo 배경화면 변경, 사운드 추가 (fix, 좌우이동)
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

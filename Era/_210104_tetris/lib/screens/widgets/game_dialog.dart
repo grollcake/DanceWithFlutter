@@ -51,7 +51,7 @@ class GameDialog extends StatelessWidget {
                 actions: [
                   Center(
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         TextButton(
                           onPressed: () {

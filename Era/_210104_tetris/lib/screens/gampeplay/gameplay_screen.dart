@@ -207,7 +207,7 @@ class _GameScreenState extends State<GameScreen> {
     if (ttBoard.dropBlock()) {
       _soundEffect?.dropSound();
       shakeKey.currentState!.shake();
-      _fixingBlockPosition();
+      _fixingBlockPosition(isDrop: true);
     }
   }
 
@@ -220,8 +220,11 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   // 블록 위치 확정
-  void _fixingBlockPosition() async {
+  void _fixingBlockPosition({bool isDrop = false}) async {
     _timer?.cancel();
+
+    if (!isDrop) _soundEffect!.fixingSound();
+
     setState(() {
       ttBoard.fixBlock();
     });
