@@ -35,15 +35,14 @@ class _SwipeDetectorState extends State<SwipeDetector> {
   final int _dropCheckMillisecond = 50;
   final double _dropTriggerDistance = 20;
 
-  Timer? _timer;
-  int startTimestamp = 0;
+  List<Timer> _delayedSwipeDownTimer = [];
+  int _startTimestamp = 0;
   List<Map<String, dynamic>> _moveHistory = [];
-  double totalSwipeDistance = 0.0;
-  double verticalSwipeDistance = 0.0;
-  double horizontalSwipeDistance = 0.0;
-  int delayedSwipeDownStep = 0;
-  bool isSwipeDone = false;
-  int callBackCount = 0;
+  double _totalSwipeDistance = 0.0;
+  double _verticalSwipeDistance = 0.0;
+  double _horizontalSwipeDistance = 0.0;
+  bool _isSwipeDone = false;
+  int _callBackCount = 0;
 
   // 이동 정보 처리
   void handleMoveEvent(Offset delta) {
@@ -63,47 +62,41 @@ class _SwipeDetectorState extends State<SwipeDetector> {
     }
 
     // 1. 이동 거리 정보 기록
-    int currentElapsedMs = DateTime.now().millisecondsSinceEpoch - startTimestamp;
+    int currentElapsedMs = DateTime.now().millisecondsSinceEpoch - _startTimestamp;
     _moveHistory.add({'elapsedMillisecond': currentElapsedMs, 'deltaX': delta.dx, 'deltaY': delta.dy});
 
     // 2. 이동 거리 누적값 계산
-    totalSwipeDistance += delta.dx.abs() + delta.dy.abs();
-    horizontalSwipeDistance += delta.dx;
-    verticalSwipeDistance += delta.dy;
+    _totalSwipeDistance += delta.dx.abs() + delta.dy.abs();
+    _horizontalSwipeDistance += delta.dx;
+    _verticalSwipeDistance += delta.dy;
 
     // 3. 임계치 초과 시 사용자 함수 호출
-    if (horizontalSwipeDistance ~/ xAxisThreadhold != 0) {
-      int steps = horizontalSwipeDistance ~/ xAxisThreadhold;
-      horizontalSwipeDistance = horizontalSwipeDistance - xAxisThreadhold * steps;
-      verticalSwipeDistance = 0;
-      callBackCount += steps.abs();
+    if (_horizontalSwipeDistance ~/ xAxisThreadhold != 0) {
+      int steps = _horizontalSwipeDistance ~/ xAxisThreadhold;
+      _horizontalSwipeDistance = _horizontalSwipeDistance - xAxisThreadhold * steps;
+      _verticalSwipeDistance = 0;
+      _callBackCount += steps.abs();
       if (steps > 0) {
         widget.onSwipeRight(steps);
       } else {
         widget.onSwipeLeft(-steps);
       }
     }
-    if (verticalSwipeDistance ~/ yAxisThreadhold != 0) {
-      int steps = verticalSwipeDistance ~/ yAxisThreadhold;
-      verticalSwipeDistance = verticalSwipeDistance - yAxisThreadhold * steps;
-      horizontalSwipeDistance = 0;
-      callBackCount += steps.abs();
+    if (_verticalSwipeDistance ~/ yAxisThreadhold != 0) {
+      int steps = _verticalSwipeDistance ~/ yAxisThreadhold;
+      _verticalSwipeDistance = _verticalSwipeDistance - yAxisThreadhold * steps;
+      _horizontalSwipeDistance = 0;
+      _callBackCount += steps.abs();
       if (steps > 0) {
-        // 미처리된 SwipeDown이 있다면 그것부터 처리한다.
-        if (_timer?.isActive ?? false) {
-          _timer!.cancel();
-          widget.onSwipeDown(delayedSwipeDownStep);
-        }
         // SwipeDown인 경우 Drop 일수도 있기 때문에 약간 지연 처리한다.
-        delayedSwipeDownStep = steps;
-        _timer = Timer(const Duration(milliseconds: 200), () {
-          widget.onSwipeDown(steps);
-          delayedSwipeDownStep = 0;
-          _timer = null;
-        });
+        _delayedSwipeDownTimer.add(
+          Timer(const Duration(milliseconds: 100), () {
+            widget.onSwipeDown(steps);
+          }),
+        );
       } else {
         widget.onSwipeUp();
-        isSwipeDone = true;
+        _isSwipeDone = true;
       }
     }
   }
@@ -114,19 +107,18 @@ class _SwipeDetectorState extends State<SwipeDetector> {
       behavior: HitTestBehavior.translucent,
       child: widget.child,
       onPointerDown: (PointerDownEvent event) {
-        isSwipeDone = false;
-        callBackCount = 0;
-        totalSwipeDistance = 0.0;
-        verticalSwipeDistance = 0;
-        horizontalSwipeDistance = 0;
-        delayedSwipeDownStep = 0;
-        startTimestamp = DateTime.now().millisecondsSinceEpoch;
+        _isSwipeDone = false;
+        _callBackCount = 0;
+        _totalSwipeDistance = 0.0;
+        _verticalSwipeDistance = 0;
+        _horizontalSwipeDistance = 0;
+        _startTimestamp = DateTime.now().millisecondsSinceEpoch;
         _moveHistory = [];
       },
       onPointerUp: (PointerUpEvent event) {
         handleMoveEvent(event.delta);
 
-        if (callBackCount == 0 && totalSwipeDistance <= 3) {
+        if (_callBackCount == 0 && _totalSwipeDistance <= 3) {
           widget.onTap();
           return;
         }
@@ -134,41 +126,34 @@ class _SwipeDetectorState extends State<SwipeDetector> {
         // Drop이 발생했는지 확인: 마지막 50ms 동안 아래로 움직인 속도 확인
         if (_isDropOccurred()) {
           // Drop 직전의 SwipeDown은 취소해버린다.
-          if (_timer?.isActive ?? false) {
-            _timer!.cancel();
-            delayedSwipeDownStep = 0;
+          for (final t in _delayedSwipeDownTimer) {
+            if (t.isActive) t.cancel();
           }
           widget.onSwipeDrop();
           return;
         }
 
         // 여기까지 왔다면 너무 조금 움직여서 아무 이벤트도 발생하지 않은 경우이다
-        // 이벤트 하나는 발생시키고 종료하자
-        if (callBackCount == 0 && horizontalSwipeDistance != verticalSwipeDistance) {
-          if (horizontalSwipeDistance.abs() > verticalSwipeDistance.abs()) {
-            if (horizontalSwipeDistance > 0) {
+        // 좌우 이동 정도는 처리하고 종료하자
+        if (_callBackCount == 0) {
+          if (_horizontalSwipeDistance.abs() > _verticalSwipeDistance.abs()) {
+            if (_horizontalSwipeDistance > 0) {
               widget.onSwipeRight(1);
             } else {
               widget.onSwipeLeft(1);
-            }
-          } else {
-            if (verticalSwipeDistance > 0) {
-              widget.onSwipeDown(1);
-            } else {
-              widget.onSwipeUp();
             }
           }
         }
       },
       onPointerMove: (PointerMoveEvent event) {
-        if (isSwipeDone) return;
+        if (_isSwipeDone) return;
         handleMoveEvent(event.delta);
       },
     );
   }
 
   bool _isDropOccurred() {
-    int currentElapsedMilliseconds = DateTime.now().millisecondsSinceEpoch - startTimestamp;
+    int currentElapsedMilliseconds = DateTime.now().millisecondsSinceEpoch - _startTimestamp;
     double dropDistance = 0;
     double horizontalDistance = 0;
     int dropElapsedMilliseconds = 0;
@@ -192,7 +177,7 @@ class _SwipeDetectorState extends State<SwipeDetector> {
     // Drop 속도 계산
     if (dropDistance > horizontalDistance.abs() && dropDistance >= 20) {
       double dropVelocity = dropDistance / dropElapsedMilliseconds;
-      double totalVelocity = verticalSwipeDistance / currentElapsedMilliseconds;
+      double totalVelocity = _verticalSwipeDistance / currentElapsedMilliseconds;
       // print(
       //     'Drop( ${dropDistance.toStringAsFixed(2)} / ${dropElapsedMilliseconds}ms => ${dropVelocity.toStringAsFixed(2)})  '
       //     'Total( ${verticalSwipeDistance.toStringAsFixed(2)} / ${currentElapsedMilliseconds}ms => ${totalVelocity.toStringAsFixed(2)})');
