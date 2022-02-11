@@ -5,18 +5,20 @@ import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/models/enums.dart';
 
 class TTTile extends StatelessWidget {
-  const TTTile({Key? key, required this.blockId, required this.status}) : super(key: key);
+  const TTTile({Key? key, required this.blockId, required this.status, this.color, this.typeId}) : super(key: key);
   final TTBlockID blockId;
   final TTBlockStatus status;
+  final Color? color;
+  final int? typeId;
   static const typeCount = 4;
 
   @override
   Widget build(BuildContext context) {
-    Color color = AppSettings.tileColor(blockId);
+    Color color = this.color ?? AppSettings.tileColor(blockId);
     if (status == TTBlockStatus.shadow) {
       color = color.withOpacity(0.2);
     }
-    return _getShape(AppSettings.tileTypeId, color);
+    return _getShape(typeId ?? AppSettings.tileTypeId, color);
   }
 
   static Widget _getShape(int id, [Color color = Colors.green]) {

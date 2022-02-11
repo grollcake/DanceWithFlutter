@@ -79,8 +79,14 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done (문제해결) 이동거리가 2칸 미만인 경우 drop이 되지 않음
 // Done (문제해결) flutter 2.10 미대응으로 soundpool을 audio_play로 변경
 // Done Fixing 사운드 추가
+// Done 앱 아이콘 변경
+// Done 인트로 화면의 로고 변경 및 타일 색상 고정
+// todo 게임종료 다이얼로그에 현재 순위 보이기
+// todo 로고 변경 (인트로 화면의 로고와 맞춤)
+// todo setState => Provider 변경
+// todo 모든 한글을 영어로 변경
 // todo Fixing 애니메이션 추가
-// todo (문제해결) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제 - sound 기능을 모두 끄고 테스트
+// todo (문제해결) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제
 // todo 배경화면 변경, 사운드 추가 (fix, 좌우이동)
 
 void main() async {

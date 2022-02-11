@@ -5,6 +5,7 @@ import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/screens/gampeplay/gameplay_screen.dart';
 import 'package:tetris/screens/widgets/mini_block.dart';
+import 'package:tetris/screens/widgets/tttile.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({Key? key}) : super(key: key);
@@ -36,7 +37,7 @@ class _IntroScreenState extends State<IntroScreen> {
           end: Alignment.bottomCenter,
           colors: [
             Colors.black.withOpacity(0),
-            Colors.black.withOpacity(0.5),
+            Colors.black.withOpacity(0.6),
           ],
         ),
       ),
@@ -48,7 +49,7 @@ class _IntroScreenState extends State<IntroScreen> {
           buildLogo(),
           Spacer(flex: 2),
           FadeIn(
-            delay: Duration(milliseconds: 1200),
+            delay: Duration(milliseconds: 1600),
             duration: Duration(milliseconds: 200),
             child: SizedBox(
               width: 200,
@@ -67,14 +68,101 @@ class _IntroScreenState extends State<IntroScreen> {
               ),
             ),
           ),
-          SizedBox(height: 100),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildLogo() {
+    double tileSize = 34;
+    return SizedBox(
+      width: tileSize * 3,
+      height: tileSize * 2,
+      child: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            child: FadeInLeft(
+              duration: Duration(milliseconds: 300),
+              from: 40,
+              child: SizedBox(
+                width: tileSize,
+                height: tileSize,
+                child: TTTile(
+                  blockId: TTBlockID.T,
+                  status: TTBlockStatus.fixed,
+                  typeId: 0,
+                  color: Colors.blue,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: tileSize * 1,
+            child: FadeInDown(
+              delay: Duration(milliseconds: 200),
+              duration: Duration(milliseconds: 300),
+              from: 40,
+              child: SizedBox(
+                width: tileSize,
+                height: tileSize,
+                child: TTTile(
+                  blockId: TTBlockID.T,
+                  status: TTBlockStatus.fixed,
+                  typeId: 0,
+                  color: Colors.blue,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: tileSize * 2,
+            child: FadeInRight(
+              delay: Duration(milliseconds: 400),
+              duration: Duration(milliseconds: 300),
+              from: 40,
+              child: SizedBox(
+                width: tileSize,
+                height: tileSize,
+                child: TTTile(
+                  blockId: TTBlockID.T,
+                  status: TTBlockStatus.fixed,
+                  typeId: 0,
+                  color: Colors.blue,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: tileSize,
+            left: tileSize * 1,
+            child: FadeInUp(
+              delay: Duration(milliseconds: 400),
+              duration: Duration(milliseconds: 300),
+              from: 40,
+              child: SizedBox(
+                width: tileSize,
+                height: tileSize,
+                child: TTTile(
+                  blockId: TTBlockID.T,
+                  status: TTBlockStatus.fixed,
+                  typeId: 0,
+                  color: Colors.blue,
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
   }
 
   // 테트리스 블록 3개가 겹쳐진 로고 그리기
-  Widget buildLogo() {
+  Widget buildLogo2() {
     double tileSize = 26;
     return SizedBox(
       width: tileSize * 6,
