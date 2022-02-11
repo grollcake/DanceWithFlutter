@@ -23,8 +23,9 @@ class _SettingsDetailFeedbackState extends State<SettingsDetailFeedback> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SettingsSubtitle(title: '의견 보내기'),
-        Text('게임을 재밌게 즐기셨나요?\n느낌이나 더 나은 아이디어를 보내주세요~', style: TextStyle(fontSize: 12, color: Colors.grey)),
+        SettingsSubtitle(title: 'Feedback'),
+        Text('Do you enjoy the game?\nSend me of your feeling or something',
+            style: TextStyle(fontSize: 12, color: Colors.grey)),
         SizedBox(height: 10),
         Container(
           padding: EdgeInsets.all(10),
@@ -80,7 +81,7 @@ class _SettingsDetailFeedbackState extends State<SettingsDetailFeedback> {
                     setState(() {
                       controller.text = '';
                       hasMessage = false;
-                      thanks = '의견에 감사합니다!';
+                      thanks = 'Thank you for feedback!';
                     });
                     Timer(Duration(seconds: 2), () {
                       setState(() {
@@ -89,7 +90,7 @@ class _SettingsDetailFeedbackState extends State<SettingsDetailFeedback> {
                     });
                   }
                 : null,
-            label: Text('보내기', style: TextStyle(fontSize: 16, color: AppStyle.darkTextColor)),
+            label: Text('S E N D', style: TextStyle(fontSize: 16, color: AppStyle.darkTextColor)),
             style: ElevatedButton.styleFrom(
               primary: AppStyle.accentColor,
               minimumSize: Size(160, 34),

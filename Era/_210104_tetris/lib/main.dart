@@ -81,10 +81,10 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done Fixing 사운드 추가
 // Done 앱 아이콘 변경
 // Done 인트로 화면의 로고 변경 및 타일 색상 고정
+// Done 로고 변경 (인트로 화면의 로고와 맞춤)
+// Done 모든 한글을 영어로 변경
 // todo 게임종료 다이얼로그에 현재 순위 보이기
-// todo 로고 변경 (인트로 화면의 로고와 맞춤)
 // todo setState => Provider 변경
-// todo 모든 한글을 영어로 변경
 // todo Fixing 애니메이션 추가
 // todo (문제해결) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제
 // todo 배경화면 변경, 사운드 추가 (fix, 좌우이동)

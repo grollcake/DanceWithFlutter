@@ -16,7 +16,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   static const defalutPadding = 12.0;
-  List<String> menus = ['배경', '블록', '기타', '의견', '정보'];
+  List<String> menus = ['Theme', 'Block', 'Misc', 'Mail', 'About'];
 
   final List _settingsDetailPage = [
     SettingsDetailTheme(),
@@ -52,7 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Row(
         children: [
           SizedBox(
-            width: 60,
+            width: 80,
             height: double.infinity,
             child: ListView.builder(
               itemCount: menus.length,

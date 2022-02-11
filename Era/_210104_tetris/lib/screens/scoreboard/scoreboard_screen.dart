@@ -62,7 +62,8 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
         children: [
           Align(
             alignment: Alignment.center,
-            child: Text('점 수 표', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('S C O R E    B O A R D',
+                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
           ),
           Align(
             alignment: Alignment(1, 0),
@@ -99,7 +100,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
           children: [
             SizedBox(height: 50),
             const Text(
-              '점수표를 보려면\n이름을 알려주셔야 합니다',
+              'Want to see scoreboard?\nFirst, let me know your name.',
               style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor),
               textAlign: TextAlign.center,
             ),
@@ -128,7 +129,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   isDense: true,
-                  hintText: '이름이 뭐에요?',
+                  hintText: 'Your name?',
                   hintStyle: TextStyle(color: Colors.grey),
                 ),
               ),
@@ -144,7 +145,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
                       setState(() {});
                     }
                   : null,
-              child: Text('등록'),
+              child: Text('Register'),
             ),
           ],
         ),
@@ -243,7 +244,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
       child: TextButton(
         onPressed: () async => setUsername(await usernameDialog()),
         child: Text(
-          '이름 변경',
+          'Change name',
           style: TextStyle(fontSize: 14, color: AppStyle.accentColor),
         ),
       ),
@@ -282,7 +283,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(textEditingcontroller.text),
-              child: Text('변경'),
+              child: Text('Change'),
             ),
           ],
         );

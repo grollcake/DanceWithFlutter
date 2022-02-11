@@ -141,9 +141,9 @@ class _GameScreenState extends State<GameScreen> {
       builder: (BuildContext context) {
         return GameDialog(
           title: 'G A M E  E N D',
-          primaryText: '재시작',
+          primaryText: 'Restart',
           primaryPressed: () => _startGame(reset: true),
-          secondaryText: '점수표',
+          secondaryText: 'Scoreboard',
           secondaryPressed: () async {
             await showScoreboardDialog();
             _showGameEndDialog(true);

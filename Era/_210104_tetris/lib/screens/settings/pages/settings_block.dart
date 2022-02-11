@@ -43,7 +43,7 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SettingsSubtitle(title: '색상'),
+        SettingsSubtitle(title: 'Color set'),
         GridView.builder(
           shrinkWrap: true,
           itemCount: AppSettings.colorSets.length,
@@ -86,7 +86,7 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SettingsSubtitle(title: '모양'),
+        SettingsSubtitle(title: 'Tile'),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(
@@ -117,7 +117,7 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SettingsSubtitle(title: '미리보기'),
+        SettingsSubtitle(title: 'Preview'),
         Container(
           margin: EdgeInsets.only(right: 10),
           padding: EdgeInsets.all(5),

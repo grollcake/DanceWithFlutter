@@ -18,7 +18,7 @@ class _SettingsDetailThemeState extends State<SettingsDetailTheme> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SettingsSubtitle(title: '배경 이미지'),
+        SettingsSubtitle(title: 'Background image'),
         Flexible(
           child: GridView.builder(
             shrinkWrap: true,

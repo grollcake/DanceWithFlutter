@@ -39,7 +39,7 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SettingsSubtitle(title: '배경음악'),
+        SettingsSubtitle(title: 'Background music'),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -81,7 +81,7 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SettingsSubtitle(title: '효과음'),
+        SettingsSubtitle(title: 'Sound effect'),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -123,7 +123,7 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SettingsSubtitle(title: '안내선'),
+        SettingsSubtitle(title: 'Guide line'),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -165,7 +165,7 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SettingsSubtitle(title: '그림자 블록'),
+        SettingsSubtitle(title: 'Shadow block'),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -207,7 +207,7 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SettingsSubtitle(title: '조작 감도'),
+        SettingsSubtitle(title: 'Sensitivity'),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -221,7 +221,7 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
                   width: 50,
                   height: 30,
                   alignment: Alignment.center,
-                  child: Text('보통', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
+                  child: Text('Normal', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
                 ),
               ),
             ),
@@ -235,7 +235,7 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
                   width: 50,
                   height: 30,
                   alignment: Alignment.center,
-                  child: Text('느리게', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
+                  child: Text('Slow', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
                 ),
               ),
             ),
@@ -249,7 +249,7 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
                   width: 50,
                   height: 30,
                   alignment: Alignment.center,
-                  child: Text('빠르게', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
+                  child: Text('Fast', style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor)),
                 ),
               ),
             )
