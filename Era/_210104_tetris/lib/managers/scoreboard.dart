@@ -7,7 +7,6 @@ import 'package:tetris/models/score.dart';
 
 class ScoreBoard {
   int _rank = 0;
-
   int get rank => _rank;
 
   // 점수 등록
@@ -48,8 +47,11 @@ class ScoreBoard {
     }
   }
 
-  // 모든 사용자의 점수 조회
-  Future<List<Score>> fetchAllScores2() async {
+  // 순위 조회
+  Future<int> fetchRank({int? score, int? level}) async {
+    if (score != null && level != null) {
+      await updateScore(score: score, level: level);
+    }
     final allScores = await FirebaseFirestore.instance
         .collection('scoreboards')
         .orderBy('score', descending: true)
@@ -57,12 +59,10 @@ class ScoreBoard {
         .get();
     if (allScores.docs.isNotEmpty) {
       List<Score> results = allScores.docs.map((e) => Score.fromJson(e.data())).toList();
-
       _rank = results.indexWhere((element) => element.userId == AppSettings.userId) + 1;
-
-      return results;
+      return _rank;
     } else {
-      return [];
+      return 0;
     }
   }
 

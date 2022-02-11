@@ -128,12 +128,38 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   // 게임종료 Dialog
-  void _showGameEndDialog([bool recursive = false]) {
+  void _showGameEndDialog([bool recursive = false]) async {
+    Widget? content;
+
     // 재귀호출인 경우 몇가지는 생략한다.
     if (!recursive) {
       _bgmPlayer?.stopBGM();
       _soundEffect?.gameEndSound();
       ScoreBoard().updateScore(score: ttBoard.getScore, level: ttBoard.getLevel);
+
+      var scoreBoard = ScoreBoard();
+      await scoreBoard.fetchRank(score: ttBoard.getScore, level: ttBoard.getLevel);
+
+      content = RichText(
+        text: TextSpan(
+          style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor, height: 1.5),
+          children: [
+            TextSpan(text: 'Current score is '),
+            TextSpan(
+                text: '${ttBoard.getScore}\n',
+                style: TextStyle(color: AppStyle.accentColor, fontWeight: FontWeight.bold)),
+            TextSpan(text: '(Best score is '),
+            TextSpan(
+                text: '${AppSettings.highestScore}. ',
+                style: TextStyle(color: AppStyle.accentColor, fontWeight: FontWeight.bold)),
+            TextSpan(text: 'Ranking is '),
+            TextSpan(
+                text: '${scoreBoard.rank}', style: TextStyle(color: AppStyle.accentColor, fontWeight: FontWeight.bold)),
+            TextSpan(text: ')'),
+          ],
+        ),
+        // text:
+      );
     }
     showDialog(
       context: context,
@@ -141,6 +167,7 @@ class _GameScreenState extends State<GameScreen> {
       builder: (BuildContext context) {
         return GameDialog(
           title: 'G A M E  E N D',
+          content: content,
           primaryText: 'Restart',
           primaryPressed: () => _startGame(reset: true),
           secondaryText: 'Scoreboard',
@@ -535,14 +562,16 @@ class _GameScreenState extends State<GameScreen> {
         // 타이머들 일시 정지
         _pauseControll(true);
 
-        // 일시정지 다이얼로그 노출
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return GameDialog(title: 'P A U S E D', primaryText: 'Resume', primaryPressed: () => _pauseControll(false));
-          },
-        );
+        _showGameEndDialog(); // todo 여기 복원 필요
+
+        // // 일시정지 다이얼로그 노출
+        // showDialog(
+        //   context: context,
+        //   barrierDismissible: false,
+        //   builder: (BuildContext context) {
+        //     return GameDialog(title: 'P A U S E D', primaryText: 'Resume', primaryPressed: () => _pauseControll(false));
+        //   },
+        // );
       },
     );
   }
