@@ -8,16 +8,22 @@ flutter 프로젝트의 웹앱(`build/web/`)을 바로 실행해볼 수 있도�
 https://flutter.ifwind.net
 
 
+
+
 ## 2. 서버 실행
 
 서버는 Era가 보유한 오라클 클라우드 무료서버에서 실행한다.
 
 * 프로젝트 경로: `DanceWithFlutter/flutter-web-server`
+
 * 프로젝트 준비: `bash prepare.sh`
+
 * 서버 실행: 
   * 기본적으로 `systemd`에 등록되어 부팅 시 자동실행된다.
   * 수동 실행방법 #1: `sudo systemctl start flutter-web-server`
   * 수동 실행방법 #2: `bash run-server.sh`
+  
+  
 
 
 ## 3. URL Mapping
@@ -25,6 +31,8 @@ https://flutter.ifwind.net
 * `/`: public/index.html 파일 전송
 * `/refresh`: 최신 소스로 업데이트(git pull) 후 web app들에 대해 public/projects에 symbolic link 생성
 * `/projects.json`: public/projects에 있는 web app 목록을 json으로 반환
+
+
 
 
 ## 4. 기본 아키텍처
@@ -37,9 +45,13 @@ https://flutter.ifwind.net
 * UI Framework: Bootstrap5 + Vue.js
 
 
+
+
 ## 5. 자동 갱신
 
 github에서 제공하는 action 기능을 이용하여, 새로운 프로젝트가 push되면 flutter.ifwind.net도 프로젝트 목록이 자동갱신되도록 `wget https://flutter.ifwind.net/refresh`를 작업으로 추가함
+
+
 
 
 ## 6. 서버 자동실행 등록
@@ -68,6 +80,7 @@ sudo systemctl status flutter-web-server.service
 ```
 
 
+
 ## 7. 프로젝트 세팅 준비 (최초 1회)
 
 ### a. 우분투 서버에 dart 설치
@@ -81,6 +94,7 @@ sudo systemctl status flutter-web-server.service
  sudo apt-get update
  sudo apt-get install dart
 ```
+
 
 
 ## 8. 개발관련 메모
@@ -110,3 +124,25 @@ dev_dependencies:
 dart pub add shelf
 dart pub get
 ```
+
+
+
+## 9. 오류 해결
+
+### a. 홈페이지의 vue가 실행되지 않은채 첫 페이지가 나타남
+
+* 오류 발생일: 2022-02-11
+* 오류 원인: <script src="https://cdn.jsdelivr.net/npm/vue"></script>로 불러온 최신 라이브러리가 아래와 같은 초기화 방법을 지원하지 않음
+
+```js
+var app = new Vue({
+```
+
+* 오류 조치: 특정 버전의 라이브러를 불러오도록 수정함
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+```
+
+
+
