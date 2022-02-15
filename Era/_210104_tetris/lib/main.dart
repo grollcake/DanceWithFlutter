@@ -89,6 +89,7 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done setState => Provider 변경
 // Done 점수, 레벨을 ttboard에서 분리
 // Done kIsWeb인 경우 사운드 미사용을 기본값으로
+// todo newplay_screen을 gameplay_screen으로 이름 변경
 // todo 설정이 바뀌면 즉시 반영되어야 해 (특히 배경화면)
 // todo 새로운 기록 달성 시 toast 메시지로 안내
 // todo 레고 타일모양 개선
