@@ -1,9 +1,9 @@
-import 'dart:math' as math;
+import 'package:flutter/material.dart';
 import 'package:tetris/constants/constants.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/managers/ttblock.dart';
 
-class TTBoard {
+class TTBoardManager {
   static const int width = kTetrisMatrixWidth;
   static const int height = kTetrisMatrixHeight;
 
@@ -18,15 +18,11 @@ class TTBoard {
   bool _holdUsed = false; // 보관 기능 사용여부
   int? _blockX; // 현재 블록의 x 위치값
   int? _blockY; // 현재 블록의 y 위치값
-  int _score = 0; // 현재 점수
   int _cleans = 0; // 지운 줄 개수
-  int _level = 1; // 현재 레벨
   bool _isLevelUpCondition = false; // 레벨업 조건 충족 여부
   List<int> _frequency = List.filled(TTBlockID.values.length, 0); // 블록별 생성 횟수
-  Stopwatch _totalStopwatch = Stopwatch();
-  Duration _beforeDuration = Duration();
 
-  TTBoard() {
+  TTBoardManager() {
     reset();
     // _makeTestBlocks();
   }
@@ -42,22 +38,11 @@ class TTBoard {
 
   int? get getBlockY => _blockY;
 
-  int get getScore => _score;
-
   int get getCleans => _cleans;
-
-  int get getLevel => _level;
 
   bool get isLevelUpCondition => _isLevelUpCondition;
 
-  Duration get getSpeed =>
-      Duration(milliseconds: (kInitalSpeed.inMilliseconds * math.pow((1 - kSpeedUpForLevel), _level - 1)).toInt());
-
   int get getBlockCount => _frequency.reduce((value, element) => value + element);
-
-  Duration get getCurrentElapsed => _totalStopwatch.elapsed - _beforeDuration;
-
-  Duration get getTotalElapsed => _totalStopwatch.elapsed;
 
   ////////////////////////////////////////////////////////////////////
   // 초기화 및 블록 생성
@@ -78,13 +63,6 @@ class TTBoard {
     _blockY = 0;
     _cleans = 0;
     _isLevelUpCondition = false;
-
-    if (!isLevelUp) {
-      _score = 0;
-      _level = 1;
-      _beforeDuration = Duration();
-      _totalStopwatch.reset();
-    }
 
     _frequency = List.filled(TTBlockID.values.length, 0);
 
@@ -134,12 +112,6 @@ class TTBoard {
       }
     }
 
-    // 첫번째 블록 생성 시 스탑워치 시작
-    if (getBlockCount == 1) {
-      _beforeDuration = _totalStopwatch.elapsed;
-      _totalStopwatch.start();
-    }
-
     // 그림자 블록 위치 계산
     _calcShadowBlockCoords();
 
@@ -149,13 +121,25 @@ class TTBoard {
   ////////////////////////////////////////////////////////////////////
   // 블록 이동
   ////////////////////////////////////////////////////////////////////
-  bool moveLeft() => _moveBlock('LEFT');
+  bool moveLeft() {
+    bool result = _moveBlock('LEFT');
+    return result;
+  }
 
-  bool moveRight() => _moveBlock('RIGHT');
+  bool moveRight() {
+    bool result = _moveBlock('RIGHT');
+    return result;
+  }
 
-  bool moveDown() => _moveBlock('DOWN');
+  bool moveDown() {
+    bool result = _moveBlock('DOWN');
+    return result;
+  }
 
-  bool rotate() => _moveBlock('ROTATE');
+  bool rotate() {
+    bool result = _moveBlock('ROTATE');
+    return result;
+  }
 
   bool dropBlock() {
     if (_block == null) return false;
@@ -192,7 +176,6 @@ class TTBoard {
       _boardCoords[coord.x][coord.y] = _block!.id;
     }
     _block = null;
-    _score += 10;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -273,7 +256,7 @@ class TTBoard {
     }
   }
 
-  // 완성 줄 삭제 후 삭제된 조각 개수 반환
+  // 완성 줄 삭제 후 삭제된 줄 개수 반환
   int clearing() {
     int removedRows = 0;
 
@@ -299,34 +282,11 @@ class TTBoard {
     _boardCoords = newBoards.map((element) => List<TTBlockID?>.from(element)).toList();
 
     // 점수 계산: 한 줄당 100점. 2줄 이상이면 한줄당 보너스 10점 추가
-    _score += removedRows * 100;
-    _score += (removedRows - 1) * 10;
     _cleans += removedRows;
 
-    if (_cleans >= kCleansForLevel) {
-      _isLevelUpCondition = true;
-      _totalStopwatch.stop();
-    }
-
-    // 삭제한 조각 개수 반환
+    // 삭제한 줄 개수 반환
     return removedRows;
   }
-
-  ////////////////////////////////////////////////////////////////////
-  // 레벨업 처리
-  ////////////////////////////////////////////////////////////////////
-  int levelUp() {
-    reset(isLevelUp: true);
-    _level++;
-
-    return _level;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  // 게임 일시 정지 처리
-  ////////////////////////////////////////////////////////////////////
-  void pauseGame() => _totalStopwatch.stop();
-  void resumeGame() => _totalStopwatch.start();
 
   ////////////////////////////////////////////////////////////////////
   // 내부 전용 메서드

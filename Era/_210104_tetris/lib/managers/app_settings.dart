@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tetris/models/enums.dart';
@@ -215,8 +216,8 @@ class AppSettings {
       _userId = (settings['userId'] ?? '') as String;
       _username = (settings['username'] ?? '') as String;
       _highestScore = (settings['highestScore'] ?? 0) as int;
-      _backgroundMusic = (settings['backgroundMusic'] ?? true) as bool;
-      _soundEffect = (settings['soundEffect'] ?? true) as bool;
+      _backgroundMusic = (settings['backgroundMusic'] ?? (kIsWeb ? false : true)) as bool;
+      _soundEffect = (settings['soundEffect'] ?? (kIsWeb ? false : true)) as bool;
       _showGridLine = (settings['showGridLine'] ?? true) as bool;
       _showShadowBlock = (settings['showShadowBlock'] ?? true) as bool;
       _swipeSensitivity = (settings['swipeSensitivity'] ?? 0) as int;

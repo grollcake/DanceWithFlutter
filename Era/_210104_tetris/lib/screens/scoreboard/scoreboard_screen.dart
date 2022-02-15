@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
-import 'package:tetris/managers/scoreboard.dart';
+import 'package:tetris/managers/scoreboard_manager.dart';
 import 'package:tetris/models/score.dart';
 
 class ScoreBoardScreen extends StatefulWidget {
@@ -12,7 +12,7 @@ class ScoreBoardScreen extends StatefulWidget {
 }
 
 class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
-  late ScoreBoard scoreBoard;
+  late ScoreBoardManager scoreBoard;
   late ScrollController scrollController;
   late TextEditingController textEditingcontroller;
   var myScoreKey = GlobalKey();
@@ -21,7 +21,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   @override
   void initState() {
     super.initState();
-    scoreBoard = ScoreBoard();
+    scoreBoard = ScoreBoardManager();
     scrollController = ScrollController();
     textEditingcontroller = TextEditingController();
   }
@@ -294,7 +294,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   Future<void> setUsername(String? name) async {
     if (name != null && name.isNotEmpty && name.trim().length > 0) {
       print('Changing username [${AppSettings.username}] => [$name]');
-      await ScoreBoard().updateUsername(name);
+      await ScoreBoardManager().updateUsername(name);
     }
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
+import 'package:tetris/managers/gameplay_manager.dart';
 import 'package:tetris/screens/intro/intro_screen.dart';
 
 // Done GameStart dialog 화면
@@ -84,10 +86,18 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done 로고 변경 (인트로 화면의 로고와 맞춤)
 // Done 모든 한글을 영어로 변경
 // Done 게임종료 다이얼로그에 현재 순위 보이기
-// todo setState => Provider 변경
+// Done setState => Provider 변경
+// Done 점수, 레벨을 ttboard에서 분리
+// Done kIsWeb인 경우 사운드 미사용을 기본값으로
+// todo 설정이 바뀌면 즉시 반영되어야 해 (특히 배경화면)
+// todo 새로운 기록 달성 시 toast 메시지로 안내
+// todo 레고 타일모양 개선
+// todo (보류) Hold, Next를 ttboard에서 분리
+// todo (오류) pause 버튼을 누를 때 블록이 한번 회전함
 // todo Fixing 애니메이션 추가
 // todo (문제해결) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제
-// todo 배경화면 변경, 사운드 추가 (좌우이동)
+// todo 저작권 문제없는 배경화면으로 변경
+// todo 좌우 이동에 대한 사운드 추가
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -105,7 +115,11 @@ void main() async {
     Firebase.initializeApp();
   }
 
-  return runApp(TetrisApp());
+  return runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider<GamePlayManager>(create: (_) => GamePlayManager()),
+    ], child: TetrisApp()),
+  );
 }
 
 class TetrisApp extends StatelessWidget {

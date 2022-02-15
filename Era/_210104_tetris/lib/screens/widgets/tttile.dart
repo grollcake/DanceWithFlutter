@@ -192,11 +192,55 @@ class TileType3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: color,
-      ),
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      double size = constraints.maxWidth * .6;
+      return Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: color,
+          border: Border(
+            left: const BorderSide(
+              color: Colors.white70,
+              width: 1,
+            ),
+            top: const BorderSide(
+              color: Colors.white70,
+              width: 1,
+            ),
+            right: BorderSide(
+              color: Colors.grey.shade700,
+              width: 1,
+            ),
+            bottom: BorderSide(
+              color: Colors.grey.shade700,
+              width: 1,
+            ),
+          ),
+        ),
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color,
+            boxShadow: [
+              const BoxShadow(
+                color: Colors.white,
+                blurRadius: 1.0,
+                spreadRadius: 0,
+                offset: Offset(-1, -1),
+              ),
+              BoxShadow(
+                color: Colors.grey.shade700,
+                blurRadius: 2.0,
+                spreadRadius: 1,
+                offset: const Offset(2, 2),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }
 

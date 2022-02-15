@@ -5,7 +5,7 @@ import 'package:platform_device_id/platform_device_id.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/models/score.dart';
 
-class ScoreBoard {
+class ScoreBoardManager {
   int _rank = 0;
   int get rank => _rank;
 

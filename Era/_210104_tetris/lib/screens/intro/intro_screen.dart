@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/models/enums.dart';
-import 'package:tetris/screens/gampeplay/gameplay_screen.dart';
+import 'package:tetris/screens/gampeplay/newplay_screen.dart';
 import 'package:tetris/screens/widgets/mini_block.dart';
 import 'package:tetris/screens/widgets/tttile.dart';
 
@@ -56,7 +56,8 @@ class _IntroScreenState extends State<IntroScreen> {
               height: 40,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => GameScreen()));
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) => GameScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => NewPlayScreen()));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: AppStyle.accentColor,

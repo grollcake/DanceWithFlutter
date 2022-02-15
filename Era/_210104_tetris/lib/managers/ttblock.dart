@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:tetris/models/enums.dart';
 
 class TTCoord {
@@ -77,7 +76,6 @@ class TTBlock {
     for (int i = 0; i < 4; i++) {
       blockCoords[i].x = x + _figure[i].x;
       blockCoords[i].y = y + _figure[i].y - minMinusY;
-      // print('$x:$y ${_figure[i].x}:${_figure[i].y} => ${blockCoords[i].x}:${blockCoords[i].y}'); // Todo cleansing
     }
 
     return blockCoords;
