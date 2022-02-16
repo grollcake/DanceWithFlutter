@@ -104,10 +104,11 @@ class _SettingsDetailFeedbackState extends State<SettingsDetailFeedback> {
 
   Future<void> sendFeedback(String message) async {
     final feedbackDoc = FirebaseFirestore.instance.collection('feedbacks').doc();
+    final AppSettings settings = AppSettings();
 
     final feedback = <String, dynamic>{
-      'userId': AppSettings.userId,
-      'username': AppSettings.username,
+      'userId': settings.userId,
+      'username': settings.username,
       'message': message,
       'dateTime': DateTime.now(),
       'platform': defaultTargetPlatform.toString(),

@@ -89,14 +89,16 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done setState => Provider 변경
 // Done 점수, 레벨을 ttboard에서 분리
 // Done kIsWeb인 경우 사운드 미사용을 기본값으로
-// todo newplay_screen을 gameplay_screen으로 이름 변경
-// todo 설정이 바뀌면 즉시 반영되어야 해 (특히 배경화면)
+// Done newplay_screen을 gameplay_screen으로 이름 변경
+// Done 설정이 바뀌면 즉시 반영되어야 해 (특히 배경화면)
+// Done 효과음을 soundpool 패키지로 변경
 // todo 새로운 기록 달성 시 toast 메시지로 안내
-// todo 레고 타일모양 개선
+// todo 레고 타일을 좀 더 산뜻하게 개선
+// todo 그림자 블록 모양 개선
 // todo (보류) Hold, Next를 ttboard에서 분리
 // todo (오류) pause 버튼을 누를 때 블록이 한번 회전함
 // todo Fixing 애니메이션 추가
-// todo (문제해결) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제
+// todo (문제해결) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제. Provider 패턴으로 변경 후 더 심해졌음..
 // todo 저작권 문제없는 배경화면으로 변경
 // todo 좌우 이동에 대한 사운드 추가
 
@@ -118,6 +120,7 @@ void main() async {
 
   return runApp(
     MultiProvider(providers: [
+      ChangeNotifierProvider<AppSettings>(create: (_) => AppSettings()),
       ChangeNotifierProvider<GamePlayManager>(create: (_) => GamePlayManager()),
     ], child: TetrisApp()),
   );
@@ -128,7 +131,7 @@ class TetrisApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppSettings.loadSettings(); // 설정 정보 읽어오기
+    context.read<AppSettings>().loadSettings(); // 설정 정보 읽어오기
     return MaterialApp(
       title: 'Tetris',
       debugShowCheckedModeBanner: false,

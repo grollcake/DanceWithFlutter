@@ -8,18 +8,19 @@ import 'package:tetris/models/score.dart';
 class ScoreBoardManager {
   int _rank = 0;
   int get rank => _rank;
+  AppSettings settings = AppSettings();
 
   // 점수 등록
   Future<void> updateScore({required int score, required int level}) async {
     // AppSettings에 최고 기록을 등록한다.
-    AppSettings.highestScore = max(score, AppSettings.highestScore);
+    settings.highestScore = max(score, settings.highestScore);
 
     // Firestore에 이미 등록된 정보가 있는지 확인한다. (userId, username은 AppSettings에서 가져온다)
     Score? remoteScore = await _firestoreFetch();
     if (remoteScore != null) {
       remoteScore.score = max(score, remoteScore.score ?? 0);
       remoteScore.level = max(level, remoteScore.level ?? 1);
-      remoteScore.username = AppSettings.username;
+      remoteScore.username = settings.username;
       remoteScore.playCount = (remoteScore.playCount ?? 0) + 1;
       remoteScore.dateTime = DateTime.now();
 
@@ -35,7 +36,7 @@ class ScoreBoardManager {
 
   // 사용자 이름 변경
   Future<void> updateUsername(String username) async {
-    AppSettings.username = username;
+    settings.username = username;
     Score? remoteScore = await _firestoreFetch();
     if (remoteScore != null) {
       remoteScore.username = username;
@@ -59,7 +60,7 @@ class ScoreBoardManager {
         .get();
     if (allScores.docs.isNotEmpty) {
       List<Score> results = allScores.docs.map((e) => Score.fromJson(e.data())).toList();
-      _rank = results.indexWhere((element) => element.userId == AppSettings.userId) + 1;
+      _rank = results.indexWhere((element) => element.userId == settings.userId) + 1;
       return _rank;
     } else {
       return 0;
@@ -76,10 +77,10 @@ class ScoreBoardManager {
 
   // 파이어스토어에서 사용자의 데이터를 가져온다.
   Future<Score?> _firestoreFetch() async {
-    if (AppSettings.userId == null || AppSettings.userId!.isEmpty) {
+    if (settings.userId == null || settings.userId!.isEmpty) {
       return null;
     }
-    final scoreSnapshot = await FirebaseFirestore.instance.collection('scoreboards').doc(AppSettings.userId).get();
+    final scoreSnapshot = await FirebaseFirestore.instance.collection('scoreboards').doc(settings.userId).get();
     if (!scoreSnapshot.exists) {
       return null;
     }
@@ -89,12 +90,12 @@ class ScoreBoardManager {
   // 파이어스토어에 새로운 데이터를 생성한다.
   Future<Score> _createNewScore(int score, int level) async {
     final scoreDoc = FirebaseFirestore.instance.collection('scoreboards').doc();
-    AppSettings.userId = scoreDoc.id;
-    print('New userId is generated: ${AppSettings.userId}');
+    settings.userId = scoreDoc.id;
+    print('New userId is generated: ${settings.userId}');
 
     Score newScore = Score(
       userId: scoreDoc.id,
-      username: AppSettings.username,
+      username: settings.username,
       score: score,
       level: level,
       dateTime: DateTime.now(),

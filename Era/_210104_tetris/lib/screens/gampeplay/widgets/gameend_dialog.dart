@@ -16,7 +16,7 @@ class GameEndDialog extends StatelessWidget {
 
     Widget? content;
 
-    if (!isRecall && manager.score > AppSettings.highestScore) {
+    if (!isRecall && manager.score > context.select((AppSettings settings) => settings.highestScore)) {
       content = Text(
         "We've achieved a new record.\nLet's check the scoreboard.",
         style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor, height: 1.5),

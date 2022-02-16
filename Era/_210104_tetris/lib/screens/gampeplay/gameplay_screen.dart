@@ -87,12 +87,12 @@ class NewPlayScreen extends StatelessWidget {
     print('buildBody called');
 
     final manager = context.read<GamePlayManager>();
+    final backgroundImage = context.select((AppSettings settings) => settings.backgroundImage);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       decoration: BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage(AppSettings.backgroundImages[AppSettings.backgroundImageId]), fit: BoxFit.cover),
+        image: DecorationImage(image: AssetImage(backgroundImage), fit: BoxFit.cover),
       ),
       child: Column(
         children: [

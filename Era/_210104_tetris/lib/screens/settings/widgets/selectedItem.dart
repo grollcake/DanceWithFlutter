@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class SelectedItem extends StatelessWidget {
-  SelectedItem({Key? key, required this.child, required this.selected}) : super(key: key);
+  SelectedItem({Key? key, required this.child, required this.isSelected}) : super(key: key);
   final Widget child;
-  final bool selected;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(width: 3.0, color: selected ? Colors.yellowAccent : Colors.transparent),
+          bottom: BorderSide(width: 3.0, color: isSelected ? Colors.yellowAccent : Colors.transparent),
         ),
       ),
       child: child,

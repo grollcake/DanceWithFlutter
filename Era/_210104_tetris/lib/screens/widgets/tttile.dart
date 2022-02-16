@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:tetris/constants/app_style.dart';
+import 'package:provider/provider.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/models/enums.dart';
 
@@ -14,11 +14,14 @@ class TTTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color color = this.color ?? AppSettings.tileColor(blockId);
+    final colorSetId = context.select((AppSettings settings) => settings.colorSetId);
+    final settings = context.read<AppSettings>();
+
+    Color color = this.color ?? settings.tileColor(blockId);
     if (status == TTBlockStatus.shadow) {
       color = color.withOpacity(0.2);
     }
-    return _getShape(typeId ?? AppSettings.tileTypeId, color);
+    return _getShape(typeId ?? settings.tileTypeId, color);
   }
 
   static Widget _getShape(int id, [Color color = Colors.green]) {

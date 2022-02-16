@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/screens/settings/widgets/subtitle.dart';
 import 'package:tetris/screens/settings/widgets/selectedItem.dart';
@@ -15,6 +16,8 @@ class SettingsDetailTheme extends StatefulWidget {
 class _SettingsDetailThemeState extends State<SettingsDetailTheme> {
   @override
   Widget build(BuildContext context) {
+    final settings = context.watch<AppSettings>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,7 +25,7 @@ class _SettingsDetailThemeState extends State<SettingsDetailTheme> {
         Flexible(
           child: GridView.builder(
             shrinkWrap: true,
-            itemCount: AppSettings.backgroundImages.length,
+            itemCount: settings.backgroundImages.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 10,
@@ -31,18 +34,13 @@ class _SettingsDetailThemeState extends State<SettingsDetailTheme> {
             ),
             itemBuilder: (context, index) {
               return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    AppSettings.backgroundImageId = index;
-                  });
-                },
+                onTap: () => settings.backgroundImageId = index,
                 child: SelectedItem(
-                  selected: index == AppSettings.backgroundImageId,
+                  isSelected: index == settings.backgroundImageId,
                   child: Container(
                     margin: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                        image:
-                            DecorationImage(image: AssetImage(AppSettings.backgroundImages[index]), fit: BoxFit.cover)),
+                        image: DecorationImage(image: AssetImage(settings.backgroundImages[index]), fit: BoxFit.cover)),
                   ),
                 ),
               );

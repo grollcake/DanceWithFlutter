@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/screens/settings/pages/settings_about.dart';
@@ -47,6 +48,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   SizedBox buidBody() {
+    final settings = context.watch<AppSettings>();
+
     return SizedBox(
       height: 500,
       child: Row(
@@ -58,17 +61,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               itemCount: menus.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  onTap: () {
-                    setState(() {
-                      AppSettings.selectedMenuIndex = index;
-                    });
-                  },
+                  onTap: () => settings.selectedMenuIndex = index,
                   title: Text(
                     menus[index],
                     style: TextStyle(
                       fontSize: 14,
-                      color: index == AppSettings.selectedMenuIndex ? Colors.yellowAccent : Colors.grey,
-                      fontWeight: index == AppSettings.selectedMenuIndex ? FontWeight.w700 : FontWeight.w500,
+                      color: index == settings.selectedMenuIndex ? Colors.yellowAccent : Colors.grey,
+                      fontWeight: index == settings.selectedMenuIndex ? FontWeight.w700 : FontWeight.w500,
                     ),
                   ),
                 );
@@ -83,7 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Expanded(
             child: Container(
               padding: EdgeInsets.only(left: defalutPadding * 2, right: defalutPadding * 2, top: defalutPadding),
-              child: _settingsDetailPage[AppSettings.selectedMenuIndex],
+              child: _settingsDetailPage[settings.selectedMenuIndex],
             ),
           ),
         ],

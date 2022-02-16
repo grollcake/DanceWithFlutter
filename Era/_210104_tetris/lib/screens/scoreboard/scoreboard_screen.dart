@@ -18,6 +18,8 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   var myScoreKey = GlobalKey();
   bool isValidUsername = false;
 
+  AppSettings settings = AppSettings();
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +37,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool hasName = AppSettings.username != null && AppSettings.username!.isNotEmpty;
+    bool hasName = settings.username != null && settings.username!.isNotEmpty;
     return Dialog(
       child: Container(
         height: 600,
@@ -186,12 +188,12 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
 
   Widget buildScoreRow(int rank, Score score) {
     return Container(
-      key: score.userId == AppSettings.userId ? myScoreKey : null,
+      key: score.userId == settings.userId ? myScoreKey : null,
       height: 30,
       margin: EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
           color: rank % 2 == 1 ? AppStyle.bgColorWeak : Colors.transparent,
-          border: score.userId == AppSettings.userId
+          border: score.userId == settings.userId
               ? Border.all(
                   color: AppStyle.accentColor,
                   width: 2.0,
@@ -252,7 +254,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   }
 
   Future<String?> usernameDialog() async {
-    textEditingcontroller.text = AppSettings.username ?? '';
+    textEditingcontroller.text = settings.username ?? '';
 
     return await showDialog<String>(
       context: context,
@@ -293,7 +295,6 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
 
   Future<void> setUsername(String? name) async {
     if (name != null && name.isNotEmpty && name.trim().length > 0) {
-      print('Changing username [${AppSettings.username}] => [$name]');
       await ScoreBoardManager().updateUsername(name);
     }
   }

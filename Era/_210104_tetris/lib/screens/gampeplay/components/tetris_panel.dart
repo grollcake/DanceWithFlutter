@@ -98,51 +98,55 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
       child: Container(
         padding: EdgeInsets.all(2),
         color: Colors.white,
-        child: Container(
-          color: AppSettings.showGridLine ? AppStyle.bgColor : AppStyle.bgColorAccent,
-          child: MediaQuery.removePadding(
-            removeTop: true,
-            context: context,
-            child: Builder(builder: (context) {
-              final manager = context.watch<GamePlayManager>();
-              return GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: kTetrisMatrixWidth * kTetrisMatrixHeight,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: kTetrisMatrixWidth,
-                  crossAxisSpacing: 1.0,
-                  mainAxisSpacing: 1.0,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  int gridX = index % kTetrisMatrixWidth;
-                  int gridY = index ~/ kTetrisMatrixWidth;
+        child: Builder(builder: (context) {
+          final showGridLine = context.select((AppSettings settings) => settings.showGridLine);
+          final showShadowBlock = context.select((AppSettings settings) => settings.showShadowBlock);
+          return Container(
+            color: showGridLine ? AppStyle.bgColor : AppStyle.bgColorAccent,
+            child: MediaQuery.removePadding(
+              removeTop: true,
+              context: context,
+              child: Builder(builder: (context) {
+                final manager = context.watch<GamePlayManager>();
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: kTetrisMatrixWidth * kTetrisMatrixHeight,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: kTetrisMatrixWidth,
+                    crossAxisSpacing: 1.0,
+                    mainAxisSpacing: 1.0,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    int gridX = index % kTetrisMatrixWidth;
+                    int gridY = index ~/ kTetrisMatrixWidth;
 
-                  TTBlockID? blockId = manager.getBlockId(gridX, gridY);
-                  TTBlockStatus blockStatus = manager.getBlockStatus(gridX, gridY);
+                    TTBlockID? blockId = manager.getBlockId(gridX, gridY);
+                    TTBlockStatus blockStatus = manager.getBlockStatus(gridX, gridY);
 
-                  // shadow 블록 미표시
-                  if (blockStatus == TTBlockStatus.shadow && !AppSettings.showShadowBlock) {
+                    // shadow 블록 미표시
+                    if (blockStatus == TTBlockStatus.shadow && !showShadowBlock) {
+                      return Container(
+                        color: AppStyle.bgColorAccent,
+                      );
+                    }
+
+                    if (blockId == null || (_manager.hideCompletedRow && blockStatus == TTBlockStatus.completed)) {
+                      return Container(
+                        color: AppStyle.bgColorAccent,
+                      );
+                    }
+
                     return Container(
                       color: AppStyle.bgColorAccent,
+                      child: TTTile(blockId: blockId, status: blockStatus),
                     );
-                  }
-
-                  if (blockId == null || (_manager.hideCompletedRow && blockStatus == TTBlockStatus.completed)) {
-                    return Container(
-                      color: AppStyle.bgColorAccent,
-                    );
-                  }
-
-                  return Container(
-                    color: AppStyle.bgColorAccent,
-                    child: TTTile(blockId: blockId, status: blockStatus),
-                  );
-                },
-              );
-            }),
-          ),
-        ),
+                  },
+                );
+              }),
+            ),
+          );
+        }),
       ),
     );
   }

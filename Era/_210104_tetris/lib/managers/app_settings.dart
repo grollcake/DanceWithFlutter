@@ -4,19 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tetris/models/enums.dart';
 
-class AppSettings {
+class AppSettings with ChangeNotifier {
   ////////////////////////////////////////////////////////////////////////
   // 배경화면 테마
   ////////////////////////////////////////////////////////////////////////
   static int _backgroundImageId = 0;
-  static int get backgroundImageId => _backgroundImageId;
+  int get backgroundImageId => _backgroundImageId;
 
-  static set backgroundImageId(int value) {
+  set backgroundImageId(int value) {
     _backgroundImageId = value;
     saveSettings();
+    notifyListeners();
   }
 
-  static List<String> backgroundImages = [
+  get backgroundImage => backgroundImages[_backgroundImageId];
+
+  List<String> backgroundImages = [
     'assets/images/bg01.png',
     'assets/images/bg02.jpg',
     'assets/images/bg03.jpg',
@@ -30,13 +33,14 @@ class AppSettings {
   ////////////////////////////////////////////////////////////////////////
   static int _colorSetId = 0;
 
-  static int get colorSetId => _colorSetId;
-  static set colorSetId(int value) {
+  int get colorSetId => _colorSetId;
+  set colorSetId(int value) {
     _colorSetId = value;
     saveSettings();
+    notifyListeners();
   }
 
-  static List<List<Color>> colorSets = [
+  List<List<Color>> colorSets = [
     // Color set #1
     [
       Colors.red.shade400,
@@ -95,39 +99,41 @@ class AppSettings {
   ];
 
   // 정보 조회
-  static Color tileColor(TTBlockID blockID) => colorSets[_colorSetId][blockID.index];
+  Color tileColor(TTBlockID blockID) => colorSets[_colorSetId][blockID.index];
 
   ////////////////////////////////////////////////////////////////////////
   // 테트리스 블록 타일의 모양 테마
   ////////////////////////////////////////////////////////////////////////
   static int _tileTypeId = 0;
 
-  static int get tileTypeId => _tileTypeId;
-  static set tileTypeId(int value) {
+  int get tileTypeId => _tileTypeId;
+  set tileTypeId(int value) {
     _tileTypeId = value;
     saveSettings();
+    notifyListeners();
   }
 
   ////////////////////////////////////////////////////////////////////////
   // 사용자 정보
   ////////////////////////////////////////////////////////////////////////
   static String? _userId;
-  static String? get userId => _userId;
-  static set userId(String? id) {
+  String? get userId => _userId;
+  set userId(String? id) {
     _userId = id;
     saveSettings();
   }
 
   static String? _username;
-  static String? get username => _username;
-  static set username(String? name) {
+  String? get username => _username;
+  set username(String? name) {
     _username = name;
     saveSettings();
+    notifyListeners();
   }
 
   static int _highestScore = 0;
-  static int get highestScore => _highestScore;
-  static set highestScore(int value) {
+  int get highestScore => _highestScore;
+  set highestScore(int value) {
     _highestScore = value;
     saveSettings();
   }
@@ -136,48 +142,58 @@ class AppSettings {
   // 기타 설정
   ////////////////////////////////////////////////////////////////////////
   static bool _backgroundMusic = true;
-  static bool get backgroundMusic => _backgroundMusic;
-  static set backgroundMusic(bool value) {
+  bool get backgroundMusic => _backgroundMusic;
+  set backgroundMusic(bool value) {
     _backgroundMusic = value;
     saveSettings();
+    notifyListeners();
   }
 
   static bool _soundEffect = true;
-  static bool get soundEffect => _soundEffect;
-  static set soundEffect(bool value) {
+  bool get soundEffect => _soundEffect;
+  set soundEffect(bool value) {
     _soundEffect = value;
     saveSettings();
+    notifyListeners();
   }
 
   static bool _showGridLine = true;
-  static bool get showGridLine => _showGridLine;
-  static set showGridLine(bool value) {
+  bool get showGridLine => _showGridLine;
+  set showGridLine(bool value) {
     _showGridLine = value;
     saveSettings();
+    notifyListeners();
   }
 
   static bool _showShadowBlock = true;
-  static bool get showShadowBlock => _showShadowBlock;
-  static set showShadowBlock(bool value) {
+  bool get showShadowBlock => _showShadowBlock;
+  set showShadowBlock(bool value) {
     _showShadowBlock = value;
     saveSettings();
+    notifyListeners();
   }
 
   static int _swipeSensitivity = 0; // 조작감도: 0-보통, 1-느리게, 2-빠르게
-  static int get swipeSensitivity => _swipeSensitivity;
-  static set swipeSensitivity(int value) {
+  int get swipeSensitivity => _swipeSensitivity;
+  set swipeSensitivity(int value) {
     _swipeSensitivity = value;
     saveSettings();
+    notifyListeners();
   }
 
   // 이건 기기설정에 저장하지는 않음
-  static int selectedMenuIndex = 0;
+  int _selectedMenuIndex = 0;
+  int get selectedMenuIndex => _selectedMenuIndex;
+  set selectedMenuIndex(int value) {
+    _selectedMenuIndex = value;
+    notifyListeners();
+  }
 
   ////////////////////////////////////////////////////////////////////////
   // 설정을 기기에 저장하거나 불러오기
   ////////////////////////////////////////////////////////////////////////
   // 설정을 기기에 저장
-  static Future<bool> saveSettings() async {
+  Future<bool> saveSettings() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     Map<String, dynamic> settings = {
       'backgroundImageId': _backgroundImageId,
@@ -202,7 +218,7 @@ class AppSettings {
   }
 
   // 설정을 불러오기
-  static Future<bool> loadSettings() async {
+  Future<bool> loadSettings() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? settingsString = preferences.getString('settings');
     if (settingsString != null) {
@@ -221,6 +237,8 @@ class AppSettings {
       _showGridLine = (settings['showGridLine'] ?? true) as bool;
       _showShadowBlock = (settings['showShadowBlock'] ?? true) as bool;
       _swipeSensitivity = (settings['swipeSensitivity'] ?? 0) as int;
+
+      notifyListeners();
 
       return true;
     } else {

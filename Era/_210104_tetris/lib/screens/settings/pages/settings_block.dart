@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/screens/settings/widgets/subtitle.dart';
@@ -22,6 +23,8 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
     [null, TTBlockID.I, TTBlockID.I, TTBlockID.I, TTBlockID.I, null]
   ];
 
+  AppSettings settings = AppSettings();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -40,13 +43,15 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
   }
 
   Widget buildColorChoice() {
+    final settings = context.watch<AppSettings>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SettingsSubtitle(title: 'Color set'),
         GridView.builder(
           shrinkWrap: true,
-          itemCount: AppSettings.colorSets.length,
+          itemCount: settings.colorSets.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 8.0,
@@ -55,13 +60,9 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
           ),
           itemBuilder: (context, index) {
             return GestureDetector(
-              onTap: () {
-                setState(() {
-                  AppSettings.colorSetId = index;
-                });
-              },
+              onTap: () => settings.colorSetId = index,
               child: SelectedItem(
-                selected: index == AppSettings.colorSetId,
+                isSelected: index == settings.colorSetId,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
@@ -70,7 +71,7 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
                       margin: EdgeInsets.symmetric(horizontal: 1),
                       width: 14,
                       height: 14,
-                      color: AppSettings.colorSets[index][index2],
+                      color: settings.colorSets[index][index2],
                     ),
                   ),
                 ),
@@ -83,6 +84,8 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
   }
 
   Widget buildShapeChoice() {
+    final settings = context.watch<AppSettings>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -94,11 +97,11 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
             (index) => GestureDetector(
               onTap: () {
                 setState(() {
-                  AppSettings.tileTypeId = index;
+                  settings.tileTypeId = index;
                 });
               },
               child: SelectedItem(
-                selected: index == AppSettings.tileTypeId,
+                isSelected: index == settings.tileTypeId,
                 child: Container(
                   width: 40,
                   height: 40,

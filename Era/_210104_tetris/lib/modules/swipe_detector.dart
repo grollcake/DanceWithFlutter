@@ -44,20 +44,22 @@ class _SwipeDetectorState extends State<SwipeDetector> {
   bool _isSwipeDone = false;
   int _callBackCount = 0;
 
+  AppSettings settings = AppSettings();
+
   // 이동 정보 처리
   void handleMoveEvent(Offset delta) {
     // 0. 기준 임계치 계산
     double xAxisThreadhold = _xAxisThreadhold;
-    if (AppSettings.swipeSensitivity == 1) {
+    if (settings.swipeSensitivity == 1) {
       xAxisThreadhold *= 1.5;
-    } else if (AppSettings.swipeSensitivity == 2) {
+    } else if (settings.swipeSensitivity == 2) {
       xAxisThreadhold *= 0.6;
     }
 
     double yAxisThreadhold = _yAxisThreadhold;
-    if (AppSettings.swipeSensitivity == 1) {
+    if (settings.swipeSensitivity == 1) {
       yAxisThreadhold *= 1.5;
-    } else if (AppSettings.swipeSensitivity == 2) {
+    } else if (settings.swipeSensitivity == 2) {
       yAxisThreadhold *= 0.6;
     }
 

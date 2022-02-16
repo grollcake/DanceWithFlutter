@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/constants/constants.dart';
-import 'package:tetris/managers/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsDetailAbout extends StatefulWidget {
@@ -42,47 +41,6 @@ class _SettingsDetailAboutState extends State<SettingsDetailAbout> {
           style: ElevatedButton.styleFrom(
             primary: AppStyle.accentColor,
             minimumSize: Size(160, 34),
-          ),
-        ),
-        // Spacer(),
-        // buildUserInfo(),
-      ],
-    );
-  }
-
-  Widget buildUserInfo() {
-    String platform = defaultTargetPlatform.toString().split('.')[1];
-    if (kIsWeb) {
-      platform = '$platform (web)';
-    }
-    return Column(
-      children: [
-        Container(
-          alignment: Alignment.centerLeft,
-          margin: EdgeInsets.only(bottom: 6),
-          child: Text(
-            '사용자 정보',
-            style: TextStyle(fontSize: 12, color: Colors.grey),
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 6),
-          decoration: BoxDecoration(
-            color: AppStyle.bgColorWeak,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 6),
-              Text(AppSettings.username ?? '이름 없음',
-                  style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor, fontWeight: FontWeight.bold)),
-              SizedBox(height: 6),
-              Text(AppSettings.userId ?? '아이디 없음', style: TextStyle(fontSize: 12, color: Colors.grey)),
-              SizedBox(height: 2),
-              Text(platform, style: TextStyle(fontSize: 12, color: Colors.grey)),
-            ],
           ),
         ),
       ],

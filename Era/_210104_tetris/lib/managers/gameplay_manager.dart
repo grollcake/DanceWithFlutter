@@ -280,13 +280,13 @@ class GamePlayManager with ChangeNotifier {
       Duration(milliseconds: (kInitalSpeed.inMilliseconds * math.pow((1 - kSpeedUpForLevel), _stage - 1)).toInt());
 
   void _startBgm() {
-    if (AppSettings.backgroundMusic) {
+    if (AppSettings().backgroundMusic) {
       _bgmPlayer?.startBGM();
     }
   }
 
   void _stopBgm() {
-    if (AppSettings.backgroundMusic) {
+    if (AppSettings().backgroundMusic) {
       _bgmPlayer?.stopBGM();
     }
   }

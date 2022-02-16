@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/screens/settings/widgets/selectedItem.dart';
@@ -36,6 +37,8 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
   }
 
   Widget buildBackgroundMusicChoice() {
+    final settings = context.watch<AppSettings>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -44,11 +47,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             GestureDetector(
-              onTap: () => setState(() {
-                AppSettings.backgroundMusic = true;
-              }),
+              onTap: () => settings.backgroundMusic = true,
               child: SelectedItem(
-                selected: AppSettings.backgroundMusic,
+                isSelected: settings.backgroundMusic,
                 child: Container(
                   width: 50,
                   height: 30,
@@ -58,11 +59,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
               ),
             ),
             GestureDetector(
-              onTap: () => setState(() {
-                AppSettings.backgroundMusic = false;
-              }),
+              onTap: () => settings.backgroundMusic = false,
               child: SelectedItem(
-                selected: !AppSettings.backgroundMusic,
+                isSelected: !settings.backgroundMusic,
                 child: Container(
                   width: 50,
                   height: 30,
@@ -78,6 +77,8 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
   }
 
   Widget buildSoundEffectChoice() {
+    final settings = context.watch<AppSettings>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -86,11 +87,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             GestureDetector(
-              onTap: () => setState(() {
-                AppSettings.soundEffect = true;
-              }),
+              onTap: () => settings.soundEffect = true,
               child: SelectedItem(
-                selected: AppSettings.soundEffect,
+                isSelected: settings.soundEffect,
                 child: Container(
                   width: 50,
                   height: 30,
@@ -100,11 +99,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
               ),
             ),
             GestureDetector(
-              onTap: () => setState(() {
-                AppSettings.soundEffect = false;
-              }),
+              onTap: () => settings.soundEffect = false,
               child: SelectedItem(
-                selected: !AppSettings.soundEffect,
+                isSelected: !settings.soundEffect,
                 child: Container(
                   width: 50,
                   height: 30,
@@ -120,6 +117,8 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
   }
 
   Widget buildGridlineChoice() {
+    final settings = context.watch<AppSettings>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -128,11 +127,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             GestureDetector(
-              onTap: () => setState(() {
-                AppSettings.showGridLine = true;
-              }),
+              onTap: () => settings.showGridLine = true,
               child: SelectedItem(
-                selected: AppSettings.showGridLine,
+                isSelected: settings.showGridLine,
                 child: Container(
                   width: 50,
                   height: 30,
@@ -142,11 +139,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
               ),
             ),
             GestureDetector(
-              onTap: () => setState(() {
-                AppSettings.showGridLine = false;
-              }),
+              onTap: () => settings.showGridLine = false,
               child: SelectedItem(
-                selected: !AppSettings.showGridLine,
+                isSelected: !settings.showGridLine,
                 child: Container(
                   width: 50,
                   height: 30,
@@ -162,6 +157,8 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
   }
 
   Widget buildShadowBlockChoice() {
+    final settings = context.watch<AppSettings>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -170,11 +167,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             GestureDetector(
-              onTap: () => setState(() {
-                AppSettings.showShadowBlock = true;
-              }),
+              onTap: () => settings.showShadowBlock = true,
               child: SelectedItem(
-                selected: AppSettings.showShadowBlock,
+                isSelected: settings.showShadowBlock,
                 child: Container(
                   width: 50,
                   height: 30,
@@ -184,11 +179,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
               ),
             ),
             GestureDetector(
-              onTap: () => setState(() {
-                AppSettings.showShadowBlock = false;
-              }),
+              onTap: () => settings.showShadowBlock = false,
               child: SelectedItem(
-                selected: !AppSettings.showShadowBlock,
+                isSelected: !settings.showShadowBlock,
                 child: Container(
                   width: 50,
                   height: 30,
@@ -204,6 +197,8 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
   }
 
   Widget buildSensitivityChoice() {
+    final settings = context.watch<AppSettings>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -212,11 +207,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             GestureDetector(
-              onTap: () => setState(() {
-                AppSettings.swipeSensitivity = 0;
-              }),
+              onTap: () => settings.swipeSensitivity = 0,
               child: SelectedItem(
-                selected: AppSettings.swipeSensitivity == 0,
+                isSelected: settings.swipeSensitivity == 0,
                 child: Container(
                   width: 50,
                   height: 30,
@@ -226,11 +219,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
               ),
             ),
             GestureDetector(
-              onTap: () => setState(() {
-                AppSettings.swipeSensitivity = 1;
-              }),
+              onTap: () => settings.swipeSensitivity = 1,
               child: SelectedItem(
-                selected: AppSettings.swipeSensitivity == 1,
+                isSelected: settings.swipeSensitivity == 1,
                 child: Container(
                   width: 50,
                   height: 30,
@@ -240,11 +231,9 @@ class _SettingsDetailMiscState extends State<SettingsDetailMisc> {
               ),
             ),
             GestureDetector(
-              onTap: () => setState(() {
-                AppSettings.swipeSensitivity = 2;
-              }),
+              onTap: () => settings.swipeSensitivity = 2,
               child: SelectedItem(
-                selected: AppSettings.swipeSensitivity == 2,
+                isSelected: settings.swipeSensitivity == 2,
                 child: Container(
                   width: 50,
                   height: 30,
