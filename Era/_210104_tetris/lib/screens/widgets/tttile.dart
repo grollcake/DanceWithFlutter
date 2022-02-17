@@ -201,24 +201,24 @@ class TileType3 extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: color,
-          border: Border(
-            left: const BorderSide(
-              color: Colors.white70,
-              width: 1,
-            ),
-            top: const BorderSide(
-              color: Colors.white70,
-              width: 1,
-            ),
-            right: BorderSide(
-              color: Colors.grey.shade700,
-              width: 1,
-            ),
-            bottom: BorderSide(
-              color: Colors.grey.shade700,
-              width: 1,
-            ),
-          ),
+          // border: Border(
+          //   left: const BorderSide(
+          //     color: Colors.white70,
+          //     width: 1,
+          //   ),
+          //   top: const BorderSide(
+          //     color: Colors.white70,
+          //     width: 1,
+          //   ),
+          //   right: BorderSide(
+          //     color: Colors.grey.shade700,
+          //     width: 1,
+          //   ),
+          //   bottom: BorderSide(
+          //     color: Colors.grey.shade700,
+          //     width: 1,
+          //   ),
+          // ),
         ),
         child: Container(
           width: size,
@@ -227,17 +227,17 @@ class TileType3 extends StatelessWidget {
             shape: BoxShape.circle,
             color: color,
             boxShadow: [
-              const BoxShadow(
-                color: Colors.white,
-                blurRadius: 1.0,
-                spreadRadius: 0,
-                offset: Offset(-1, -1),
-              ),
               BoxShadow(
                 color: Colors.grey.shade700,
-                blurRadius: 2.0,
+                offset: const Offset(1, 1),
+                blurRadius: 2,
                 spreadRadius: 1,
-                offset: const Offset(2, 2),
+              ),
+              const BoxShadow(
+                color: Colors.white,
+                offset: Offset(-1, -1),
+                blurRadius: 0,
+                spreadRadius: 0,
               ),
             ],
           ),

@@ -92,8 +92,9 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done newplay_screen을 gameplay_screen으로 이름 변경
 // Done 설정이 바뀌면 즉시 반영되어야 해 (특히 배경화면)
 // Done 효과음을 soundpool 패키지로 변경
+// Done 레고 타일을 좀 더 산뜻하게 개선
+// Done (오류) swipeUp 착오 감지
 // todo 새로운 기록 달성 시 toast 메시지로 안내
-// todo 레고 타일을 좀 더 산뜻하게 개선
 // todo 그림자 블록 모양 개선
 // todo (보류) Hold, Next를 ttboard에서 분리
 // todo (오류) pause 버튼을 누를 때 블록이 한번 회전함

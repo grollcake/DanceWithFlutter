@@ -72,7 +72,7 @@ class _SwipeDetectorState extends State<SwipeDetector> {
     _horizontalSwipeDistance += delta.dx;
     _verticalSwipeDistance += delta.dy;
 
-    // 3. 임계치 초과 시 사용자 함수 호출
+    // 3. 임계치 초과 시 콜백 함수 호출
     if (_horizontalSwipeDistance ~/ xAxisThreadhold != 0) {
       int steps = _horizontalSwipeDistance ~/ xAxisThreadhold;
       _horizontalSwipeDistance = _horizontalSwipeDistance - xAxisThreadhold * steps;
@@ -88,15 +88,18 @@ class _SwipeDetectorState extends State<SwipeDetector> {
       int steps = _verticalSwipeDistance ~/ yAxisThreadhold;
       _verticalSwipeDistance = _verticalSwipeDistance - yAxisThreadhold * steps;
       _horizontalSwipeDistance = 0;
-      _callBackCount += steps.abs();
       if (steps > 0) {
+        _callBackCount += steps.abs();
         // SwipeDown인 경우 Drop 일수도 있기 때문에 약간 지연 처리한다.
         _delayedSwipeDownTimer.add(
           Timer(const Duration(milliseconds: 100), () {
             widget.onSwipeDown(steps);
           }),
         );
-      } else {
+      }
+      // 좌우로 움직인 이력이 없는 경우에만 swipe up 이벤트 처리
+      else if (_callBackCount == 0) {
+        _callBackCount = 1;
         widget.onSwipeUp();
         _isSwipeDone = true;
       }
