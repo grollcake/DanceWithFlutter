@@ -46,7 +46,7 @@ class FlutterWebBuilder {
       flutter create . --org appName
 
       # Web build
-      flutter build web --base-href="/projects/$projectName/"
+      flutter build web --base-href="/projects/$projectName/" --web-renderer canvaskit --release
 
       # git add
       git add build/web/*
