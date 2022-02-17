@@ -14,26 +14,30 @@ class TTTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorSetId = context.select((AppSettings settings) => settings.colorSetId);
+    // 설정에서 색상 테마 변경 시 즉시 반영을 위해서 모니터링 추가
+    context.select((AppSettings settings) => settings.colorSetId);
+
+    // 설정에서 타일 모양 변경 시 즉시 반영을 위해서 모니터링 추가
+    context.select((AppSettings settings) => settings.tileTypeId);
+
     final settings = context.read<AppSettings>();
 
     Color color = this.color ?? settings.tileColor(blockId);
-    if (status == TTBlockStatus.shadow) {
-      color = color.withOpacity(0.2);
-    }
-    return _getShape(typeId ?? settings.tileTypeId, color);
+    bool isShadow = status == TTBlockStatus.shadow;
+
+    return _getShape(typeId ?? settings.tileTypeId, color, isShadow);
   }
 
-  static Widget _getShape(int id, [Color color = Colors.green]) {
+  static Widget _getShape(int id, [Color color = Colors.green, bool isShadow = false]) {
     switch (id) {
       case 0:
-        return TileType1(color: color);
+        return TileType1(color: color, isShadow: isShadow);
       case 1:
-        return TileType2(color: color);
+        return TileType2(color: color, isShadow: isShadow);
       case 2:
-        return TileType3(color: color);
+        return TileType3(color: color, isShadow: isShadow);
       case 3:
-        return TileType4(color: color);
+        return TileType4(color: color, isShadow: isShadow);
     }
     return SizedBox();
   }
@@ -44,17 +48,20 @@ class TTTile extends StatelessWidget {
 }
 
 class TileType1 extends StatelessWidget {
-  const TileType1({Key? key, required this.color}) : super(key: key);
+  const TileType1({Key? key, required this.color, required this.isShadow}) : super(key: key);
   final _adjustRatio = 0.10;
 
   final Color color;
+  final bool isShadow;
 
   @override
   Widget build(BuildContext context) {
-    final currentValue = HSVColor.fromColor(color).value;
+    Color baseColor = isShadow ? color.withOpacity(.2) : color;
+    final currentValue = HSVColor.fromColor(baseColor).value;
     final lightValue = min(currentValue + _adjustRatio, 1.0);
-    Color lightColor = HSVColor.fromColor(color).withValue(lightValue).toColor();
-    Color darkColor = lightValue < 1.0 ? color : HSVColor.fromColor(color).withValue(1 - _adjustRatio).toColor();
+    Color lightColor = HSVColor.fromColor(baseColor).withValue(lightValue).toColor();
+    Color darkColor =
+        lightValue < 1.0 ? baseColor : HSVColor.fromColor(baseColor).withValue(1 - _adjustRatio).toColor();
 
     return Stack(
       children: [
@@ -101,22 +108,25 @@ class TileType1Clipper extends CustomClipper<Path> {
 }
 
 class TileType2 extends StatelessWidget {
-  const TileType2({Key? key, required this.color}) : super(key: key);
+  const TileType2({Key? key, required this.color, required this.isShadow}) : super(key: key);
   final _adjustRatio = 0.10;
   final Color color;
+  final bool isShadow;
 
   @override
   Widget build(BuildContext context) {
-    final Color lightColor = HSVColor.fromColor(color).withValue(1).toColor();
+    final Color baseColor = isShadow ? color.withOpacity(0.2) : color;
+    final Color lightColor = HSVColor.fromColor(baseColor).withValue(1).toColor();
 
-    var lightValue = max(HSVColor.fromColor(color).value - _adjustRatio, 0.0);
-    final Color mediumColor = HSVColor.fromColor(color).withValue(lightValue).toColor();
+    var lightValue = max(HSVColor.fromColor(baseColor).value - _adjustRatio, 0.0);
+    final Color mediumColor = HSVColor.fromColor(baseColor).withValue(lightValue).toColor();
 
-    lightValue = max(HSVColor.fromColor(color).value - _adjustRatio * 2, 0.0);
-    final Color darkColor = HSVColor.fromColor(color).withValue(lightValue).toColor();
+    lightValue = max(HSVColor.fromColor(baseColor).value - _adjustRatio * 2, 0.0);
+    final Color darkColor = HSVColor.fromColor(baseColor).withValue(lightValue).toColor();
 
     return Stack(
       children: [
+        if (isShadow) Container(color: baseColor),
         ClipPath(
           child: Container(
             color: mediumColor,
@@ -144,7 +154,7 @@ class TileType2 extends StatelessWidget {
         LayoutBuilder(builder: (context, size) {
           return Container(
             margin: EdgeInsets.all(size.maxWidth * .15),
-            color: color,
+            color: baseColor,
           );
         }),
       ],
@@ -190,8 +200,9 @@ class TileType2Clipper extends CustomClipper<Path> {
 }
 
 class TileType3 extends StatelessWidget {
-  const TileType3({Key? key, required this.color}) : super(key: key);
+  const TileType3({Key? key, required this.color, required this.isShadow}) : super(key: key);
   final Color color;
+  final bool isShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -200,45 +211,29 @@ class TileType3 extends StatelessWidget {
       return Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: color,
-          // border: Border(
-          //   left: const BorderSide(
-          //     color: Colors.white70,
-          //     width: 1,
-          //   ),
-          //   top: const BorderSide(
-          //     color: Colors.white70,
-          //     width: 1,
-          //   ),
-          //   right: BorderSide(
-          //     color: Colors.grey.shade700,
-          //     width: 1,
-          //   ),
-          //   bottom: BorderSide(
-          //     color: Colors.grey.shade700,
-          //     width: 1,
-          //   ),
-          // ),
+          color: isShadow ? color.withOpacity(.2) : color,
         ),
         child: Container(
           width: size,
           height: size,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: color,
+            color: isShadow ? color.withOpacity(.05) : color,
             boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade700,
-                offset: const Offset(1, 1),
-                blurRadius: 2,
-                spreadRadius: 1,
-              ),
-              const BoxShadow(
-                color: Colors.white,
-                offset: Offset(-1, -1),
-                blurRadius: 0,
-                spreadRadius: 0,
-              ),
+              if (!isShadow)
+                BoxShadow(
+                  color: Colors.grey.shade700,
+                  offset: const Offset(1, 1),
+                  blurRadius: 2,
+                  spreadRadius: 1,
+                ),
+              if (!isShadow)
+                const BoxShadow(
+                  color: Colors.white,
+                  offset: Offset(-1, -1),
+                  blurRadius: 0,
+                  spreadRadius: 0,
+                ),
             ],
           ),
         ),
@@ -248,8 +243,9 @@ class TileType3 extends StatelessWidget {
 }
 
 class TileType4 extends StatelessWidget {
-  const TileType4({Key? key, required this.color}) : super(key: key);
+  const TileType4({Key? key, required this.color, required this.isShadow}) : super(key: key);
   final Color color;
+  final bool isShadow;
   final _adjustRatio = 0.25;
 
   @override
@@ -259,16 +255,24 @@ class TileType4 extends StatelessWidget {
     Color lightColor = HSVColor.fromColor(color).withValue(lightValue).toColor();
     Color darkColor = lightValue < 1.0 ? color : HSVColor.fromColor(color).withValue(1 - _adjustRatio).toColor();
 
-    return Container(
-      margin: EdgeInsets.all(1),
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [lightColor, darkColor],
-          center: Alignment.center,
-        ),
-      ),
-    );
+    return isShadow
+        ? Container(
+            margin: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              color: color.withOpacity(.2),
+              shape: BoxShape.circle,
+            ),
+          )
+        : Container(
+            margin: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [lightColor, darkColor],
+                center: Alignment.center,
+              ),
+            ),
+          );
   }
 }

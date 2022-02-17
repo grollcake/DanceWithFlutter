@@ -11,7 +11,7 @@ class ScoreBoardManager {
   AppSettings settings = AppSettings();
 
   // 점수 등록
-  Future<void> updateScore({required int score, required int level}) async {
+  Future<void> updateScore({required int score, required int stage}) async {
     // AppSettings에 최고 기록을 등록한다.
     settings.highestScore = max(score, settings.highestScore);
 
@@ -19,7 +19,7 @@ class ScoreBoardManager {
     Score? remoteScore = await _firestoreFetch();
     if (remoteScore != null) {
       remoteScore.score = max(score, remoteScore.score ?? 0);
-      remoteScore.level = max(level, remoteScore.level ?? 1);
+      remoteScore.stage = max(stage, remoteScore.stage ?? 1);
       remoteScore.username = settings.username;
       remoteScore.playCount = (remoteScore.playCount ?? 0) + 1;
       remoteScore.dateTime = DateTime.now();
@@ -30,7 +30,7 @@ class ScoreBoardManager {
     }
 
     // Firestore에 정보가 없다면 신규로 생성한다.
-    await _createNewScore(score, level);
+    await _createNewScore(score, stage);
     return;
   }
 
@@ -49,14 +49,14 @@ class ScoreBoardManager {
   }
 
   // 순위 조회
-  Future<int> fetchRank({int? score, int? level}) async {
-    if (score != null && level != null) {
-      await updateScore(score: score, level: level);
+  Future<int> fetchRank({int? score, int? stage}) async {
+    if (score != null && stage != null) {
+      await updateScore(score: score, stage: stage);
     }
     final allScores = await FirebaseFirestore.instance
         .collection('scoreboards')
         .orderBy('score', descending: true)
-        .orderBy('level', descending: true)
+        .orderBy('stage', descending: true)
         .get();
     if (allScores.docs.isNotEmpty) {
       List<Score> results = allScores.docs.map((e) => Score.fromJson(e.data())).toList();
@@ -71,7 +71,7 @@ class ScoreBoardManager {
   Stream<List<Score>> fetchAllScores() => FirebaseFirestore.instance
       .collection('scoreboards')
       .orderBy('score', descending: true)
-      .orderBy('level', descending: true)
+      .orderBy('stage', descending: true)
       .snapshots()
       .map((snapshot) => snapshot.docs.map((doc) => Score.fromJson(doc.data())).toList());
 
@@ -88,7 +88,7 @@ class ScoreBoardManager {
   }
 
   // 파이어스토어에 새로운 데이터를 생성한다.
-  Future<Score> _createNewScore(int score, int level) async {
+  Future<Score> _createNewScore(int score, int stage) async {
     final scoreDoc = FirebaseFirestore.instance.collection('scoreboards').doc();
     settings.userId = scoreDoc.id;
     print('New userId is generated: ${settings.userId}');
@@ -97,7 +97,7 @@ class ScoreBoardManager {
       userId: scoreDoc.id,
       username: settings.username,
       score: score,
-      level: level,
+      stage: stage,
       dateTime: DateTime.now(),
       playCount: 1,
       deviceUUID: await PlatformDeviceId.getDeviceId,

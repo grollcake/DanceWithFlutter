@@ -4,12 +4,22 @@ import 'package:flutter/foundation.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 import 'package:tetris/constants/constants.dart';
 import 'package:tetris/managers/app_settings.dart';
+import 'package:tetris/managers/scoreboard_manager.dart';
 import 'package:tetris/managers/ttboard_manager.dart';
 import 'package:tetris/models/enums.dart';
 import 'package:tetris/modules/bgm_player.dart';
 import 'package:tetris/modules/sound_effect.dart';
 
-enum GamePlayEvents { gameStarted, gamePaused, gameResumed, gameEnded, stageCleared, blockDropped, gameEndDialogRecall }
+enum GamePlayEvents {
+  gameStarted,
+  gamePaused,
+  gameResumed,
+  gameEnded,
+  stageCleared,
+  recordBreaked,
+  blockDropped,
+  gameEndDialogRecall
+}
 
 class GamePlayManager with ChangeNotifier {
   // Variables
@@ -125,7 +135,7 @@ class GamePlayManager with ChangeNotifier {
       // todo move Sound
       notifyListeners();
     } else if (direction == MoveDirection.down) {
-      _layDownBlock();
+      _layDownBlock(withDrop: false);
     }
     return isMoved;
   }
@@ -143,11 +153,12 @@ class GamePlayManager with ChangeNotifier {
   ////////////////////////////////////////////////////////
   // Drop block
   ////////////////////////////////////////////////////////
-  void dropBlock() {
-    _ttboardManager.dropBlock();
+  void dropBlock() async {
     _soundEffect?.dropSound();
+    await Future.delayed(Duration(milliseconds: 100)); // 사운드 싱크를 위해 약간 대기
+    _ttboardManager.dropBlock();
     _gamePlayEvents.sink.add(GamePlayEvents.blockDropped);
-    _layDownBlock();
+    _layDownBlock(withDrop: true);
   }
 
   ////////////////////////////////////////////////////////
@@ -194,7 +205,16 @@ class GamePlayManager with ChangeNotifier {
     _blockTimer?.cancel();
     _stopBgm();
     _soundEffect?.gameEndSound();
+    _registerScore();
     _gamePlayEvents.sink.add(GamePlayEvents.gameEnded);
+  }
+
+  ////////////////////////////////////////////////////////
+  // Register score to firestore
+  ////////////////////////////////////////////////////////
+  void _registerScore() async {
+    final scoreboard = ScoreBoardManager();
+    await scoreboard.updateScore(score: score, stage: _stage);
   }
 
   ////////////////////////////////////////////////////////
@@ -220,7 +240,7 @@ class GamePlayManager with ChangeNotifier {
   }
 
   // Lay down block
-  void _layDownBlock() async {
+  void _layDownBlock({required bool withDrop}) async {
     _blockTimer?.cancel();
 
     _ttboardManager.fixBlock();
@@ -243,6 +263,11 @@ class GamePlayManager with ChangeNotifier {
       _score += clearningRows * 100;
       _score += (clearningRows - 1) * 20;
 
+      // 최고 기록 갱신 시 토스트 메시지 표시
+      if (_score > AppSettings().highestScore) {
+        _gamePlayEvents.sink.add(GamePlayEvents.recordBreaked);
+      }
+
       // 스테이지 클리어 확인
       _cleans += clearningRows;
       if (_cleans >= kCleansForStage) {
@@ -256,8 +281,13 @@ class GamePlayManager with ChangeNotifier {
 
     // 완성 줄이 없는 경우
     else {
-      _soundEffect?.fixingSound();
-      _score += 10;
+      if (!withDrop) _soundEffect?.fixingSound();
+      _score += 10; // todo 여기를 10점으로 고쳐야해
+
+      // 최고 기록 갱신 시 토스트 메시지 표시
+      if (_score > AppSettings().highestScore) {
+        _gamePlayEvents.sink.add(GamePlayEvents.recordBreaked);
+      }
     }
 
     notifyListeners();

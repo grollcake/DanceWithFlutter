@@ -106,13 +106,9 @@ class NewPlayScreen extends StatelessWidget {
           SizedBox(height: 6),
           // 메인 게임 패널
           SwipeDetector(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: const [
-                SizedBox(width: 60),
-                Expanded(child: GameplayTetrisPanel()),
-                SizedBox(width: 60, child: GamePlayPausePanel()),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              child: GameplayTetrisPanel(),
             ),
             onTap: () => manager.rotateBlock(),
             onSwipeLeft: (int steps) => manager.moveBlock(MoveDirection.left, steps),
@@ -121,7 +117,11 @@ class NewPlayScreen extends StatelessWidget {
             onSwipeDown: (int steps) => manager.moveBlock(MoveDirection.down, steps),
             onSwipeDrop: () => manager.dropBlock(),
           ),
-          Spacer(),
+          Container(
+            padding: EdgeInsets.only(bottom: 10),
+            alignment: Alignment.centerRight,
+            child: GamePlayPausePanel(),
+          ),
         ],
       ),
     );

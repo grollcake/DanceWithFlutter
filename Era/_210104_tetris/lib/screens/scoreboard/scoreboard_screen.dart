@@ -162,8 +162,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
         builder: (BuildContext context, AsyncSnapshot<List<Score>> snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Something went wrong'));
-          } else if (snapshot.hasData) {
-            print(snapshot.connectionState);
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             // 사용자의 점수가 제일 위에 나타나도록 스크롤 위치 조정
             WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
               Scrollable.ensureVisible(myScoreKey.currentContext!);
@@ -173,7 +172,8 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
                 child: Column(
-                    children: List.generate(allScores.length, (index) => buildScoreRow(index + 1, allScores[index]))),
+                  children: List.generate(allScores.length, (index) => buildScoreRow(index + 1, allScores[index])),
+                ),
               ),
             );
           } else if (snapshot.connectionState != ConnectionState.done) {
@@ -229,7 +229,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
           Expanded(
             flex: 2,
             child: Text(
-              'Lvl.${score.level}',
+              'Lvl.${score.stage}',
               style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor),
               textAlign: TextAlign.center,
             ),

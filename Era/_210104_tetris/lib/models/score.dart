@@ -4,7 +4,7 @@ class Score {
   String? userId;
   String? username;
   int? score;
-  int? level;
+  int? stage;
   DateTime? dateTime;
   int? playCount;
   String? deviceUUID;
@@ -14,7 +14,7 @@ class Score {
     this.userId,
     this.username,
     this.score,
-    this.level,
+    this.stage,
     this.dateTime,
     this.playCount,
     this.deviceUUID,
@@ -26,7 +26,7 @@ class Score {
         'username': username,
         'score': score,
         'datetime': dateTime,
-        'level': level,
+        'stage': stage,
         'playCount': playCount,
         'deviceUUID': deviceUUID,
         'platform': platform,
@@ -38,7 +38,7 @@ class Score {
       username: json['username'],
       score: json['score'],
       dateTime: json['datetime'] == null ? null : (json['datetime'] as Timestamp).toDate(),
-      level: json['level'],
+      stage: json['stage'],
       playCount: json['playCount'],
       deviceUUID: json['deviceUUID'],
       platform: json['platform'],

@@ -95,11 +95,7 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
           children: List.generate(
             TTTile.typeCount,
             (index) => GestureDetector(
-              onTap: () {
-                setState(() {
-                  settings.tileTypeId = index;
-                });
-              },
+              onTap: () => settings.tileTypeId = index,
               child: SelectedItem(
                 isSelected: index == settings.tileTypeId,
                 child: Container(

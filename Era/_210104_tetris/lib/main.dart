@@ -94,14 +94,19 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done 효과음을 soundpool 패키지로 변경
 // Done 레고 타일을 좀 더 산뜻하게 개선
 // Done (오류) swipeUp 착오 감지
-// todo 새로운 기록 달성 시 toast 메시지로 안내
-// todo 그림자 블록 모양 개선
-// todo (보류) Hold, Next를 ttboard에서 분리
-// todo (오류) pause 버튼을 누를 때 블록이 한번 회전함
+// Done (오류) scoreboard 등록 오류
+// Done (문제) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제 -> release 모드로 빌드 후 해결
+// Done 새로운 기록 달성 시 toast 메시지로 안내
+// Done (오류) 드랍 사운드 중첩 문제
+// Done (문제) Pause 버튼과 rotate 기능이 겹치는 문제 -> pause 버튼 위치 이동
+// Done 세팅에서 타일 타입 변경 즉시 반영
+// Done 그림자 블록 모양 개선
+// todo mail을 개인 메일로 수신하도록 변경
+// todo 레고타일인 경우 타일사이 간격 제거
 // todo Fixing 애니메이션 추가
-// todo (문제해결) iOS PWA에서 레벨4 정도 진행하면 멈추는 문제. Provider 패턴으로 변경 후 더 심해졌음..
 // todo 저작권 문제없는 배경화면으로 변경
 // todo 좌우 이동에 대한 사운드 추가
+// todo (보류) Hold, Next를 ttboard에서 분리
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
