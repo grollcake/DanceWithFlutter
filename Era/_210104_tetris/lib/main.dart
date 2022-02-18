@@ -104,10 +104,12 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done (오류) 드랍다운을 연속으로 하면 여러 블록이 연속으로 재생성
 // Done (오류) new record가 0점일때도 나오고, 계속 반복해서 나타남
 // Done mail을 개인 메일로 수신하도록 변경 (emailjs 서비스 이용)
+// Done lottie 이미지로 교체 테스트
 // todo 레고타일인 경우 타일사이 간격 제거
 // todo Fixing 애니메이션 추가
 // todo 저작권 문제없는 배경화면으로 변경
 // todo 좌우 이동에 대한 사운드 추가
+// todo scoreboard 로딩 이미지에 lottie 사용
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
