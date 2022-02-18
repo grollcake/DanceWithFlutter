@@ -106,11 +106,12 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done mail을 개인 메일로 수신하도록 변경 (emailjs 서비스 이용)
 // Done about 페이지에 lottie 이미지로 교체 테스트
 // Done lottie 배경 이미지
-// todo 레고타일인 경우 타일사이 간격 제거
+// Done 레고타일인 경우 타일사이 간격 제거
+// Done scoreboard 로딩 이미지에 lottie 사용
 // todo Fixing 애니메이션 추가 (stack으로 반투명 색 덧씌우기)
-// todo 저작권 문제없는 배경화면으로 변경
 // todo 좌우 이동에 대한 사운드 추가
-// todo scoreboard 로딩 이미지에 lottie 사용
+// todo 저작권 문제없는 배경화면으로 변경
+// todo credit 페이지 (이미지, lottie 저작권 표시)
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

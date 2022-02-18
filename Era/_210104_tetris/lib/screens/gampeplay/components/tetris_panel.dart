@@ -114,15 +114,17 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
               removeTop: true,
               context: context,
               child: Builder(builder: (context) {
-                final manager = context.watch<GamePlayManager>(); // todo 여기에 성능향상 요소 있을 듯
+                final manager = context.watch<GamePlayManager>();
+                final removeSpacing = context.select((AppSettings settings) => settings.tileTypeId) == 2;
+
                 return GridView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: kTetrisMatrixWidth * kTetrisMatrixHeight,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: kTetrisMatrixWidth,
-                    crossAxisSpacing: 1.0,
-                    mainAxisSpacing: 1.0,
+                    crossAxisSpacing: removeSpacing ? 0 : 1.0,
+                    mainAxisSpacing: removeSpacing ? 0 : 1.0,
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     int gridX = index % kTetrisMatrixWidth;
@@ -134,6 +136,7 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
                     // 1) 빈 타일이면 배경만 그리고 종료
                     if (blockId == null) {
                       return Container(
+                        margin: removeSpacing ? EdgeInsets.all(0.5) : null, // 레고블록은 다른 방식으로 구분선을 그린다.
                         color: AppStyle.bgColorAccent,
                       );
                     }
@@ -141,6 +144,7 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
                     // 2) 그림자 블록 미표시 옵션인 경우 배경만 그린다
                     if (blockStatus == TTBlockStatus.shadow && !showShadowBlock) {
                       return Container(
+                        margin: removeSpacing ? EdgeInsets.all(0.5) : null, // 레고블록은 다른 방식으로 구분선을 그린다.
                         color: AppStyle.bgColorAccent,
                       );
                     }
@@ -148,6 +152,7 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
                     // 3) 완성줄 애니메이션(깜빡임) 상태라면 배경만 그린다
                     if (_manager.hideCompletedRow && blockStatus == TTBlockStatus.completed) {
                       return Container(
+                        padding: removeSpacing ? EdgeInsets.all(1) : null, // 레고블록은 다른 방식으로 구분선을 그린다.
                         color: AppStyle.bgColorAccent,
                       );
                     }

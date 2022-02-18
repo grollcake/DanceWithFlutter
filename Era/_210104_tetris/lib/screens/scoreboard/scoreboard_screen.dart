@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/managers/scoreboard_manager.dart';
@@ -177,7 +178,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
               ),
             );
           } else if (snapshot.connectionState != ConnectionState.done) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: Lottie.asset('assets/animations/loading2.json', width: 250));
           } else {
             return Center(child: Text('Something wrong'));
           }

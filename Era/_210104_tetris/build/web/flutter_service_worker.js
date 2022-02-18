@@ -3,12 +3,15 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "d3b062cf68fc4dd2e530b08391d08af6",
+  "assets/AssetManifest.json": "60a52f030add04d51af4cd56c421eded",
 "assets/assets/animations/abstract-background.json": "5bf0867305aa1283a2be74e87daa3708",
 "assets/assets/animations/balloon-background.json": "fd3cc9fccefc87b44e8240a312c0fb5c",
 "assets/assets/animations/heart-background.json": "fb2a543621e5be5e99dbd131e17cdcac",
 "assets/assets/animations/lake-background.json": "a9f7a1ea1992d673f902416e4fbcc72b",
+"assets/assets/animations/loading1.json": "593891a522df33229da1937b7b1c3632",
+"assets/assets/animations/loading2.json": "355facd287463114db9f01557e3f3d73",
 "assets/assets/animations/lottie-space.json": "05b099c29212cfde79d7a982560d6fa7",
+"assets/assets/animations/night-background.json": "cacfe4d1d254d8d9f98679c0e2b9620b",
 "assets/assets/animations/space-background.json": "ba1624760c28c503fc91676b96892855",
 "assets/assets/animations/train-background.json": "af111f54727ae67297b25099f896e31b",
 "assets/assets/images/bg01.png": "f9c6a4eea668aa83b33df998bc3f82a7",
@@ -45,9 +48,9 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "16358a33c9d180708a02cadf275c7311",
-"/": "16358a33c9d180708a02cadf275c7311",
-"main.dart.js": "165d691e233e4a90f8a5add59be8ec85",
+"index.html": "0a8c2776884d2a804f38cf5bbfab08fa",
+"/": "0a8c2776884d2a804f38cf5bbfab08fa",
+"main.dart.js": "de7ad7e3faaeac8585c30b3b86c222d4",
 "manifest.json": "b634c074dcb1c75ead7158e4675bebca",
 "version.json": "7b2471689c73be94afe1a6995c8601d3"
 };
