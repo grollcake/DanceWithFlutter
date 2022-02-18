@@ -34,6 +34,7 @@ class GamePlayManager with ChangeNotifier {
   bool _hideCompletedRow = false;
   BgmPlayer? _bgmPlayer;
   SoundEffect? _soundEffect;
+  bool _newRecordNotified = false;
 
   // getters
   TTBlockID? getBlockId(int x, int y) => _ttboardManager.getBlockId(x, y);
@@ -83,6 +84,7 @@ class GamePlayManager with ChangeNotifier {
     _score = 0;
     _stage = 1;
     _cleans = 0;
+    _newRecordNotified = false;
     _startBgm();
     _playTime.reset();
     _playTime.start();
@@ -154,6 +156,7 @@ class GamePlayManager with ChangeNotifier {
   // Drop block
   ////////////////////////////////////////////////////////
   void dropBlock() async {
+    if (_ttboardManager.block == null) return;
     _soundEffect?.dropSound();
     await Future.delayed(Duration(milliseconds: 100)); // 사운드 싱크를 위해 약간 대기
     _ttboardManager.dropBlock();
@@ -264,8 +267,9 @@ class GamePlayManager with ChangeNotifier {
       _score += (clearningRows - 1) * 20;
 
       // 최고 기록 갱신 시 토스트 메시지 표시
-      if (_score > AppSettings().highestScore) {
+      if (AppSettings().highestScore > 0 && _score > AppSettings().highestScore && !_newRecordNotified) {
         _gamePlayEvents.sink.add(GamePlayEvents.recordBreaked);
+        _newRecordNotified = true;
       }
 
       // 스테이지 클리어 확인
@@ -282,11 +286,12 @@ class GamePlayManager with ChangeNotifier {
     // 완성 줄이 없는 경우
     else {
       if (!withDrop) _soundEffect?.fixingSound();
-      _score += 10; // todo 여기를 10점으로 고쳐야해
+      _score += 10;
 
       // 최고 기록 갱신 시 토스트 메시지 표시
-      if (_score > AppSettings().highestScore) {
+      if (AppSettings().highestScore > 0 && _score > AppSettings().highestScore && !_newRecordNotified) {
         _gamePlayEvents.sink.add(GamePlayEvents.recordBreaked);
+        _newRecordNotified = true;
       }
     }
 

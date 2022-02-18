@@ -101,12 +101,13 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done (문제) Pause 버튼과 rotate 기능이 겹치는 문제 -> pause 버튼 위치 이동
 // Done 세팅에서 타일 타입 변경 즉시 반영
 // Done 그림자 블록 모양 개선
-// todo mail을 개인 메일로 수신하도록 변경
+// Done (오류) 드랍다운을 연속으로 하면 여러 블록이 연속으로 재생성
+// Done (오류) new record가 0점일때도 나오고, 계속 반복해서 나타남
+// Done mail을 개인 메일로 수신하도록 변경 (emailjs 서비스 이용)
 // todo 레고타일인 경우 타일사이 간격 제거
 // todo Fixing 애니메이션 추가
 // todo 저작권 문제없는 배경화면으로 변경
 // todo 좌우 이동에 대한 사운드 추가
-// todo (보류) Hold, Next를 ttboard에서 분리
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

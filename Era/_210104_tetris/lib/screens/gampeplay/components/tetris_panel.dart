@@ -11,6 +11,7 @@ import 'package:tetris/models/enums.dart';
 import 'package:tetris/modules/shaker_widget.dart';
 import 'package:tetris/screens/gampeplay/widgets/gameend_dialog.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
+import 'package:tetris/screens/widgets/toast_message.dart';
 import 'package:tetris/screens/widgets/tttile.dart';
 
 class GameplayTetrisPanel extends StatefulWidget {
@@ -23,14 +24,10 @@ class GameplayTetrisPanel extends StatefulWidget {
 class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
   GlobalKey<ShakeWidgetState> shakeKey = GlobalKey();
   late final GamePlayManager _manager;
-  late final FToast fToast;
 
   @override
   void initState() {
     super.initState();
-
-    fToast = FToast();
-    fToast.init(context);
 
     _manager = context.read<GamePlayManager>();
     Future.delayed(Duration.zero, () => _manager.startGame());
@@ -59,7 +56,7 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
         _gameendDialog(isRecall: true);
         break;
       case GamePlayEvents.recordBreaked:
-        _showNewRecordToast();
+        showNewRecordToast(context: context, message: 'New record! Keep going', icon: FontAwesomeIcons.trophy);
         break;
     }
   }
@@ -96,30 +93,6 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
       builder: (BuildContext context) {
         return GameEndDialog(isRecall: isRecall);
       },
-    );
-  }
-
-  void _showNewRecordToast() {
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: AppStyle.accentColor,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: const [
-          Icon(FontAwesomeIcons.trophy, size: 16),
-          SizedBox(width: 12.0),
-          Text('New record! Keep going', style: TextStyle(fontSize: 16, color: Colors.black87)),
-        ],
-      ),
-    );
-
-    fToast.showToast(
-      child: toast,
-      gravity: ToastGravity.BOTTOM,
-      toastDuration: Duration(seconds: 2),
     );
   }
 
