@@ -21,7 +21,6 @@ class _SettingsDetailAboutState extends State<SettingsDetailAbout> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Lottie.asset('assets/animations/lottie-space.json'),
-        // Image.asset('assets/images/space.gif'),
         SizedBox(height: 30),
         Text('Developed by ERA, 2022',
             style: TextStyle(fontSize: 16, color: AppStyle.accentColor, fontWeight: FontWeight.bold)),

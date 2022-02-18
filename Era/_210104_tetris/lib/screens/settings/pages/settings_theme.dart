@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/screens/settings/widgets/subtitle.dart';
@@ -33,15 +34,27 @@ class _SettingsDetailThemeState extends State<SettingsDetailTheme> {
               childAspectRatio: 1 / 1.3,
             ),
             itemBuilder: (context, index) {
+              final imagePath = settings.backgroundImages[index];
+              bool isLottie = imagePath.endsWith('.json');
+
               return GestureDetector(
                 onTap: () => settings.backgroundImageId = index,
                 child: SelectedItem(
                   isSelected: index == settings.backgroundImageId,
-                  child: Container(
-                    margin: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(image: AssetImage(settings.backgroundImages[index]), fit: BoxFit.cover)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: isLottie
+                          ? Lottie.asset(imagePath, fit: BoxFit.cover)
+                          : Image.asset(imagePath, fit: BoxFit.cover),
+                    ),
                   ),
+                  // child: Container(
+                  //   margin: EdgeInsets.all(8),
+                  //   decoration: BoxDecoration(
+                  //       image: DecorationImage(image: AssetImage(settings.backgroundImages[index]), fit: BoxFit.cover)),
+                  // ),
                 ),
               );
             },

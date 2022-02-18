@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tetris/constants/app_style.dart';
@@ -88,42 +89,46 @@ class NewPlayScreen extends StatelessWidget {
 
     final manager = context.read<GamePlayManager>();
     final backgroundImage = context.select((AppSettings settings) => settings.backgroundImage);
+    final isLottie = backgroundImage.endsWith('.json');
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-      decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage(backgroundImage), fit: BoxFit.cover),
-      ),
-      child: Column(
-        children: [
-          Spacer(),
-          // 상단 상태 패널
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 60),
-            height: 70,
-            child: GameplayTopPanel(),
-          ),
-          SizedBox(height: 6),
-          // 메인 게임 패널
-          SwipeDetector(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 60),
-              child: GameplayTetrisPanel(),
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: isLottie
+              ? Lottie.asset(backgroundImage, fit: BoxFit.cover)
+              : Image.asset(backgroundImage, fit: BoxFit.cover),
+        ),
+        Column(
+          children: [
+            Spacer(),
+            // 상단 상태 패널
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 60),
+              height: 70,
+              child: GameplayTopPanel(),
             ),
-            onTap: () => manager.rotateBlock(),
-            onSwipeLeft: (int steps) => manager.moveBlock(MoveDirection.left, steps),
-            onSwipeRight: (int steps) => manager.moveBlock(MoveDirection.right, steps),
-            onSwipeUp: () => manager.holdBlock(),
-            onSwipeDown: (int steps) => manager.moveBlock(MoveDirection.down, steps),
-            onSwipeDrop: () => manager.dropBlock(),
-          ),
-          Container(
-            padding: EdgeInsets.only(bottom: 20 + MediaQuery.of(context).padding.bottom),
-            alignment: Alignment.centerRight,
-            child: GamePlayPausePanel(),
-          ),
-        ],
-      ),
+            SizedBox(height: 6),
+            // 메인 게임 패널
+            SwipeDetector(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 60),
+                child: GameplayTetrisPanel(),
+              ),
+              onTap: () => manager.rotateBlock(),
+              onSwipeLeft: (int steps) => manager.moveBlock(MoveDirection.left, steps),
+              onSwipeRight: (int steps) => manager.moveBlock(MoveDirection.right, steps),
+              onSwipeUp: () => manager.holdBlock(),
+              onSwipeDown: (int steps) => manager.moveBlock(MoveDirection.down, steps),
+              onSwipeDrop: () => manager.dropBlock(),
+            ),
+            Container(
+              padding: EdgeInsets.only(bottom: 20 + MediaQuery.of(context).padding.bottom),
+              alignment: Alignment.centerRight,
+              child: GamePlayPausePanel(),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

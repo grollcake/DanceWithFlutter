@@ -20,12 +20,14 @@ class AppSettings with ChangeNotifier {
   get backgroundImage => backgroundImages[_backgroundImageId];
 
   List<String> backgroundImages = [
+    'assets/animations/lake-background.json',
+    'assets/animations/train-background.json',
+    'assets/animations/abstract-background.json',
+    'assets/animations/balloon-background.json',
+    'assets/animations/space-background.json',
+    'assets/animations/heart-background.json',
     'assets/images/bg01.png',
     'assets/images/bg02.jpg',
-    'assets/images/bg03.jpg',
-    'assets/images/bg04.jpg',
-    'assets/images/bg05.jpg',
-    'assets/images/bg06.jpg'
   ];
 
   ////////////////////////////////////////////////////////////////////////

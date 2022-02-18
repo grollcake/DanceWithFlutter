@@ -114,7 +114,7 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
               removeTop: true,
               context: context,
               child: Builder(builder: (context) {
-                final manager = context.watch<GamePlayManager>();
+                final manager = context.watch<GamePlayManager>(); // todo 여기에 성능향상 요소 있을 듯
                 return GridView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -131,19 +131,28 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
                     TTBlockID? blockId = manager.getBlockId(gridX, gridY);
                     TTBlockStatus blockStatus = manager.getBlockStatus(gridX, gridY);
 
-                    // shadow 블록 미표시
+                    // 1) 빈 타일이면 배경만 그리고 종료
+                    if (blockId == null) {
+                      return Container(
+                        color: AppStyle.bgColorAccent,
+                      );
+                    }
+
+                    // 2) 그림자 블록 미표시 옵션인 경우 배경만 그린다
                     if (blockStatus == TTBlockStatus.shadow && !showShadowBlock) {
                       return Container(
                         color: AppStyle.bgColorAccent,
                       );
                     }
 
-                    if (blockId == null || (_manager.hideCompletedRow && blockStatus == TTBlockStatus.completed)) {
+                    // 3) 완성줄 애니메이션(깜빡임) 상태라면 배경만 그린다
+                    if (_manager.hideCompletedRow && blockStatus == TTBlockStatus.completed) {
                       return Container(
                         color: AppStyle.bgColorAccent,
                       );
                     }
 
+                    // 4) 테트리스 블록 타일을 그린다 (정상 타일, 그림자 타일)
                     return Container(
                       color: AppStyle.bgColorAccent,
                       child: TTTile(blockId: blockId, status: blockStatus),
