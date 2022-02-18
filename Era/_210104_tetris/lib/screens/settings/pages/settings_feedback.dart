@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
+import 'package:tetris/managers/sendmail_manager.dart';
 import 'package:tetris/screens/settings/widgets/subtitle.dart';
+import 'package:tetris/screens/widgets/toast_message.dart';
 
 class SettingsDetailFeedback extends StatefulWidget {
   const SettingsDetailFeedback({Key? key}) : super(key: key);
@@ -74,22 +76,7 @@ class _SettingsDetailFeedbackState extends State<SettingsDetailFeedback> {
         Center(
           child: ElevatedButton.icon(
             icon: Icon(Icons.mail, color: AppStyle.darkTextColor, size: 18),
-            onPressed: hasMessage
-                ? () async {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    sendFeedback(controller.text);
-                    setState(() {
-                      controller.text = '';
-                      hasMessage = false;
-                      thanks = 'Thank you for feedback!';
-                    });
-                    Timer(Duration(seconds: 2), () {
-                      setState(() {
-                        thanks = '';
-                      });
-                    });
-                  }
-                : null,
+            onPressed: hasMessage ? () async => sendFeedbackMail() : null,
             label: Text('S E N D', style: TextStyle(fontSize: 16, color: AppStyle.darkTextColor)),
             style: ElevatedButton.styleFrom(
               primary: AppStyle.accentColor,
@@ -102,16 +89,40 @@ class _SettingsDetailFeedbackState extends State<SettingsDetailFeedback> {
     );
   }
 
+  void sendFeedbackMail() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    final AppSettings settings = AppSettings();
+    final platform = '${defaultTargetPlatform.toString().split('.').last} (isWeb: $kIsWeb)';
+
+    final result = await SendMailManager().sendEmail(
+      controller.text,
+      settings.userId,
+      settings.username,
+      platform,
+    );
+    if (result) {
+      setState(() {
+        controller.text = '';
+        hasMessage = false;
+      });
+      showNewRecordToast(context: context, message: 'Thanks for your feedback', icon: Icons.check);
+    } else {
+      showNewRecordToast(context: context, message: 'Something wrong', icon: Icons.block);
+    }
+  }
+
   Future<void> sendFeedback(String message) async {
     final feedbackDoc = FirebaseFirestore.instance.collection('feedbacks').doc();
     final AppSettings settings = AppSettings();
+    final platform = '${defaultTargetPlatform.toString().split('.').last} (isWeb: $kIsWeb)';
 
     final feedback = <String, dynamic>{
       'userId': settings.userId,
       'username': settings.username,
       'message': message,
       'dateTime': DateTime.now(),
-      'platform': defaultTargetPlatform.toString(),
+      'platform': platform,
     };
 
     await feedbackDoc.set(feedback);

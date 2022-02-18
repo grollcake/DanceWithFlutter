@@ -28,7 +28,7 @@ class TTBoardManager {
   }
 
   // Getter
-  TTBlockID? get getCurrentId => _block?.id;
+  TTBlock? get block => _block;
 
   TTBlockID? get getNextId => _next?.id;
 

@@ -118,7 +118,7 @@ class NewPlayScreen extends StatelessWidget {
             onSwipeDrop: () => manager.dropBlock(),
           ),
           Container(
-            padding: EdgeInsets.only(bottom: 10),
+            padding: EdgeInsets.only(bottom: 20 + MediaQuery.of(context).padding.bottom),
             alignment: Alignment.centerRight,
             child: GamePlayPausePanel(),
           ),
