@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/managers/sendmail_manager.dart';
@@ -17,8 +18,8 @@ class SettingsDetailFeedback extends StatefulWidget {
 
 class _SettingsDetailFeedbackState extends State<SettingsDetailFeedback> {
   final TextEditingController controller = TextEditingController();
-  bool hasMessage = false;
-  String thanks = '';
+  bool _isSending = false;
+  bool _hasMessage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class _SettingsDetailFeedbackState extends State<SettingsDetailFeedback> {
             controller: controller,
             onChanged: (value) {
               setState(() {
-                hasMessage = value.trim().length > 0;
+                _hasMessage = value.trim().length > 0;
               });
             },
             minLines: 5,
@@ -58,31 +59,19 @@ class _SettingsDetailFeedbackState extends State<SettingsDetailFeedback> {
           ),
         ),
         SizedBox(height: 10),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            color: thanks.isNotEmpty ? AppStyle.accentColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Center(
-            child: Text(
-              thanks,
-              style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
         Spacer(flex: 1),
         Center(
-          child: ElevatedButton.icon(
-            icon: Icon(Icons.mail, color: AppStyle.darkTextColor, size: 18),
-            onPressed: hasMessage ? () async => sendFeedbackMail() : null,
-            label: Text('S E N D', style: TextStyle(fontSize: 16, color: AppStyle.darkTextColor)),
-            style: ElevatedButton.styleFrom(
-              primary: AppStyle.accentColor,
-              minimumSize: Size(160, 34),
-            ),
-          ),
+          child: _isSending
+              ? Lottie.asset('assets/animations/loading.json')
+              : ElevatedButton.icon(
+                  icon: Icon(Icons.mail, color: AppStyle.darkTextColor, size: 18),
+                  onPressed: _hasMessage ? () async => sendFeedbackMail() : null,
+                  label: Text('S E N D', style: TextStyle(fontSize: 16, color: AppStyle.darkTextColor)),
+                  style: ElevatedButton.styleFrom(
+                    primary: AppStyle.accentColor,
+                    minimumSize: Size(160, 34),
+                  ),
+                ),
         ),
         Spacer(flex: 2),
       ],
@@ -95,16 +84,22 @@ class _SettingsDetailFeedbackState extends State<SettingsDetailFeedback> {
     final AppSettings settings = AppSettings();
     final platform = '${defaultTargetPlatform.toString().split('.').last} (isWeb: $kIsWeb)';
 
+    setState(() {
+      _isSending = true;
+    });
+
     final result = await SendMailManager().sendEmail(
       controller.text,
       settings.userId,
       settings.username,
       platform,
     );
+
     if (result) {
       setState(() {
         controller.text = '';
-        hasMessage = false;
+        _hasMessage = false;
+        _isSending = false;
       });
       showNewRecordToast(context: context, message: 'Thanks for your feedback', icon: Icons.check);
     } else {

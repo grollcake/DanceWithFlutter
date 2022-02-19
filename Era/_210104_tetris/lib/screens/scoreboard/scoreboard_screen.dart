@@ -178,7 +178,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
               ),
             );
           } else if (snapshot.connectionState != ConnectionState.done) {
-            return Center(child: Lottie.asset('assets/animations/loading2.json', width: 250));
+            return Center(child: Lottie.asset('assets/animations/loading.json', width: 250));
           } else {
             return Center(child: Text('Something wrong'));
           }
