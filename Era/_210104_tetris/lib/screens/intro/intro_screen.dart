@@ -93,7 +93,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 height: tileSize,
                 child: TTTile(
                   blockId: TTBlockID.T,
-                  status: TTBlockStatus.fixed,
+                  status: TTTileStatus.fixed,
                   typeId: 0,
                   color: Colors.blue,
                 ),
@@ -112,7 +112,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 height: tileSize,
                 child: TTTile(
                   blockId: TTBlockID.T,
-                  status: TTBlockStatus.fixed,
+                  status: TTTileStatus.fixed,
                   typeId: 0,
                   color: Colors.blue,
                 ),
@@ -131,7 +131,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 height: tileSize,
                 child: TTTile(
                   blockId: TTBlockID.T,
-                  status: TTBlockStatus.fixed,
+                  status: TTTileStatus.fixed,
                   typeId: 0,
                   color: Colors.blue,
                 ),
@@ -150,7 +150,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 height: tileSize,
                 child: TTTile(
                   blockId: TTBlockID.T,
-                  status: TTBlockStatus.fixed,
+                  status: TTTileStatus.fixed,
                   typeId: 0,
                   color: Colors.blue,
                 ),

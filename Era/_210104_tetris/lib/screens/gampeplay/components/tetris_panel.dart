@@ -8,6 +8,7 @@ import 'package:tetris/constants/constants.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/managers/gameplay_manager.dart';
 import 'package:tetris/models/enums.dart';
+import 'package:tetris/modules/flashing_widget.dart';
 import 'package:tetris/modules/shaker_widget.dart';
 import 'package:tetris/screens/gampeplay/widgets/gameend_dialog.dart';
 import 'package:tetris/screens/widgets/game_dialog.dart';
@@ -131,7 +132,7 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
                     int gridY = index ~/ kTetrisMatrixWidth;
 
                     TTBlockID? blockId = manager.getBlockId(gridX, gridY);
-                    TTBlockStatus blockStatus = manager.getBlockStatus(gridX, gridY);
+                    TTTileStatus blockStatus = manager.getBlockStatus(gridX, gridY);
 
                     // 1) 빈 타일이면 배경만 그리고 종료
                     if (blockId == null) {
@@ -142,7 +143,7 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
                     }
 
                     // 2) 그림자 블록 미표시 옵션인 경우 배경만 그린다
-                    if (blockStatus == TTBlockStatus.shadow && !showShadowBlock) {
+                    if (blockStatus == TTTileStatus.shadow && !showShadowBlock) {
                       return Container(
                         margin: removeSpacing ? EdgeInsets.all(0.5) : null, // 레고블록은 다른 방식으로 구분선을 그린다.
                         color: AppStyle.bgColorAccent,
@@ -150,7 +151,7 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
                     }
 
                     // 3) 완성줄 애니메이션(깜빡임) 상태라면 배경만 그린다
-                    if (_manager.hideCompletedRow && blockStatus == TTBlockStatus.completed) {
+                    if (_manager.hideCompletedRow && blockStatus == TTTileStatus.completed) {
                       return Container(
                         padding: removeSpacing ? EdgeInsets.all(1) : null, // 레고블록은 다른 방식으로 구분선을 그린다.
                         color: AppStyle.bgColorAccent,
@@ -160,7 +161,9 @@ class _GameplayTetrisPanelState extends State<GameplayTetrisPanel> {
                     // 4) 테트리스 블록 타일을 그린다 (정상 타일, 그림자 타일)
                     return Container(
                       color: AppStyle.bgColorAccent,
-                      child: TTTile(blockId: blockId, status: blockStatus),
+                      child: blockStatus == TTTileStatus.justFixed
+                          ? FlashingWidget(child: TTTile(blockId: blockId, status: blockStatus))
+                          : TTTile(blockId: blockId, status: blockStatus),
                     );
                   },
                 );

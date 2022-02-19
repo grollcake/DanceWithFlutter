@@ -1,17 +1,17 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:soundpool/soundpool.dart';
 import 'package:tetris/managers/app_settings.dart';
 
 class SoundEffect {
   Soundpool? _soundpool;
-  int rotateSoundId = 0; // 블록 회전
-  int fixingSoundId = 0; // 블록 위치 확정
-  int dropSoundId = 0; // 블록 떨어뜨리기
-  int clearningSoundId = 0; // 완성줄 삭제
-  int holdSoundId = 0; // 블록 보관
-  int gameEndSoundId = 0; // 게임종료
-  int levelUpSoundId = 0; // 현재 레벨 완료
+  int _rotateSoundId = 0; // 블록 회전
+  int _movingSoundId = 0; // 블록 이동
+  int _fixingSoundId = 0; // 블록 위치 확정
+  int _dropSoundId = 0; // 블록 떨어뜨리기
+  int _clearningSoundId = 0; // 완성줄 삭제
+  int _holdSoundId = 0; // 블록 보관
+  int _gameEndSoundId = 0; // 게임종료
+  int _levelUpSoundId = 0; // 현재 레벨 완료
 
   AppSettings settings = AppSettings();
 
@@ -19,25 +19,28 @@ class SoundEffect {
     _soundpool = Soundpool(streamType: StreamType.alarm);
 
     var asset = await rootBundle.load('assets/sound/rotate.wav');
-    rotateSoundId = await _soundpool!.load(asset);
+    _rotateSoundId = await _soundpool!.load(asset);
+
+    asset = await rootBundle.load('assets/sound/moving.wav');
+    _movingSoundId = await _soundpool!.load(asset);
 
     asset = await rootBundle.load('assets/sound/fixing.wav');
-    fixingSoundId = await _soundpool!.load(asset);
+    _fixingSoundId = await _soundpool!.load(asset);
 
     asset = await rootBundle.load('assets/sound/drop.wav');
-    dropSoundId = await _soundpool!.load(asset);
+    _dropSoundId = await _soundpool!.load(asset);
 
     asset = await rootBundle.load('assets/sound/clearning.wav');
-    clearningSoundId = await _soundpool!.load(asset);
+    _clearningSoundId = await _soundpool!.load(asset);
 
     asset = await rootBundle.load('assets/sound/hold.wav');
-    holdSoundId = await _soundpool!.load(asset);
+    _holdSoundId = await _soundpool!.load(asset);
 
     asset = await rootBundle.load('assets/sound/game-end.wav');
-    gameEndSoundId = await _soundpool!.load(asset);
+    _gameEndSoundId = await _soundpool!.load(asset);
 
     asset = await rootBundle.load('assets/sound/level-up.wav');
-    levelUpSoundId = await _soundpool!.load(asset);
+    _levelUpSoundId = await _soundpool!.load(asset);
 
     print('SoundEffect loaded ok');
   }
@@ -57,11 +60,12 @@ class SoundEffect {
     return await _soundpool!.play(soundId);
   }
 
-  Future<int> rotateSound() async => _sound(rotateSoundId);
-  Future<int> fixingSound() async => _sound(fixingSoundId);
-  Future<int> dropSound() async => _sound(dropSoundId);
-  Future<int> clearningSound() async => _sound(clearningSoundId);
-  Future<int> holdSound() async => _sound(holdSoundId);
-  Future<int> gameEndSound() async => _sound(gameEndSoundId);
-  Future<int> levelUpSound() async => _sound(levelUpSoundId);
+  Future<int> rotateSound() async => _sound(_rotateSoundId);
+  Future<int> movingSound() async => _sound(_movingSoundId);
+  Future<int> fixingSound() async => _sound(_fixingSoundId);
+  Future<int> dropSound() async => _sound(_dropSoundId);
+  Future<int> clearningSound() async => _sound(_clearningSoundId);
+  Future<int> holdSound() async => _sound(_holdSoundId);
+  Future<int> gameEndSound() async => _sound(_gameEndSoundId);
+  Future<int> levelUpSound() async => _sound(_levelUpSoundId);
 }

@@ -13,9 +13,6 @@ class BgmPlayer {
     _audioPlayer = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
     _audioCache = AudioCache(fixedPlayer: _audioPlayer);
     _audioCache.loadAll([_bgmFile]);
-    // _audioPlayer.onPlayerStateChanged.listen((PlayerState event) {
-    //   print('onPlayerStateChanged: $event');
-    // });
   }
 
   void dispose() {

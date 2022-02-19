@@ -129,7 +129,7 @@ class _SettingsDetailBlockState extends State<SettingsDetailBlock> {
                 children: List.generate(_previewMatrix[row].length, (col) {
                   Widget previewTile = SizedBox();
                   if (_previewMatrix[row][col] != null) {
-                    previewTile = TTTile(blockId: _previewMatrix[row][col]!, status: TTBlockStatus.fixed);
+                    previewTile = TTTile(blockId: _previewMatrix[row][col]!, status: TTTileStatus.fixed);
                   }
                   return Container(
                     width: 20,

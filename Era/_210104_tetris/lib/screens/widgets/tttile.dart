@@ -7,7 +7,7 @@ import 'package:tetris/models/enums.dart';
 class TTTile extends StatelessWidget {
   const TTTile({Key? key, required this.blockId, required this.status, this.color, this.typeId}) : super(key: key);
   final TTBlockID blockId;
-  final TTBlockStatus status;
+  final TTTileStatus status;
   final Color? color;
   final int? typeId;
   static const typeCount = 4;
@@ -23,7 +23,7 @@ class TTTile extends StatelessWidget {
     final settings = context.read<AppSettings>();
 
     Color color = this.color ?? settings.tileColor(blockId);
-    bool isShadow = status == TTBlockStatus.shadow;
+    bool isShadow = status == TTTileStatus.shadow;
 
     return _getShape(typeId ?? settings.tileTypeId, color, isShadow);
   }

@@ -14,6 +14,7 @@ class TTBoardManager {
   TTBlock? _block; // 현재 블록
   TTBlock? _next; // 다음 블록
   List<TTCoord>? _shadowBlockCoords; // 그림자 블록 (드랍 위치를 나타내는 블록)
+  List<TTCoord>? _justFixedBlockCoords; // 이제 막 내려놓은 블록
   TTBlockID? _holdId; // 보관 블록
   bool _holdUsed = false; // 보관 기능 사용여부
   int? _blockX; // 현재 블록의 x 위치값
@@ -57,6 +58,7 @@ class TTBoardManager {
     _block = null;
     _next = null;
     _shadowBlockCoords = null;
+    _justFixedBlockCoords = null;
     _holdId = null;
     _holdUsed = false;
     _blockX = 0;
@@ -85,6 +87,7 @@ class TTBoardManager {
   bool newBlock([TTBlockID? blockId]) {
     _block = _next ?? TTBlock(blockId);
     _holdUsed = false;
+    _justFixedBlockCoords = null;
 
     // 같은 블록이 연속으로 생성되면 한번 더 재생성 시도한다.
     for (int i = 0; i < 2; i++) {
@@ -172,6 +175,9 @@ class TTBoardManager {
   ////////////////////////////////////////////////////////////////////
   void fixBlock() {
     if (_block == null) return;
+
+    _justFixedBlockCoords = [..._block!.getCoord(_blockX!, _blockY!)];
+
     for (TTCoord coord in _block!.getCoord(_blockX!, _blockY!)) {
       _boardCoords[coord.x][coord.y] = _block!.id;
     }
@@ -216,20 +222,30 @@ class TTBoardManager {
   }
 
   // 요청 위치의 블록 상태(고정형,이동중,완성,미리보기)을 확인
-  TTBlockStatus getBlockStatus(int x, int y) {
-    if (isCompletedTile(x, y)) return TTBlockStatus.completed;
-    if (_boardCoords[x][y] != null) return TTBlockStatus.fixed;
-    if (_block == null) return TTBlockStatus.none;
-    for (TTCoord coord in _block!.getCoord(getBlockX!, getBlockY!)) {
-      if (coord.x == x && coord.y == y) return TTBlockStatus.float;
-    }
-    if (_shadowBlockCoords != null) {
-      for (TTCoord coord in _shadowBlockCoords!) {
-        if (coord.x == x && coord.y == y) return TTBlockStatus.shadow;
+  TTTileStatus getBlockStatus(int x, int y) {
+    if (isCompletedTile(x, y)) return TTTileStatus.completed;
+
+    if (_justFixedBlockCoords != null) {
+      for (TTCoord coord in _justFixedBlockCoords!) {
+        if (coord.x == x && coord.y == y) return TTTileStatus.justFixed;
       }
     }
 
-    return TTBlockStatus.none;
+    if (_boardCoords[x][y] != null) return TTTileStatus.fixed;
+
+    if (_block == null) return TTTileStatus.none;
+
+    for (TTCoord coord in _block!.getCoord(getBlockX!, getBlockY!)) {
+      if (coord.x == x && coord.y == y) return TTTileStatus.float;
+    }
+
+    if (_shadowBlockCoords != null) {
+      for (TTCoord coord in _shadowBlockCoords!) {
+        if (coord.x == x && coord.y == y) return TTTileStatus.shadow;
+      }
+    }
+
+    return TTTileStatus.none;
   }
 
   // 블록 생성 빈도 확인

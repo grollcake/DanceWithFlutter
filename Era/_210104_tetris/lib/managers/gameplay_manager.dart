@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 import 'package:tetris/constants/constants.dart';
@@ -39,7 +40,7 @@ class GamePlayManager with ChangeNotifier {
   // getters
   TTBlockID? getBlockId(int x, int y) => _ttboardManager.getBlockId(x, y);
 
-  TTBlockStatus getBlockStatus(int x, int y) => _ttboardManager.getBlockStatus(x, y);
+  TTTileStatus getBlockStatus(int x, int y) => _ttboardManager.getBlockStatus(x, y);
 
   TTBlockID? get nextBlockId => _ttboardManager.getNextId;
 
@@ -134,7 +135,7 @@ class GamePlayManager with ChangeNotifier {
         break;
     }
     if (isMoved) {
-      // todo move Sound
+      if ([MoveDirection.left, MoveDirection.right].contains(direction)) _soundEffect?.movingSound();
       notifyListeners();
     } else if (direction == MoveDirection.down) {
       _layDownBlock(withDrop: false);
@@ -316,13 +317,11 @@ class GamePlayManager with ChangeNotifier {
 
   void _startBgm() {
     if (AppSettings().backgroundMusic) {
-      _bgmPlayer?.startBGM();
+      _bgmPlayer?.bgmStatus == PlayerState.STOPPED ? _bgmPlayer?.startBGM() : _bgmPlayer?.resumeBGM();
     }
   }
 
   void _stopBgm() {
-    if (AppSettings().backgroundMusic) {
-      _bgmPlayer?.stopBGM();
-    }
+    _bgmPlayer?.bgmStatus == PlayerState.PLAYING ? _bgmPlayer?.pauseBGM() : _bgmPlayer?.stopBGM();
   }
 }

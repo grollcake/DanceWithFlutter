@@ -6,6 +6,7 @@ import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/managers/gameplay_manager.dart';
 import 'package:tetris/screens/intro/intro_screen.dart';
+import 'package:tetris/screens/test_only/fixing_effect_test_screen.dart';
 
 // Done GameStart dialog 화면
 // Done 가로크기를 11로 했을 때 블록 생성이 잘 못되는 문제 수정
@@ -108,9 +109,10 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done lottie 배경 이미지
 // Done 레고타일인 경우 타일사이 간격 제거
 // Done scoreboard 로딩 이미지에 lottie 사용
-// todo Fixing 애니메이션 추가 (stack으로 반투명 색 덧씌우기)
-// todo 좌우 이동에 대한 사운드 추가
-// todo 저작권 문제없는 배경화면으로 변경
+// Done Fixing 애니메이션 추가
+// Done 좌우 이동에 대한 사운드 추가
+// Done 저작권 문제없는 배경화면으로 변경
+// todo (문제) Drop, clearning 사운드가 겹칩
 // todo credit 페이지 (이미지, lottie 저작권 표시)
 
 void main() async {
