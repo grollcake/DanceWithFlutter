@@ -113,8 +113,11 @@ import 'package:tetris/screens/test_only/fixing_effect_test_screen.dart';
 // Done 좌우 이동에 대한 사운드 추가
 // Done 저작권 문제없는 배경화면으로 변경
 // Done 피드백 전송 중 로딩 이미지 보이기
-// todo (오류) FlashingWidget dispose 오류 발생
-// todo 왼쪽 상단에 사용자 이름 보이기
+// Done (오류) FlashingWidget dispose 오류 발생
+// Done 왼쪽 상단에 사용자 이름 보이기
+// Done 점수판에서 이름 바꾸는 로직 변경
+// todo 갤폴드에서도 제대로 플레이 가능하도록
+// todo (문제) 로딩이미지가 너무 작게 나오는 문제
 // todo (문제) Drop, clearning 사운드가 겹칩
 // todo credit 페이지 (이미지, lottie 저작권 표시)
 

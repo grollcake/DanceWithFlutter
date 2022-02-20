@@ -27,8 +27,8 @@ class _FlashingWidgetState extends State<FlashingWidget> with SingleTickerProvid
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   @override

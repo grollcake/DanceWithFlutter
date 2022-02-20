@@ -4,6 +4,8 @@ import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/managers/scoreboard_manager.dart';
 import 'package:tetris/models/score.dart';
+import 'package:tetris/screens/widgets/primary_button.dart';
+import 'package:tetris/screens/widgets/rounded_text_field.dart';
 
 class ScoreBoardScreen extends StatefulWidget {
   const ScoreBoardScreen({Key? key}) : super(key: key);
@@ -16,8 +18,9 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   late ScoreBoardManager scoreBoard;
   late ScrollController scrollController;
   late TextEditingController textEditingcontroller;
-  var myScoreKey = GlobalKey();
-  bool isValidUsername = false;
+  var _myScoreKey = GlobalKey();
+  bool _isValidUsername = false;
+  int _usernameChangeStep = 0; // 0: 변경대기  1: 이름입력  2: 변경등록중
 
   AppSettings settings = AppSettings();
 
@@ -38,20 +41,17 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool hasName = settings.username != null && settings.username!.isNotEmpty;
+    bool _hasName = settings.username != null && settings.username!.isNotEmpty;
     return Dialog(
       child: Container(
         height: 600,
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        decoration: BoxDecoration(color: AppStyle.bgColor.withOpacity(1.0)),
+        decoration: BoxDecoration(color: AppStyle.bgColor),
         child: Column(
           children: [
             buildTitleBar(),
-            SizedBox(height: 20),
-            hasName ? buildScoreBoard() : buildRequestUsername(),
-            SizedBox(height: 20),
-            if (hasName) changeUsername(),
+            !_hasName ? buildRequestUsername() : buildScoreBoard(),
           ],
         ),
       ),
@@ -59,8 +59,9 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   }
 
   Widget buildTitleBar() {
-    return SizedBox(
+    return Container(
       height: 40,
+      margin: EdgeInsets.only(bottom: 20),
       child: Stack(
         children: [
           Align(
@@ -101,55 +102,36 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            SizedBox(height: 50),
+            Spacer(flex: 2),
             const Text(
               'Want to see scoreboard?\nFirst, let me know your name.',
               style: TextStyle(fontSize: 14, color: AppStyle.lightTextColor),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 50),
-            Container(
-              width: 200,
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: AppStyle.bgColorAccent,
-              ),
-              child: TextField(
-                controller: textEditingcontroller,
-                autofocus: true,
-                style: TextStyle(color: AppStyle.accentColor),
-                onChanged: (value) {
-                  setState(() {
-                    isValidUsername = value.isNotEmpty && value.trim().length > 0;
-                  });
-                },
-                onSubmitted: (value) {
-                  setState(() {
-                    isValidUsername = value.isNotEmpty && value.trim().length > 0;
-                  });
-                },
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  isDense: true,
-                  hintText: 'Your name?',
-                  hintStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
+            Spacer(flex: 1),
+            RoundedTextField(
+              autofocus: true,
+              hintText: 'Your name?',
+              controller: textEditingcontroller,
+              onChanged: (value) {
+                setState(() {
+                  _isValidUsername = value.isNotEmpty && value.trim().length > 0;
+                });
+              },
+              onSubmitted: (value) => setUsername(value.trim()),
             ),
-            SizedBox(height: 100),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(100, 40),
-              ),
-              onPressed: isValidUsername
-                  ? () async {
-                      await setUsername(textEditingcontroller.text);
-                      setState(() {});
+            Spacer(flex: 5),
+            PrimaryButton(
+              text: 'Register',
+              onPressed: _isValidUsername
+                  ? () {
+                      if (_usernameChangeStep == 2) return;
+                      setUsername(textEditingcontroller.text);
                     }
                   : null,
-              child: Text('Register'),
+              isLoading: _usernameChangeStep == 2,
             ),
+            Spacer(),
           ],
         ),
       ),
@@ -158,38 +140,46 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
 
   Widget buildScoreBoard() {
     return Expanded(
-      child: StreamBuilder<List<Score>>(
-        stream: scoreBoard.fetchAllScores(),
-        builder: (BuildContext context, AsyncSnapshot<List<Score>> snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Something went wrong'));
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            // 사용자의 점수가 제일 위에 나타나도록 스크롤 위치 조정
-            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-              Scrollable.ensureVisible(myScoreKey.currentContext!);
-            });
-            List<Score> allScores = snapshot.data!;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: List.generate(allScores.length, (index) => buildScoreRow(index + 1, allScores[index])),
-                ),
-              ),
-            );
-          } else if (snapshot.connectionState != ConnectionState.done) {
-            return Center(child: Lottie.asset('assets/animations/loading.json', width: 250));
-          } else {
-            return Center(child: Text('Something wrong'));
-          }
-        },
+      child: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder<List<Score>>(
+              stream: scoreBoard.fetchAllScores(),
+              builder: (BuildContext context, AsyncSnapshot<List<Score>> snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text('Something went wrong'));
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  // 사용자의 점수가 제일 위에 나타나도록 스크롤 위치 조정
+                  WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+                    Scrollable.ensureVisible(_myScoreKey.currentContext!);
+                  });
+                  List<Score> allScores = snapshot.data!;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children:
+                            List.generate(allScores.length, (index) => buildScoreRow(index + 1, allScores[index])),
+                      ),
+                    ),
+                  );
+                } else if (snapshot.connectionState != ConnectionState.done) {
+                  return Center(child: Lottie.asset('assets/animations/loading.json', width: 250));
+                } else {
+                  return Center(child: Text('Something wrong'));
+                }
+              },
+            ),
+          ),
+          _usernameChangeStep == 0 ? buildChangeLabel() : buildChangeUsername(),
+        ],
       ),
     );
   }
 
   Widget buildScoreRow(int rank, Score score) {
     return Container(
-      key: score.userId == settings.userId ? myScoreKey : null,
+      key: score.userId == settings.userId ? _myScoreKey : null,
       height: 30,
       margin: EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
@@ -240,63 +230,64 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
     );
   }
 
-  Widget changeUsername() {
+  Widget buildChangeLabel() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       alignment: Alignment.centerRight,
       child: TextButton(
-        onPressed: () async => setUsername(await usernameDialog()),
-        child: Text(
-          'Change name',
-          style: TextStyle(fontSize: 14, color: AppStyle.accentColor),
-        ),
+        onPressed: () => setState(() {
+          _usernameChangeStep = 1;
+        }),
+        child: Text('Change name', style: TextStyle(fontSize: 14, color: AppStyle.accentColor)),
       ),
     );
   }
 
-  Future<String?> usernameDialog() async {
-    textEditingcontroller.text = settings.username ?? '';
-
-    return await showDialog<String>(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppStyle.bgColor,
-          content: Container(
-            decoration: BoxDecoration(
-              color: AppStyle.bgColorWeak,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: TextField(
+  Widget buildChangeUsername() {
+    return Container(
+      height: 40,
+      margin: EdgeInsets.only(top: 30, bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: RoundedTextField(
+              text: settings.username ?? '',
               controller: textEditingcontroller,
-              autofocus: true,
-              onSubmitted: (value) => Navigator.of(context).pop(textEditingcontroller.text),
-              style: TextStyle(
-                color: AppStyle.accentColor,
-                fontSize: 16,
-              ),
-              decoration: InputDecoration(
-                isDense: true,
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.all(10),
-              ),
+              onSubmitted: (newName) => setUsername(newName),
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(textEditingcontroller.text),
-              child: Text('Change'),
-            ),
-          ],
-        );
-      },
+          SizedBox(width: 10),
+          PrimaryButton(
+            width: 100,
+            onPressed: () {
+              if ((settings.username ?? '') == textEditingcontroller.text || textEditingcontroller.text.isEmpty) {
+                setState(() {
+                  _usernameChangeStep = 0;
+                });
+                return;
+              }
+              setUsername(textEditingcontroller.text);
+            },
+            text: 'Change',
+            isLoading: _usernameChangeStep == 2,
+          ),
+        ],
+      ),
     );
   }
 
   Future<void> setUsername(String? name) async {
     if (name != null && name.isNotEmpty && name.trim().length > 0) {
+      setState(() {
+        _usernameChangeStep = 2;
+      });
+      await Future.delayed(Duration(seconds: 2));
       await ScoreBoardManager().updateUsername(name);
+      setState(() {
+        _usernameChangeStep = 0;
+      });
     }
   }
 }

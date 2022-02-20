@@ -66,10 +66,14 @@ class NewPlayScreen extends StatelessWidget {
   AppBar buildAppBar(BuildContext context) {
     print('AppBar builded');
 
+    final username = context.select((AppSettings settings) => settings.username);
+
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0.0,
       automaticallyImplyLeading: false,
+      leadingWidth: 200,
+      leading: Center(child: Text(username ?? '', style: TextStyle(fontSize: 18, color: AppStyle.lightTextColor))),
       actions: [
         IconButton(
           onPressed: () async => _showScoreBoardDialog(context),
