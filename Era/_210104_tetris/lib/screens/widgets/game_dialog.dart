@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:tetris/modules/responsive.dart';
 
 class GameDialog extends StatelessWidget {
   const GameDialog(
@@ -22,11 +23,12 @@ class GameDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const borderRadius = 12.0;
+    final responsive = Responsive(context);
 
     return WillPopScope(
       onWillPop: () async => false,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: responsive.gameDialogHorizontalPadding),
         child: FittedBox(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(borderRadius),

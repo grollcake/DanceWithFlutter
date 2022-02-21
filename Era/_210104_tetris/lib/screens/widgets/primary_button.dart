@@ -21,17 +21,27 @@ class PrimaryButton extends StatelessWidget {
         onPressed: onPressed,
         child: !isLoading
             ? Text(text, style: TextStyle(fontSize: 18, color: AppStyle.darkTextColor))
-            : SizedBox(
-                width: width,
-                height: height,
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: Lottie.asset('assets/animations/loading.json', width: 160),
-                ),
-              ),
+            : _loadingAnimation(width, height),
         style: ElevatedButton.styleFrom(
           primary: AppStyle.accentColor,
         ),
+      ),
+    );
+  }
+
+  Widget _loadingAnimation(double width, double height) {
+    return SizedBox(
+      width: 60,
+      height: 30,
+      child: Stack(
+        clipBehavior: Clip.hardEdge,
+        children: [
+          Positioned(
+            left: -50,
+            top: -35,
+            child: Lottie.asset('assets/animations/loading.json', width: 160, height: 100),
+          ),
+        ],
       ),
     );
   }

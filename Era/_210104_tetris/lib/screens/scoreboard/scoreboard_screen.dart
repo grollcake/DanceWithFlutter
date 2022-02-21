@@ -4,6 +4,7 @@ import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/managers/scoreboard_manager.dart';
 import 'package:tetris/models/score.dart';
+import 'package:tetris/modules/responsive.dart';
 import 'package:tetris/screens/widgets/primary_button.dart';
 import 'package:tetris/screens/widgets/rounded_text_field.dart';
 
@@ -42,10 +43,12 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   @override
   Widget build(BuildContext context) {
     bool _hasName = settings.username != null && settings.username!.isNotEmpty;
+    final responsive = Responsive(context);
+
     return Dialog(
       child: Container(
-        height: 600,
-        width: double.infinity,
+        height: responsive.defaultDialogHeight,
+        width: responsive.defaultDialogWidth,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         decoration: BoxDecoration(color: AppStyle.bgColor),
         child: Column(
@@ -283,7 +286,6 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
       setState(() {
         _usernameChangeStep = 2;
       });
-      await Future.delayed(Duration(seconds: 2));
       await ScoreBoardManager().updateUsername(name);
       setState(() {
         _usernameChangeStep = 0;

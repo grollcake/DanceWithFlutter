@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
+import 'package:tetris/modules/responsive.dart';
 import 'package:tetris/screens/settings/pages/settings_about.dart';
 import 'package:tetris/screens/settings/pages/settings_block.dart';
 import 'package:tetris/screens/settings/pages/settings_feedback.dart';
@@ -29,17 +30,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final responsive = Responsive(context);
+
     return Dialog(
       child: SingleChildScrollView(
         child: Container(
-          width: double.infinity,
+          height: responsive.defaultDialogHeight,
+          width: responsive.defaultDialogWidth,
           padding: const EdgeInsets.symmetric(vertical: defalutPadding),
           decoration: BoxDecoration(color: AppStyle.bgColor.withOpacity(1.0)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               buildTitleBar(),
-              buidBody(),
+              Expanded(child: buidBody()),
             ],
           ),
         ),

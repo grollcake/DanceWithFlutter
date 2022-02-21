@@ -6,6 +6,7 @@ import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/managers/gameplay_manager.dart';
 import 'package:tetris/models/enums.dart';
+import 'package:tetris/modules/responsive.dart';
 import 'package:tetris/modules/swipe_detector.dart';
 import 'package:tetris/screens/gampeplay/components/pause_panel.dart';
 import 'package:tetris/screens/gampeplay/components/tetris_panel.dart';
@@ -73,7 +74,7 @@ class NewPlayScreen extends StatelessWidget {
       elevation: 0.0,
       automaticallyImplyLeading: false,
       leadingWidth: 200,
-      leading: Center(child: Text(username ?? '', style: TextStyle(fontSize: 18, color: AppStyle.lightTextColor))),
+      leading: Center(child: Text(username ?? '', style: TextStyle(fontSize: 16, color: AppStyle.lightTextColor))),
       actions: [
         IconButton(
           onPressed: () async => _showScoreBoardDialog(context),
@@ -95,6 +96,9 @@ class NewPlayScreen extends StatelessWidget {
     final backgroundImage = context.select((AppSettings settings) => settings.backgroundImage);
     final isLottie = backgroundImage.endsWith('.json');
 
+    // 화면의 넓이가 변하더라도 게임판이 짤리지 않도록 좌우 패딩값을 조정한다.
+    double responsivePadding = Responsive(context).defalutHorizontalPadding;
+
     return Stack(
       children: [
         Positioned.fill(
@@ -107,7 +111,7 @@ class NewPlayScreen extends StatelessWidget {
             Spacer(),
             // 상단 상태 패널
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 60),
+              padding: EdgeInsets.symmetric(horizontal: responsivePadding),
               height: 70,
               child: GameplayTopPanel(),
             ),
@@ -115,7 +119,7 @@ class NewPlayScreen extends StatelessWidget {
             // 메인 게임 패널
             SwipeDetector(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 60),
+                padding: EdgeInsets.symmetric(horizontal: responsivePadding),
                 child: GameplayTetrisPanel(),
               ),
               onTap: () => manager.rotateBlock(),

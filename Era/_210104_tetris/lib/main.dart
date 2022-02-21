@@ -6,7 +6,6 @@ import 'package:tetris/constants/app_style.dart';
 import 'package:tetris/managers/app_settings.dart';
 import 'package:tetris/managers/gameplay_manager.dart';
 import 'package:tetris/screens/intro/intro_screen.dart';
-import 'package:tetris/screens/test_only/fixing_effect_test_screen.dart';
 
 // Done GameStart dialog 화면
 // Done 가로크기를 11로 했을 때 블록 생성이 잘 못되는 문제 수정
@@ -116,8 +115,9 @@ import 'package:tetris/screens/test_only/fixing_effect_test_screen.dart';
 // Done (오류) FlashingWidget dispose 오류 발생
 // Done 왼쪽 상단에 사용자 이름 보이기
 // Done 점수판에서 이름 바꾸는 로직 변경
-// todo 갤폴드에서도 제대로 플레이 가능하도록
-// todo (문제) 로딩이미지가 너무 작게 나오는 문제
+// Done (문제) 로딩이미지가 너무 작게 나오는 문제
+// Done 플레이 화면 크기를 반응형으로 조정
+// todo (문제) 점수표 최초 등록 후 점수판에서 하단 이름 변경 진행중 버튼이 나타남
 // todo (문제) Drop, clearning 사운드가 겹칩
 // todo credit 페이지 (이미지, lottie 저작권 표시)
 
@@ -137,11 +137,16 @@ void main() async {
     Firebase.initializeApp();
   }
 
+  // return runApp(TestScreen());
+
   return runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider<AppSettings>(create: (_) => AppSettings()),
-      ChangeNotifierProvider<GamePlayManager>(create: (_) => GamePlayManager()),
-    ], child: TetrisApp()),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppSettings>(create: (_) => AppSettings()),
+        ChangeNotifierProvider<GamePlayManager>(create: (_) => GamePlayManager()),
+      ],
+      child: TetrisApp(),
+    ),
   );
 }
 
