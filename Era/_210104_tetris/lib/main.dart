@@ -117,8 +117,15 @@ import 'package:tetris/screens/intro/intro_screen.dart';
 // Done 점수판에서 이름 바꾸는 로직 변경
 // Done (문제) 로딩이미지가 너무 작게 나오는 문제
 // Done 플레이 화면 크기를 반응형으로 조정
+// todo (개선) 이름 등록없이도 점수표 볼 수 있도록 변경
 // todo (문제) 점수표 최초 등록 후 점수판에서 하단 이름 변경 진행중 버튼이 나타남
+// todo (문제) 가끔 pause 버튼이 작동하지 않음
 // todo (문제) Drop, clearning 사운드가 겹칩
+// todo (품질) 배경음과 효과음 레벨 조정 (배경음을 작게 하거나 효과음을 크게)
+// todo (품질) 좌우로 스와이프가 길어지면 드랍의 트리거 길이도 늘려서 오작동을 줄여야 해
+// todo (신기능) 네트워크 플레이
+// todo github 프로젝트 분리
+// todo github page에 배포
 // todo credit 페이지 (이미지, lottie 저작권 표시)
 
 void main() async {

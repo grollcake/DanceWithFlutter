@@ -49,14 +49,13 @@ class _IntroScreenState extends State<IntroScreen> {
           buildLogo(),
           Spacer(flex: 2),
           FadeIn(
-            delay: Duration(milliseconds: 1600),
+            delay: Duration(milliseconds: 1200),
             duration: Duration(milliseconds: 200),
             child: SizedBox(
               width: 200,
               height: 40,
               child: ElevatedButton(
                 onPressed: () {
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => GameScreen()));
                   Navigator.push(context, MaterialPageRoute(builder: (context) => NewPlayScreen()));
                 },
                 style: ElevatedButton.styleFrom(
