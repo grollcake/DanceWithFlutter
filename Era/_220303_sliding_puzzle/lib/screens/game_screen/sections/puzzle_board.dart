@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_puzzle/controllers/game_controller.dart';
 import 'package:sliding_puzzle/settings/constants.dart';
+import 'package:provider/provider.dart';
 
 class PuzzleBoard extends StatefulWidget {
   const PuzzleBoard({Key? key}) : super(key: key);
@@ -10,14 +11,9 @@ class PuzzleBoard extends StatefulWidget {
 }
 
 class _PuzzleBoardState extends State<PuzzleBoard> {
-  late GameController _gameController;
-
   @override
   void initState() {
     super.initState();
-
-    _gameController = GameController();
-    _gameController.shuffle();
   }
 
   @override
@@ -34,13 +30,16 @@ class _PuzzleBoardState extends State<PuzzleBoard> {
       ),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          double pieceWidth = (constraints.maxWidth - (kPuzzleDimension - 1) * kPuzzlePieceSpace) / kPuzzleDimension;
-          double pieceHeight = (constraints.maxHeight - (kPuzzleDimension - 1) * kPuzzlePieceSpace) / kPuzzleDimension;
+          final gameController = context.watch<GameController>();
+
+          double pieceWidth = (constraints.maxWidth - (gameController.puzzleDimension - 1) * kPuzzlePieceSpace) / gameController.puzzleDimension;
+          double pieceHeight = (constraints.maxHeight - (gameController.puzzleDimension - 1) * kPuzzlePieceSpace) / gameController.puzzleDimension;
+
 
           return Stack(
-            children: List.generate(_gameController.piecesCount, (index) {
-              int positionNo = _gameController.getPiecePosition(index);
-              String pieceName = _gameController.getPieceContent(index);
+            children: List.generate(gameController.piecesCount, (index) {
+              int positionNo = gameController.getPiecePosition(index);
+              String pieceName = gameController.getPieceContent(index);
 
               return Piece(
                 pieceId: index,
@@ -59,9 +58,10 @@ class _PuzzleBoardState extends State<PuzzleBoard> {
 
   /// 조각을 탭하면 이동처리
   _movePiece(int pieceId) {
-    if (_gameController.isMovable(pieceId)) {
-      int oldPosition = _gameController.getPiecePosition(pieceId);
-      int newPosition = _gameController.movePiece(pieceId)!;
+    final gameController = context.read<GameController>();
+    if (gameController.isMovable(pieceId)) {
+      int oldPosition = gameController.getPiecePosition(pieceId);
+      int newPosition = gameController.movePiece(pieceId)!;
       debugPrint('PieceMoved: $oldPosition => $newPosition');
       setState(() {});
     }
@@ -88,14 +88,14 @@ class Piece extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Offset pieceOffset = _calcOffset(positionNo);
+    Offset pieceOffset = _calcOffset(context, positionNo);
 
     debugPrint('$pieceId: $positionNo - $content');
 
     return AnimatedPositioned (
       left: pieceOffset.dx,
       top: pieceOffset.dy,
-      duration: Duration(milliseconds: 100),
+      duration: Duration(milliseconds: 250),
       child: GestureDetector(
         onTap: ()=> onTap(pieceId),
         child: Container(
@@ -114,10 +114,12 @@ class Piece extends StatelessWidget {
   }
 
   /// 조각이 표시될 위치 계산 (x, y)
-  Offset _calcOffset(int position) {
+  Offset _calcOffset(BuildContext context, int position) {
+    final gameController = context.read<GameController>();
+
     return Offset(
-      (position % kPuzzleDimension) * (width + kPuzzlePieceSpace),
-      (position ~/ kPuzzleDimension) * (height + kPuzzlePieceSpace),
+      (position % gameController.puzzleDimension) * (width + kPuzzlePieceSpace),
+      (position ~/ gameController.puzzleDimension) * (height + kPuzzlePieceSpace),
     );
   }
 }
