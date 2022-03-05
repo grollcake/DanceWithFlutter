@@ -14,10 +14,11 @@ class TopSection extends StatelessWidget {
             'SLIDING PUZZLE',
             style: TextStyle(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.bold),
           ),
-          Builder(builder: (BuildContext context) {
-            final elapsedTime = context.select((GameController controller) => controller.elapsedTime);
-            return Text(elapsedTime);
-          }),
+          StreamBuilder(
+            stream: context.select((GameController controller) => controller.elapsedTimeStream),
+            initialData: '00:00',
+            builder: (BuildContext context, AsyncSnapshot snapshot) => Text(snapshot.data),
+          ),
         ],
       ),
     );

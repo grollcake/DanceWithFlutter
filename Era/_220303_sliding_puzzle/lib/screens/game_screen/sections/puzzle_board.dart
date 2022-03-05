@@ -18,40 +18,43 @@ class _PuzzleBoardState extends State<PuzzleBoard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 300,
-      height: 300,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.black,
-          width: 2,
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          // border: Border.all(
+          //   color: Colors.black,
+          //   width: 2,
+          // ),
         ),
-      ),
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          final gameController = context.watch<GameController>();
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            final gameController = context.watch<GameController>();
 
-          double pieceWidth = (constraints.maxWidth - (gameController.puzzleDimension - 1) * kPuzzlePieceSpace) / gameController.puzzleDimension;
-          double pieceHeight = (constraints.maxHeight - (gameController.puzzleDimension - 1) * kPuzzlePieceSpace) / gameController.puzzleDimension;
+            double pieceWidth = (constraints.maxWidth - (gameController.puzzleDimension - 1) * kPuzzlePieceSpace) /
+                gameController.puzzleDimension;
+            double pieceHeight = (constraints.maxHeight - (gameController.puzzleDimension - 1) * kPuzzlePieceSpace) /
+                gameController.puzzleDimension;
 
+            return Stack(
+              children: List.generate(gameController.piecesCount, (index) {
+                int positionNo = gameController.getPiecePosition(index);
+                String pieceName = gameController.getPieceContent(index);
 
-          return Stack(
-            children: List.generate(gameController.piecesCount, (index) {
-              int positionNo = gameController.getPiecePosition(index);
-              String pieceName = gameController.getPieceContent(index);
-
-              return Piece(
-                pieceId: index,
-                positionNo: positionNo,
-                width: pieceWidth,
-                height: pieceHeight,
-                content: pieceName,
-                onTap: _movePiece,
-              );
-            }),
-          );
-        },
+                return Piece(
+                  pieceId: index,
+                  positionNo: positionNo,
+                  width: pieceWidth,
+                  height: pieceHeight,
+                  content: pieceName,
+                  onTap: _movePiece,
+                );
+              }),
+            );
+          },
+        ),
       ),
     );
   }
@@ -59,11 +62,10 @@ class _PuzzleBoardState extends State<PuzzleBoard> {
   /// 조각을 탭하면 이동처리
   _movePiece(int pieceId) {
     final gameController = context.read<GameController>();
-    if (gameController.isMovable(pieceId)) {
-      int oldPosition = gameController.getPiecePosition(pieceId);
-      int newPosition = gameController.movePiece(pieceId)!;
-      debugPrint('PieceMoved: $oldPosition => $newPosition');
-      setState(() {});
+    int oldPosition = gameController.getPiecePosition(pieceId);
+    int? newPosition = gameController.movePiece(pieceId);
+    if (newPosition != null) {
+      debugPrint('PieceMoved: $oldPosition => $newPosition'); // fixme 여기는 삭제해야 돼
     }
   }
 }
@@ -90,14 +92,15 @@ class Piece extends StatelessWidget {
   Widget build(BuildContext context) {
     Offset pieceOffset = _calcOffset(context, positionNo);
 
-    debugPrint('$pieceId: $positionNo - $content');
+    // debugPrint('$pieceId: $positionNo - $content');
 
-    return AnimatedPositioned (
+    return AnimatedPositioned(
       left: pieceOffset.dx,
       top: pieceOffset.dy,
-      duration: Duration(milliseconds: 250),
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeOutQuint,
       child: GestureDetector(
-        onTap: ()=> onTap(pieceId),
+        onTap: () => onTap(pieceId),
         child: Container(
           width: width,
           height: height,

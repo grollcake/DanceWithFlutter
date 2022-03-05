@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sliding_puzzle/common_widgets/primary_button.dart';
 import 'package:sliding_puzzle/controllers/game_controller.dart';
 
 class BottomSection extends StatelessWidget {
@@ -27,21 +28,19 @@ class BottomSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                width: 120,
-                height: 40,
-                child: ElevatedButton(onPressed: () {
+              PrimaryButton(
+                label: 'RESET',
+                onPressed: () {
                   final gameController = context.read<GameController>();
                   gameController.resetGame();
-                }, child: Text('RESET')),
+                },
               ),
-              SizedBox(
-                width: 120,
-                height: 40,
-                child: ElevatedButton(onPressed: () {
+              PrimaryButton(
+                label: 'START',
+                onPressed: () {
                   final gameController = context.read<GameController>();
                   gameController.startGame();
-                }, child: Text('START')),
+                },
               ),
             ],
           ),
