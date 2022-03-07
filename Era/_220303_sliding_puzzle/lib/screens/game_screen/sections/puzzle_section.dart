@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_puzzle/controllers/game_controller.dart';
+import 'package:sliding_puzzle/settings/app_style.dart';
 import 'package:sliding_puzzle/settings/constants.dart';
 import 'package:provider/provider.dart';
 
-class PuzzleBoard extends StatefulWidget {
-  const PuzzleBoard({Key? key}) : super(key: key);
+class PuzzleSection extends StatefulWidget {
+  const PuzzleSection({Key? key}) : super(key: key);
 
   @override
-  State<PuzzleBoard> createState() => _PuzzleBoardState();
+  State<PuzzleSection> createState() => _PuzzleSectionState();
 }
 
-class _PuzzleBoardState extends State<PuzzleBoard> {
+class _PuzzleSectionState extends State<PuzzleSection> {
   @override
   void initState() {
     super.initState();
@@ -23,7 +24,7 @@ class _PuzzleBoardState extends State<PuzzleBoard> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppStyle.bgColor,
           // border: Border.all(
           //   color: Colors.black,
           //   width: 2,
@@ -92,8 +93,6 @@ class Piece extends StatelessWidget {
   Widget build(BuildContext context) {
     Offset pieceOffset = _calcOffset(context, positionNo);
 
-    // debugPrint('$pieceId: $positionNo - $content');
-
     return AnimatedPositioned(
       left: pieceOffset.dx,
       top: pieceOffset.dy,
@@ -105,8 +104,8 @@ class Piece extends StatelessWidget {
           width: width,
           height: height,
           decoration: BoxDecoration(
-            color: Colors.cyan,
-            borderRadius: BorderRadius.circular(width * .05),
+            color: AppStyle.secondaryColor,
+            borderRadius: BorderRadius.circular(width * .1),
           ),
           child: Center(
             child: Text(content),

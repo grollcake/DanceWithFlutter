@@ -16,15 +16,15 @@ class PrimaryButton extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontSize: 16,
-            color: Colors.white70,
+            fontSize: 14,
+            color: AppStyle.textColor,
             letterSpacing: 2.0,
           ),
         ),
       ),
       style: TextButton.styleFrom(
         backgroundColor: AppStyle.primaryColor,
-        minimumSize: Size(120, 40),
+        minimumSize: Size(100, 40),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),

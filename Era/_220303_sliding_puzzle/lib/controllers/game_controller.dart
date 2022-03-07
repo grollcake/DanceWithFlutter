@@ -7,6 +7,7 @@ import 'package:sliding_puzzle/settings/constants.dart';
 class GameController with ChangeNotifier {
   int _puzzleDimension = kPuzzleDimension;
   int _piecesCount = kPuzzleDimension * kPuzzleDimension - 1;
+  int _moveCount = 0;
   bool _isCompleted = false;
   List<int> _piecesPositions = [];
   List<String> _piecesContents = [];
@@ -14,16 +15,23 @@ class GameController with ChangeNotifier {
   Stopwatch? _stopwatch;
 
   // 매초 변경시마다 notifyListeners()를 호출할 필요가 없도록 하기 위해 stream을 사용한다.
-  final StreamController _timerStreamController = StreamController<String>();
+  final StreamController _timerStreamController = StreamController<String>.broadcast();
 
   GameController() {
     init();
   }
 
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _timerStreamController.close();
+  // }
+
   void init() {
     _isCompleted = false;
     _piecesPositions = List.generate(_piecesCount, (index) => index);
     _piecesContents = List.generate(_piecesCount, (index) => 'P-$index');
+    _moveCount = 0;
   }
 
   void shuffle() {
@@ -36,6 +44,8 @@ class GameController with ChangeNotifier {
 
   int get piecesCount => _piecesCount;
 
+  get moveCount => _moveCount;
+
   GameStatus get gameStatus => _gameStatus;
 
   Stream get elapsedTimeStream => _timerStreamController.stream;
@@ -43,9 +53,8 @@ class GameController with ChangeNotifier {
   /// 게임리셋
   void resetGame() async {
     init();
-    setGameStatus(GameStatus.ready);
-    notifyListeners();
     _stopTimer(reset: true);
+    setGameStatus(GameStatus.ready);
     notifyListeners();
   }
 
@@ -109,6 +118,8 @@ class GameController with ChangeNotifier {
 
     List<int> pieceIds = [];
     if (emptyPosition != null && moveSteps != null) {
+      _moveCount++;
+
       for (int position = _piecesPositions[pieceId]; position != emptyPosition; position += moveSteps) {
         pieceIds.add(_piecesPositions.indexWhere((element) => element == position));
       }

@@ -1,1 +1,1 @@
-enum GameStatus {ready, playing, completed}
+enum GameStatus { ready, starting, playing, completed }
