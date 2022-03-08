@@ -13,7 +13,7 @@ class StartingCountdown extends StatefulWidget {
 }
 
 class _StartingCountdownState extends State<StartingCountdown> {
-  final _animationDuration = Duration(milliseconds: 1500);
+  final _animationDuration = Duration(milliseconds: 1800);
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _StartingCountdownState extends State<StartingCountdown> {
 
     for (int i = 0; i < 3; i++) {
       gameController.shuffle();
-      await Future.delayed(_animationDuration * 1.6);
+      await Future.delayed(_animationDuration);
     }
   }
 
@@ -37,12 +37,12 @@ class _StartingCountdownState extends State<StartingCountdown> {
         style: TextStyle(
             fontSize: 160, color: AppStyle.primaryColor, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
         child: AnimatedTextKit(
-          repeatForever: false,
           animatedTexts: [
             ScaleAnimatedText('2', duration: _animationDuration),
             ScaleAnimatedText('1', duration: _animationDuration),
             ScaleAnimatedText('Go', duration: _animationDuration),
           ],
+          pause: Duration.zero,
           isRepeatingAnimation: false,
           onFinished: () {
             final gameController = context.read<GameController>();
