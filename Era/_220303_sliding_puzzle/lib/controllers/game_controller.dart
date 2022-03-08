@@ -15,10 +15,10 @@ class GameController with ChangeNotifier {
   Stopwatch? _stopwatch;
 
   // 매초 변경시마다 notifyListeners()를 호출할 필요가 없도록 하기 위해 stream을 사용한다.
-  final StreamController _timerStreamController = StreamController<String>.broadcast();
+  StreamController<String>? _timerStreamController;
 
   GameController() {
-    init();
+    _init();
   }
 
   // @override
@@ -27,12 +27,7 @@ class GameController with ChangeNotifier {
   //   _timerStreamController.close();
   // }
 
-  void init() {
-    _isCompleted = false;
-    _piecesPositions = List.generate(_piecesCount, (index) => index);
-    _piecesContents = List.generate(_piecesCount, (index) => 'P-$index');
-    _moveCount = 0;
-  }
+
 
   void shuffle() {
     _piecesPositions.shuffle();
@@ -48,11 +43,12 @@ class GameController with ChangeNotifier {
 
   GameStatus get gameStatus => _gameStatus;
 
-  Stream get elapsedTimeStream => _timerStreamController.stream;
+  Stream get elapsedTimeStream => _timerStreamController!.stream;
 
   /// 게임리셋
   void resetGame() async {
-    init();
+    debugPrint('Game reseted');
+    _init();
     _stopTimer(reset: true);
     setGameStatus(GameStatus.ready);
     notifyListeners();
@@ -61,7 +57,7 @@ class GameController with ChangeNotifier {
   /// 게임시작
   void startGame() async {
     debugPrint('Game started');
-    init();
+    _init();
     shuffle();
     setGameStatus(GameStatus.playing);
     _startTimer();
@@ -78,7 +74,7 @@ class GameController with ChangeNotifier {
   void setPuzzleDimension(int dimension) {
     _puzzleDimension = dimension;
     _piecesCount = _puzzleDimension * _puzzleDimension - 1;
-    init();
+    _init();
     notifyListeners();
   }
 
@@ -141,6 +137,17 @@ class GameController with ChangeNotifier {
   /// 내부 전용 함수
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
+  void _init() {
+    _isCompleted = false;
+    _piecesPositions = List.generate(_piecesCount, (index) => index);
+    _piecesContents = List.generate(_piecesCount, (index) => 'P-$index');
+    _moveCount = 0;
+
+    _timerStreamController?.close();
+    _timerStreamController = null;
+    _timerStreamController = StreamController<String>();
+  }
+
   /// 상하좌우 방향으로 빈셀 위치 찾기
   int? _findEmptyPosition(int pieceId, String direction) {
     int currentPosition = _piecesPositions[pieceId];
@@ -199,36 +206,6 @@ class GameController with ChangeNotifier {
     return null;
   }
 
-  /// 인접한 이동 가능한 위치번호 반환
-  int? _getMovablePosition(int pieceId) {
-    int currentPosition = _piecesPositions[pieceId];
-
-    // 1. 상 확인: 위 블록이 비어있는지 확인
-    int upPosition = currentPosition - _puzzleDimension;
-    if (upPosition >= 0 && !_piecesPositions.contains(upPosition)) return upPosition;
-
-    // 2. 하 확인: 아래 블록이 비어있는지 확인
-    int downPosition = currentPosition + _puzzleDimension;
-    if (downPosition < _puzzleDimension * _puzzleDimension && !_piecesPositions.contains(downPosition)) {
-      return downPosition;
-    }
-
-    // 3. 좌 확인: 왼쪽 블록이 비어있는지 확인
-    if (currentPosition % _puzzleDimension != 0) {
-      int leftPosition = currentPosition - 1;
-      if (!_piecesPositions.contains(leftPosition)) return leftPosition;
-    }
-
-    // 4. 우 확인: 오른쪽 블록이 비어있는지 확인
-    if ((currentPosition + 1) % _puzzleDimension != 0) {
-      int rightPosition = currentPosition + 1;
-      if (!_piecesPositions.contains(rightPosition)) return rightPosition;
-    }
-
-    // 5. 여기까지 왔다면 움직일 수 있는 위치는 없는 것이다.
-    return null;
-  }
-
   /// 완성 여부 반환
   bool _completeCheck() {
     // 모든 조각의 id가 위치번호와 일치하면 완성된 것이다.
@@ -258,11 +235,11 @@ class GameController with ChangeNotifier {
   /// 타이머 시작
   void _startTimer() {
     _stopwatch = Stopwatch()..start();
-    _timerStreamController.sink.add(_formattedTime());
+    _timerStreamController?.sink.add(_formattedTime());
 
     Timer.periodic(Duration(seconds: 1), (timer) {
       if (_stopwatch?.isRunning ?? false) {
-        _timerStreamController.sink.add(_formattedTime());
+        _timerStreamController?.sink.add(_formattedTime());
       } else {
         timer.cancel();
       }
@@ -273,6 +250,6 @@ class GameController with ChangeNotifier {
   void _stopTimer({required bool reset}) {
     _stopwatch?.stop();
     if (reset) _stopwatch?.reset();
-    _timerStreamController.sink.add(_formattedTime());
+    _timerStreamController?.sink.add(_formattedTime());
   }
 }

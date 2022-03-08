@@ -7,6 +7,8 @@ import 'package:sliding_puzzle/sliding_puzzle_app.dart';
 // Done 게임 레이아웃 다시 잡기 (약 50% 진행)
 // Done 움직인 횟수 구현
 // Done 앱 색상테마 기본값 지정
+// Done 경과시간을 나태내는 스트림빌더에서 발생하던 'Bad state: Stream has already been listened to' 오류 해결
+//       => StreamController를 적정 시점에 재생성하는 방법 사용
 // todo 게임상태 세분화: 대기, 시작중, 게임중, 완성
 // todo 파워포인트로 기획서 만들기
 // todo   - 슬라이딩 규칙에 대한 자세한 설명 필요
