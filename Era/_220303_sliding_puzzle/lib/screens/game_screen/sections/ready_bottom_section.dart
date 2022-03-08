@@ -46,7 +46,7 @@ class ReadyBottomSection extends StatelessWidget {
         padding: EdgeInsets.all(8),
         child: Text(
           '$dimension x $dimension',
-          style: TextStyle(fontSize: 14, color: textColor, fontWeight: weight),
+          style: TextStyle(fontSize: 16, color: textColor, fontWeight: weight),
         ),
       ),
     );

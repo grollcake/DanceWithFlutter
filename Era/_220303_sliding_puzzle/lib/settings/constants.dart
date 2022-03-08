@@ -1,2 +1,2 @@
-const int kPuzzleDimension = 5;
+const int kPuzzleDimension = 3;
 const double kPuzzlePieceSpace = 4;

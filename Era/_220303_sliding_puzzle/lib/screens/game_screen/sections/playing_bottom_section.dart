@@ -28,11 +28,11 @@ class PlayingBottomSection extends StatelessWidget {
           children: [
             Text(
               'Moves   ',
-              style: TextStyle(fontSize: 14, color: AppStyle.inactiveTextColor),
+              style: TextStyle(fontSize: 15, color: AppStyle.inactiveTextColor),
             ),
             Text(
               '$moves',
-              style: TextStyle(fontSize: 14, color: AppStyle.textColor, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, color: AppStyle.textColor, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -40,14 +40,14 @@ class PlayingBottomSection extends StatelessWidget {
           children: [
             Text(
               'Time   ',
-              style: TextStyle(fontSize: 14, color: AppStyle.inactiveTextColor),
+              style: TextStyle(fontSize: 15, color: AppStyle.inactiveTextColor),
             ),
             StreamBuilder(
               stream: context.select((GameController controller) => controller.elapsedTimeStream),
               initialData: '00:00',
               builder: (BuildContext context, AsyncSnapshot snapshot) => Text(
                 snapshot.data,
-                style: TextStyle(fontSize: 14, color: AppStyle.textColor, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16, color: AppStyle.textColor, fontWeight: FontWeight.bold),
               ),
             ),
           ],

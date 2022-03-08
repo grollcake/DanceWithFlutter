@@ -21,14 +21,6 @@ class GameController with ChangeNotifier {
     _init();
   }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _timerStreamController.close();
-  // }
-
-
-
   void shuffle() {
     _piecesPositions.shuffle();
     notifyListeners();
@@ -92,6 +84,8 @@ class GameController with ChangeNotifier {
     int? emptyPosition;
     int? moveSteps;
 
+    if (_gameStatus != GameStatus.playing) return null;
+
     emptyPosition = _findEmptyPosition(pieceId, 'UP');
     if (emptyPosition != null) {
       moveSteps = _puzzleDimension * -1;
@@ -140,7 +134,7 @@ class GameController with ChangeNotifier {
   void _init() {
     _isCompleted = false;
     _piecesPositions = List.generate(_piecesCount, (index) => index);
-    _piecesContents = List.generate(_piecesCount, (index) => 'P-$index');
+    _piecesContents = List.generate(_piecesCount, (index) => '${index+1}');
     _moveCount = 0;
 
     _timerStreamController?.close();

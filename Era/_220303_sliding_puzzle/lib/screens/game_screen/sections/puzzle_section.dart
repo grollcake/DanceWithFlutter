@@ -108,7 +108,7 @@ class Piece extends StatelessWidget {
             borderRadius: BorderRadius.circular(width * .1),
           ),
           child: Center(
-            child: Text(content),
+            child: Text(content, style: TextStyle(fontSize: 20, color: AppStyle.textColor, fontWeight: FontWeight.bold)),
           ),
         ),
       ),
