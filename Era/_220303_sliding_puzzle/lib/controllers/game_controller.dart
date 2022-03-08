@@ -42,25 +42,31 @@ class GameController with ChangeNotifier {
     debugPrint('Game reseted');
     _init();
     _stopTimer(reset: true);
-    setGameStatus(GameStatus.ready);
+    _gameStatus = GameStatus.ready;
+    notifyListeners();
+  }
+
+  /// 시작중
+  void startingGame() {
+    debugPrint('Game starting');
+    _init();
+    _gameStatus = GameStatus.starting;
     notifyListeners();
   }
 
   /// 게임시작
   void startGame() async {
     debugPrint('Game started');
-    _init();
-    shuffle();
-    setGameStatus(GameStatus.playing);
+    _gameStatus = GameStatus.playing;
     _startTimer();
     notifyListeners();
   }
 
   /// 게임 상태 변경
-  void setGameStatus(GameStatus status) {
-    _gameStatus = status;
-    notifyListeners();
-  }
+  // void setGameStatus(GameStatus status) {
+  //   _gameStatus = status;
+  //   notifyListeners();
+  // }
 
   /// 게임 레벨 변경
   void setPuzzleDimension(int dimension) {
@@ -134,7 +140,7 @@ class GameController with ChangeNotifier {
   void _init() {
     _isCompleted = false;
     _piecesPositions = List.generate(_piecesCount, (index) => index);
-    _piecesContents = List.generate(_piecesCount, (index) => '${index+1}');
+    _piecesContents = List.generate(_piecesCount, (index) => '${index + 1}');
     _moveCount = 0;
 
     _timerStreamController?.close();

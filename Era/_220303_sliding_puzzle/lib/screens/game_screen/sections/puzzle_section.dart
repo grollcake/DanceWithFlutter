@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_puzzle/controllers/game_controller.dart';
+import 'package:sliding_puzzle/models/enums.dart';
+import 'package:sliding_puzzle/screens/game_screen/widgets/starting_countdown.dart';
+import 'package:sliding_puzzle/screens/game_screen/widgets/puzzle_piece.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
 import 'package:sliding_puzzle/settings/constants.dart';
 import 'package:provider/provider.dart';
@@ -25,10 +28,6 @@ class _PuzzleSectionState extends State<PuzzleSection> {
         width: double.infinity,
         decoration: BoxDecoration(
           color: AppStyle.bgColor,
-          // border: Border.all(
-          //   color: Colors.black,
-          //   width: 2,
-          // ),
         ),
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -40,19 +39,22 @@ class _PuzzleSectionState extends State<PuzzleSection> {
                 gameController.puzzleDimension;
 
             return Stack(
-              children: List.generate(gameController.piecesCount, (index) {
-                int positionNo = gameController.getPiecePosition(index);
-                String pieceName = gameController.getPieceContent(index);
+              children: [
+                ...List.generate(gameController.piecesCount, (index) {
+                  int positionNo = gameController.getPiecePosition(index);
+                  String pieceName = gameController.getPieceContent(index);
 
-                return Piece(
-                  pieceId: index,
-                  positionNo: positionNo,
-                  width: pieceWidth,
-                  height: pieceHeight,
-                  content: pieceName,
-                  onTap: _movePiece,
-                );
-              }),
+                  return PuzzlePiece(
+                    pieceId: index,
+                    positionNo: positionNo,
+                    width: pieceWidth,
+                    height: pieceHeight,
+                    content: pieceName,
+                    onTap: _movePiece,
+                  );
+                }),
+                if (gameController.gameStatus == GameStatus.starting) StartingCountdown(),
+              ],
             );
           },
         ),
@@ -68,60 +70,5 @@ class _PuzzleSectionState extends State<PuzzleSection> {
     if (newPosition != null) {
       debugPrint('PieceMoved: $oldPosition => $newPosition'); // fixme 여기는 삭제해야 돼
     }
-  }
-}
-
-class Piece extends StatelessWidget {
-  Piece({
-    Key? key,
-    required this.pieceId,
-    required this.width,
-    required this.height,
-    required this.positionNo,
-    required this.content,
-    required this.onTap,
-  }) : super(key: key);
-
-  final int pieceId;
-  final int positionNo;
-  final String content;
-  final double width;
-  final double height;
-  final Function(int pieceId) onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    Offset pieceOffset = _calcOffset(context, positionNo);
-
-    return AnimatedPositioned(
-      left: pieceOffset.dx,
-      top: pieceOffset.dy,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.easeOutQuint,
-      child: GestureDetector(
-        onTap: () => onTap(pieceId),
-        child: Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            color: AppStyle.secondaryColor,
-            borderRadius: BorderRadius.circular(width * .1),
-          ),
-          child: Center(
-            child: Text(content, style: TextStyle(fontSize: 20, color: AppStyle.textColor, fontWeight: FontWeight.bold)),
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// 조각이 표시될 위치 계산 (x, y)
-  Offset _calcOffset(BuildContext context, int position) {
-    final gameController = context.read<GameController>();
-
-    return Offset(
-      (position % gameController.puzzleDimension) * (width + kPuzzlePieceSpace),
-      (position ~/ gameController.puzzleDimension) * (height + kPuzzlePieceSpace),
-    );
   }
 }

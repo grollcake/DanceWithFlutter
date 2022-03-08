@@ -26,7 +26,7 @@ class ReadyBottomSection extends StatelessWidget {
           label: 'START',
           onPressed: () {
             final gameController = context.read<GameController>();
-            gameController.startGame();
+            gameController.startingGame();
           },
         ),
       ],

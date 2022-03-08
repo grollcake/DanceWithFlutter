@@ -10,7 +10,8 @@ import 'package:sliding_puzzle/sliding_puzzle_app.dart';
 // Done 경과시간을 나태내는 스트림빌더에서 발생하던 'Bad state: Stream has already been listened to' 오류 해결
 //       => StreamController를 적정 시점에 재생성하는 방법 사용
 // Done playing 상태에서만 슬라이딩이 가능하도록 제한
-// todo 게임상태 세분화: 대기, 시작중, 게임중, 완성
+// Done 게임상태 세분화: 대기, 시작중, 게임중, 완성
+// Done 게임 시작 시 3,2,1,Go 카운트 다운 구현
 // todo 파워포인트로 기획서 만들기
 // todo   - 슬라이딩 규칙에 대한 자세한 설명 필요
 // todo (Epic) 게임 레이아웃 다시 잡기
