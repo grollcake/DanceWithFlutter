@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_puzzle/controllers/game_controller.dart';
 import 'package:sliding_puzzle/models/enums.dart';
+import 'package:sliding_puzzle/screens/game_screen/sections/bottom_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/completed_bottom_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/playing_bottom_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/ready_bottom_section.dart';
@@ -62,23 +63,18 @@ class _GameScreenState extends State<GameScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  UpperSection(),
-                  SizedBox(height: 20),
-                  PuzzleSection(),
-                  SizedBox(height: 20),
-                  Builder(builder: (BuildContext context) {
-                    final gameStatus = context.select((GameController controller) => controller.gameStatus);
-                    switch (gameStatus) {
-                      case GameStatus.ready:
-                        return ReadyBottomSection();
-                      case GameStatus.starting:
-                        return StartingBottomSection();
-                      case GameStatus.playing:
-                        return PlayingBottomSection();
-                      case GameStatus.completed:
-                        return CompletedBottomSection();
-                    }
-                  })
+                  Flexible(
+                    flex: 1,
+                    child: UpperSection(),
+                  ),
+                  Flexible(
+                    flex: 2,
+                    child: PuzzleSection(),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: BottomSection(),
+                  ),
                 ],
               ),
             ),

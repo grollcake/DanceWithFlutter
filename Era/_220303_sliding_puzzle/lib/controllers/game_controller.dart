@@ -8,7 +8,6 @@ class GameController with ChangeNotifier {
   int _puzzleDimension = kPuzzleDimension;
   int _piecesCount = kPuzzleDimension * kPuzzleDimension - 1;
   int _moveCount = 0;
-  bool _isCompleted = false;
   List<int> _piecesPositions = [];
   List<String> _piecesContents = [];
   GameStatus _gameStatus = GameStatus.ready;
@@ -21,8 +20,12 @@ class GameController with ChangeNotifier {
     _init();
   }
 
-  void shuffle() {
-    _piecesPositions.shuffle();
+  /// 테스트 전용 코드
+  /// todo delete me
+  void testShuffle() {
+    for (int i = 0; i < _piecesPositions.length; i++) {
+      _piecesPositions[i] = i == _piecesPositions.length - 1 ? _piecesPositions.length : i;
+    }
     notifyListeners();
   }
 
@@ -62,12 +65,6 @@ class GameController with ChangeNotifier {
     notifyListeners();
   }
 
-  /// 게임 상태 변경
-  // void setGameStatus(GameStatus status) {
-  //   _gameStatus = status;
-  //   notifyListeners();
-  // }
-
   /// 게임 레벨 변경
   void setPuzzleDimension(int dimension) {
     _puzzleDimension = dimension;
@@ -76,14 +73,17 @@ class GameController with ChangeNotifier {
     notifyListeners();
   }
 
+  /// 퍼즐 조각 섞기
+  void shuffle() {
+    _piecesPositions.shuffle();
+    notifyListeners();
+  }
+
   /// 조각 위치 반환
   int getPiecePosition(int pieceId) => _piecesPositions[pieceId];
 
   /// 조각 이름 반환
   String getPieceContent(int pieceId) => _piecesContents[pieceId];
-
-  /// 이동 가능 확인: 상하좌우에 빈 칸이 있다면 이동 가능한 것이다
-  // bool isMovable(int pieceId) => _getMovablePosition(pieceId) != null;
 
   /// 조각 이동: 이동 후에는 새로운 위치를 반환한다.
   int? movePiece(int pieceId) {
@@ -138,14 +138,13 @@ class GameController with ChangeNotifier {
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
   void _init() {
-    _isCompleted = false;
     _piecesPositions = List.generate(_piecesCount, (index) => index);
     _piecesContents = List.generate(_piecesCount, (index) => '${index + 1}');
     _moveCount = 0;
 
     _timerStreamController?.close();
     _timerStreamController = null;
-    _timerStreamController = StreamController<String>();
+    _timerStreamController = StreamController<String>.broadcast();
   }
 
   /// 상하좌우 방향으로 빈셀 위치 찾기
@@ -211,12 +210,11 @@ class GameController with ChangeNotifier {
     // 모든 조각의 id가 위치번호와 일치하면 완성된 것이다.
     for (int pieceId = 0; pieceId < _piecesPositions.length; pieceId++) {
       if (_piecesPositions[pieceId] != pieceId) {
-        _isCompleted = false;
         notifyListeners();
         return false;
       }
     }
-    _isCompleted = true;
+    _gameStatus = GameStatus.completed;
     notifyListeners();
     return true;
   }

@@ -27,7 +27,7 @@ class PuzzlePiece extends StatelessWidget {
   Widget build(BuildContext context) {
     Offset pieceOffset = _calcOffset(context, positionNo);
     final gameStatus = context.read<GameController>().gameStatus;
-    Duration duration = Duration(milliseconds: gameStatus == GameStatus.starting ? 1800 : 500);
+    Duration duration = Duration(milliseconds: gameStatus == GameStatus.starting ? 1500 : 500);
 
     return AnimatedPositioned(
       left: pieceOffset.dx,

@@ -13,7 +13,7 @@ class StartingCountdown extends StatefulWidget {
 }
 
 class _StartingCountdownState extends State<StartingCountdown> {
-  final _animationDuration = Duration(milliseconds: 1800);
+  final _animationDuration = Duration(milliseconds: 1500);
 
   @override
   void initState() {

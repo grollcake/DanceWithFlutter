@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_puzzle/controllers/game_controller.dart';
+import 'package:sliding_puzzle/screens/game_screen/widgets/playing_info.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
 
 class PlayingBottomSection extends StatelessWidget {
@@ -9,49 +10,10 @@ class PlayingBottomSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        buildPlayInfo(context),
+        PlayingInfo(),
         buildRestart(context),
-      ],
-    );
-  }
-
-  Widget buildPlayInfo(BuildContext context) {
-    final moves = context.select((GameController controller) => controller.moveCount);
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Moves   ',
-              style: TextStyle(fontSize: 15, color: AppStyle.inactiveTextColor),
-            ),
-            Text(
-              '$moves',
-              style: TextStyle(fontSize: 16, color: AppStyle.textColor, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Text(
-              'Time   ',
-              style: TextStyle(fontSize: 15, color: AppStyle.inactiveTextColor),
-            ),
-            StreamBuilder(
-              stream: context.select((GameController controller) => controller.elapsedTimeStream),
-              initialData: '00:00',
-              builder: (BuildContext context, AsyncSnapshot snapshot) => Text(
-                snapshot.data,
-                style: TextStyle(fontSize: 16, color: AppStyle.textColor, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        ),
       ],
     );
   }
