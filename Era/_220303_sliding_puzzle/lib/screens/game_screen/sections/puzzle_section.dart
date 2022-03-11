@@ -42,7 +42,7 @@ class _PuzzleSectionState extends State<PuzzleSection> {
               children: [
                 ...List.generate(gameController.piecesCount, (index) {
                   int positionNo = gameController.getPiecePosition(index);
-                  String pieceName = gameController.getPieceContent(index);
+                  Widget pieceName = gameController.getPieceContent(index);
 
                   return PuzzlePiece(
                     pieceId: index,
@@ -67,8 +67,8 @@ class _PuzzleSectionState extends State<PuzzleSection> {
     final gameController = context.read<GameController>();
     int oldPosition = gameController.getPiecePosition(pieceId);
     int? newPosition = gameController.movePiece(pieceId);
-    if (newPosition != null) {
-      debugPrint('PieceMoved: $oldPosition => $newPosition'); // fixme 여기는 삭제해야 돼
-    }
+    // if (newPosition != null) {
+    //   debugPrint('PieceMoved: $oldPosition => $newPosition'); // fixme 여기는 삭제해야 돼
+    // }
   }
 }

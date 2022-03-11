@@ -18,7 +18,7 @@ class PuzzlePiece extends StatelessWidget {
 
   final int pieceId;
   final int positionNo;
-  final String content;
+  final Widget content;
   final double width;
   final double height;
   final Function(int pieceId) onTap;
@@ -36,16 +36,16 @@ class PuzzlePiece extends StatelessWidget {
       curve: Curves.easeOutQuint,
       child: GestureDetector(
         onTap: () => onTap(pieceId),
-        child: Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            color: AppStyle.secondaryColor,
-            borderRadius: BorderRadius.circular(width * .1),
-          ),
-          child: Center(
-            child:
-                Text(content, style: TextStyle(fontSize: 20, color: AppStyle.textColor, fontWeight: FontWeight.bold)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(width * .1),
+          child: Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+              color: AppStyle.secondaryColor,
+              borderRadius: BorderRadius.circular(width * .1),
+            ),
+            child: Center(child: content),
           ),
         ),
       ),

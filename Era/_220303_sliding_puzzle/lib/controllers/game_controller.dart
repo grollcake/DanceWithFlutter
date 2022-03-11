@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:sliding_puzzle/models/enums.dart';
+import 'package:sliding_puzzle/settings/app_style.dart';
 import 'package:sliding_puzzle/settings/constants.dart';
 
 class GameController with ChangeNotifier {
@@ -9,7 +9,8 @@ class GameController with ChangeNotifier {
   int _piecesCount = kPuzzleDimension * kPuzzleDimension - 1;
   int _moveCount = 0;
   List<int> _piecesPositions = [];
-  List<String> _piecesContents = [];
+  List<Widget> _piecesContents = [];
+  GameMode _gameMode = GameMode.image;
   GameStatus _gameStatus = GameStatus.ready;
   Stopwatch? _stopwatch;
 
@@ -36,9 +37,18 @@ class GameController with ChangeNotifier {
 
   get moveCount => _moveCount;
 
+  GameMode get gameMode => _gameMode;
+
   GameStatus get gameStatus => _gameStatus;
 
   Stream get elapsedTimeStream => _timerStreamController!.stream;
+
+  /// Setters
+  set gameMode(GameMode mode) {
+    _gameMode = mode;
+    _prepareContents();
+    notifyListeners();
+  }
 
   /// 게임리셋
   void resetGame() async {
@@ -83,7 +93,7 @@ class GameController with ChangeNotifier {
   int getPiecePosition(int pieceId) => _piecesPositions[pieceId];
 
   /// 조각 이름 반환
-  String getPieceContent(int pieceId) => _piecesContents[pieceId];
+  Widget getPieceContent(int pieceId) => _piecesContents[pieceId];
 
   /// 조각 이동: 이동 후에는 새로운 위치를 반환한다.
   int? movePiece(int pieceId) {
@@ -139,7 +149,7 @@ class GameController with ChangeNotifier {
 
   void _init() {
     _piecesPositions = List.generate(_piecesCount, (index) => index);
-    _piecesContents = List.generate(_piecesCount, (index) => '${index + 1}');
+    _prepareContents();
     _moveCount = 0;
 
     _timerStreamController?.close();
@@ -205,6 +215,29 @@ class GameController with ChangeNotifier {
     return null;
   }
 
+  /// 조각 라벨 또는 이미지 준비
+  void _prepareContents() {
+    if (_gameMode == GameMode.number) {
+      _piecesContents = List.generate(
+        _piecesCount,
+            (index) =>
+            Text(
+              '${index + 1}',
+              style: TextStyle(fontSize: 20, color: AppStyle.textColor, fontWeight: FontWeight.bold),
+            ),
+      );
+    } else {
+      _piecesContents = getSlicedWidget(
+        horizontalCount: _puzzleDimension,
+        verticalCount: _puzzleDimension,
+        horizontalSpacing: kPuzzlePieceSpace,
+        verticalSpacing: kPuzzlePieceSpace,
+        // fullSize: Size(291.69960474308306, 291.69960474308306), // todo Fixme 여기를 고처야 해
+        child: Image.asset('assets/images/sample.jpg', fit: BoxFit.cover),
+      );
+    }
+  }
+
   /// 완성 여부 반환
   bool _completeCheck() {
     // 모든 조각의 id가 위치번호와 일치하면 완성된 것이다.
@@ -215,7 +248,6 @@ class GameController with ChangeNotifier {
       }
     }
     _gameStatus = GameStatus.completed;
-    notifyListeners();
     return true;
   }
 
@@ -249,5 +281,49 @@ class GameController with ChangeNotifier {
     _stopwatch?.stop();
     if (reset) _stopwatch?.reset();
     _timerStreamController?.sink.add(_formattedTime());
+  }
+
+  /// 이미지를 조각내기
+  List<Widget> getSlicedWidget(
+      {required int horizontalCount,
+        required int verticalCount,
+        required double horizontalSpacing,
+        required double verticalSpacing,
+        required Widget child}) {
+    // 전체 그림의 가로와 세로 크기 기본값. 이 값이 퍼즐 화면보다 커야만 정상적인 조각이 가능하다.
+    // 아주 여우있게 1000 정도로 정했다
+    const defaultSize = 1000.0;
+    List<Widget> slicedWidgets = [];
+
+    final sliceWidth = (defaultSize - horizontalSpacing * (horizontalCount - 1)) / horizontalCount;
+    final sliceHeight = (defaultSize - verticalSpacing * (verticalCount - 1)) / verticalCount;
+
+    final widthFactor = sliceWidth / defaultSize;
+    final heightFactor = sliceHeight / defaultSize;
+
+    for (int sliceNo = 0; sliceNo < horizontalCount * verticalCount; sliceNo++) {
+      final xOffset = (sliceWidth + horizontalSpacing) * (sliceNo % horizontalCount);
+      final xFactor = xOffset / (defaultSize - sliceWidth);
+
+      final yOffset = (sliceHeight + verticalSpacing) * (sliceNo ~/ horizontalCount);
+      final yFactor = yOffset / (defaultSize - sliceHeight);
+
+      Widget sliced = FittedBox(
+        child: ClipRect(
+          child: Align(
+            alignment: FractionalOffset(xFactor, yFactor),
+            widthFactor: widthFactor,
+            heightFactor: heightFactor,
+            child: SizedBox(
+              width: defaultSize,
+              height: defaultSize,
+              child: child,
+            ),
+          ),
+        ),
+      );
+      slicedWidgets.add(sliced);
+    }
+    return slicedWidgets;
   }
 }
