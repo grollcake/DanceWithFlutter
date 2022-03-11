@@ -15,6 +15,7 @@ class GameController with ChangeNotifier {
   Stopwatch? _stopwatch;
 
   // 매초 변경시마다 notifyListeners()를 호출할 필요가 없도록 하기 위해 stream을 사용한다.
+  String _elapsedTime = '00:00';
   StreamController<String>? _timerStreamController;
 
   GameController() {
@@ -35,11 +36,13 @@ class GameController with ChangeNotifier {
 
   int get piecesCount => _piecesCount;
 
-  get moveCount => _moveCount;
+  int get moveCount => _moveCount;
 
   GameMode get gameMode => _gameMode;
 
   GameStatus get gameStatus => _gameStatus;
+
+  String get elapsedTime => _elapsedTime;
 
   Stream get elapsedTimeStream => _timerStreamController!.stream;
 
@@ -220,11 +223,10 @@ class GameController with ChangeNotifier {
     if (_gameMode == GameMode.number) {
       _piecesContents = List.generate(
         _piecesCount,
-            (index) =>
-            Text(
-              '${index + 1}',
-              style: TextStyle(fontSize: 20, color: AppStyle.textColor, fontWeight: FontWeight.bold),
-            ),
+        (index) => Text(
+          '${index + 1}',
+          style: TextStyle(fontSize: 20, color: AppStyle.textColor, fontWeight: FontWeight.bold),
+        ),
       );
     } else {
       _piecesContents = getSlicedWidget(
@@ -265,11 +267,13 @@ class GameController with ChangeNotifier {
   /// 타이머 시작
   void _startTimer() {
     _stopwatch = Stopwatch()..start();
-    _timerStreamController?.sink.add(_formattedTime());
+    _elapsedTime = _formattedTime();
+    _timerStreamController?.sink.add(_elapsedTime);
 
     Timer.periodic(Duration(seconds: 1), (timer) {
       if (_stopwatch?.isRunning ?? false) {
-        _timerStreamController?.sink.add(_formattedTime());
+        _elapsedTime = _formattedTime();
+        _timerStreamController?.sink.add(_elapsedTime);
       } else {
         timer.cancel();
       }
@@ -280,16 +284,17 @@ class GameController with ChangeNotifier {
   void _stopTimer({required bool reset}) {
     _stopwatch?.stop();
     if (reset) _stopwatch?.reset();
-    _timerStreamController?.sink.add(_formattedTime());
+    _elapsedTime = _formattedTime();
+    _timerStreamController?.sink.add(_elapsedTime);
   }
 
   /// 이미지를 조각내기
   List<Widget> getSlicedWidget(
       {required int horizontalCount,
-        required int verticalCount,
-        required double horizontalSpacing,
-        required double verticalSpacing,
-        required Widget child}) {
+      required int verticalCount,
+      required double horizontalSpacing,
+      required double verticalSpacing,
+      required Widget child}) {
     // 전체 그림의 가로와 세로 크기 기본값. 이 값이 퍼즐 화면보다 커야만 정상적인 조각이 가능하다.
     // 아주 여우있게 1000 정도로 정했다
     const defaultSize = 1000.0;

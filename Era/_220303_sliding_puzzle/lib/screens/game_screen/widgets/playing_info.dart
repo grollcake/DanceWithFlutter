@@ -35,7 +35,7 @@ class PlayingInfo extends StatelessWidget {
             ),
             StreamBuilder(
               stream: context.select((GameController controller) => controller.elapsedTimeStream),
-              initialData: '00:00',
+              initialData: context.select((GameController controller) => controller.elapsedTime),
               builder: (BuildContext context, AsyncSnapshot snapshot) => Text(
                 snapshot.data,
                 style: TextStyle(fontSize: 18, color: AppStyle.textColor, fontWeight: FontWeight.bold),
