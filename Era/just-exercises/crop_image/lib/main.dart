@@ -28,25 +28,25 @@ class CropImage extends StatelessWidget {
                 child: Image.asset('assets/images/sample.jpg', fit: BoxFit.cover),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_sliceCount, (index) {
-                final sliceFactor = 1 / _sliceCount;
-                final pointFactor = 1 / (_sliceCount - 1);
-                final xFactor = pointFactor * (index % _sliceCount);
-                return CropWidget(
-                  xFactor: xFactor,
-                  yFactor: 0,
-                  widthFactor: sliceFactor,
-                  heightFactor: sliceFactor,
-                  child: SizedBox(
-                    width: 200,
-                    height: 200,
-                    child: Image.asset('assets/images/sample.jpg', fit: BoxFit.cover),
-                  ),
-                );
-              }),
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: List.generate(_sliceCount, (index) {
+            //     final sliceFactor = 1 / _sliceCount;
+            //     final pointFactor = 1 / (_sliceCount - 1);
+            //     final xFactor = pointFactor * (index % _sliceCount);
+            //     return CropWidget(
+            //       xFactor: xFactor,
+            //       yFactor: 0,
+            //       widthFactor: sliceFactor,
+            //       heightFactor: sliceFactor,
+            //       child: SizedBox(
+            //         width: 200,
+            //         height: 200,
+            //         child: Image.asset('assets/images/sample.jpg', fit: BoxFit.cover),
+            //       ),
+            //     );
+            //   }),
+            // ),
             Center(
               child: SizedBox(
                 width: 200,
@@ -80,21 +80,24 @@ class CropImage extends StatelessWidget {
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: _sliceCount,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 1,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
                   ),
                   itemBuilder: (_, index) {
-                    return SlicingWidget(
-                      horizontalCount: _sliceCount,
-                      verticalCount: _sliceCount,
-                      horizontalSpacing: 30,
-                      verticalSpacing: 1,
-                      size: Size(200, 200),
-                      sliceNo: index,
-                      child: SizedBox(
-                        width: 200,
-                        height: 200,
-                        child: Image.asset('assets/images/sample.jpg', fit: BoxFit.cover),
+                    return Container(
+                      color: Colors.purple.shade200,
+                      child: SlicingWidget(
+                        horizontalCount: _sliceCount,
+                        verticalCount: _sliceCount,
+                        horizontalSpacing: 10,
+                        verticalSpacing: 10,
+                        size: Size(200, 200),
+                        sliceNo: index,
+                        child: SizedBox(
+                          width: 200,
+                          height: 200,
+                          child: Image.asset('assets/images/sample.jpg', fit: BoxFit.cover),
+                        ),
                       ),
                     );
                   },
@@ -159,13 +162,17 @@ class SlicingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double horizontalSpacingFactor = horizontalSpacing / size.width;
-    final double verticalSpacingFactor = verticalSpacing / size.height;
-    final double widthFactor = (1 - (horizontalSpacingFactor * (horizontalCount - 1))) / horizontalCount;
-    final double heightFactor = (1 - (verticalSpacingFactor * (verticalCount - 1))) / verticalCount;
+    final sliceWidth = (size.width - horizontalSpacing * (horizontalCount - 1)) / horizontalCount;
+    final sliceHeight = (size.height - verticalSpacing * (verticalCount - 1)) / verticalCount;
 
-    final xFactor = (1 / (horizontalCount - 1)) * (sliceNo % horizontalCount);
-    final yFactor = (1 / (verticalCount - 1)) * (sliceNo ~/ horizontalCount);
+    final widthFactor = sliceWidth / size.width;
+    final heightFactor = sliceHeight / size.height;
+
+    final xOffset = (sliceWidth + horizontalSpacing) * (sliceNo % horizontalCount);
+    final xFactor = xOffset / (size.width - sliceWidth);
+
+    final yOffset = (sliceHeight + verticalSpacing) * (sliceNo ~/ horizontalCount);
+    final yFactor = yOffset / (size.height - sliceHeight);
 
     return FittedBox(
       child: ClipRect(
