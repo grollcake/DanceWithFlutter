@@ -14,6 +14,15 @@ class CropImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> slicedWidgets = getSlicedWidget(
+      horizontalCount: _sliceCount,
+      verticalCount: _sliceCount,
+      horizontalSpacing: 5,
+      verticalSpacing: 5,
+      fullSize: Size(200, 200),
+      child: Image.asset('assets/images/sample.jpg', fit: BoxFit.cover),
+    );
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -26,6 +35,23 @@ class CropImage extends StatelessWidget {
                 width: 200,
                 height: 200,
                 child: Image.asset('assets/images/sample.jpg', fit: BoxFit.cover),
+              ),
+            ),
+            Center(
+              child: SizedBox(
+                width: 200,
+                child: GridView.builder(
+                  itemCount: _sliceCount * _sliceCount,
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: _sliceCount,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 5,
+                  ),
+                  itemBuilder: (_, index) {
+                    return slicedWidgets[index];
+                  },
+                ),
               ),
             ),
             // Row(
@@ -80,8 +106,8 @@ class CropImage extends StatelessWidget {
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: _sliceCount,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 2,
+                    crossAxisSpacing: 2,
                   ),
                   itemBuilder: (_, index) {
                     return Container(
@@ -139,6 +165,47 @@ class CropImage extends StatelessWidget {
       ),
     );
   }
+}
+
+List<Widget> getSlicedWidget(
+    {required int horizontalCount,
+    required int verticalCount,
+    required double horizontalSpacing,
+    required double verticalSpacing,
+    required Widget child,
+    required Size fullSize}) {
+  List<Widget> slicedWidgets = [];
+
+  final sliceWidth = (fullSize.width - horizontalSpacing * (horizontalCount - 1)) / horizontalCount;
+  final sliceHeight = (fullSize.height - verticalSpacing * (verticalCount - 1)) / verticalCount;
+
+  final widthFactor = sliceWidth / fullSize.width;
+  final heightFactor = sliceHeight / fullSize.height;
+
+  for (int sliceNo = 0; sliceNo < horizontalCount * verticalCount; sliceNo++) {
+    final xOffset = (sliceWidth + horizontalSpacing) * (sliceNo % horizontalCount);
+    final xFactor = xOffset / (fullSize.width - sliceWidth);
+
+    final yOffset = (sliceHeight + verticalSpacing) * (sliceNo ~/ horizontalCount);
+    final yFactor = yOffset / (fullSize.height - sliceHeight);
+
+    Widget sliced = FittedBox(
+      child: ClipRect(
+        child: Align(
+          alignment: FractionalOffset(xFactor, yFactor),
+          widthFactor: widthFactor,
+          heightFactor: heightFactor,
+          child: SizedBox(
+            width: fullSize.width,
+            height: fullSize.height,
+            child: child,
+          ),
+        ),
+      ),
+    );
+    slicedWidgets.add(sliced);
+  }
+  return slicedWidgets;
 }
 
 class SlicingWidget extends StatelessWidget {
