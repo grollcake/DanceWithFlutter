@@ -57,6 +57,7 @@ class _GameScreenState extends State<GameScreen> {
           children: [
             TopSection(),
             Container(
+              color: Colors.purple.shade200,
               width: contentsSize.width,
               height: contentsSize.height,
               alignment: Alignment.center,
@@ -68,11 +69,11 @@ class _GameScreenState extends State<GameScreen> {
                     child: UpperSection(),
                   ),
                   Flexible(
-                    flex: 2,
+                    flex: 3,
                     child: PuzzleSection(),
                   ),
                   Flexible(
-                    flex: 1,
+                    flex: 2,
                     child: BottomSection(),
                   ),
                 ],

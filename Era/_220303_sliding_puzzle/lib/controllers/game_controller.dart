@@ -10,7 +10,8 @@ class GameController with ChangeNotifier {
   int _moveCount = 0;
   List<int> _piecesPositions = [];
   List<Widget> _piecesContents = [];
-  GameMode _gameMode = GameMode.image;
+  GameMode _gameMode = GameMode.number;
+  String _gameImage = 'assets/images/image1.png';
   GameStatus _gameStatus = GameStatus.ready;
   Stopwatch? _stopwatch;
 
@@ -21,6 +22,7 @@ class GameController with ChangeNotifier {
   GameController() {
     _init();
   }
+
 
   /// 테스트 전용 코드
   /// todo delete me
@@ -40,6 +42,8 @@ class GameController with ChangeNotifier {
 
   GameMode get gameMode => _gameMode;
 
+  String get gameImage => _gameImage;
+
   GameStatus get gameStatus => _gameStatus;
 
   String get elapsedTime => _elapsedTime;
@@ -52,6 +56,13 @@ class GameController with ChangeNotifier {
     _prepareContents();
     notifyListeners();
   }
+
+  set gameImage(String gameImage) {
+    _gameImage = gameImage;
+    _prepareContents();
+    notifyListeners();
+  }
+
 
   /// 게임리셋
   void resetGame() async {
@@ -235,7 +246,7 @@ class GameController with ChangeNotifier {
         horizontalSpacing: kPuzzlePieceSpace,
         verticalSpacing: kPuzzlePieceSpace,
         // fullSize: Size(291.69960474308306, 291.69960474308306), // todo Fixme 여기를 고처야 해
-        child: Image.asset('assets/images/sample.jpg', fit: BoxFit.cover),
+        child: Image.asset(gameImage, fit: BoxFit.cover),
       );
     }
   }
