@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sliding_puzzle/controllers/game_controller.dart';
-import 'package:sliding_puzzle/models/enums.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/bottom_section.dart';
-import 'package:sliding_puzzle/screens/game_screen/sections/completed_bottom_section.dart';
-import 'package:sliding_puzzle/screens/game_screen/sections/playing_bottom_section.dart';
-import 'package:sliding_puzzle/screens/game_screen/sections/ready_bottom_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/puzzle_section.dart';
-import 'package:sliding_puzzle/screens/game_screen/sections/starting_bottom_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/top_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/upper_section.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
@@ -22,7 +15,7 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   /// 가로가 더 긴 화면에서도 하단 컨텐츠가 잘리지 않도록 크기를 계산한다.
   Size _calcContentsSize(BuildContext context) {
-    const double aspectRatio = 1 / 2.3; // 가로/세로 비율
+    const double aspectRatio = 1 / 2.5; // 가로/세로 비율
     const double minHorizontalPadding = 40.0;
     const double minVerticalPadding = 40.0;
     final Size screenSize = MediaQuery.of(context).size;
@@ -57,7 +50,7 @@ class _GameScreenState extends State<GameScreen> {
           children: [
             TopSection(),
             Container(
-              color: Colors.purple.shade200,
+              // color: Colors.purple.shade200,
               width: contentsSize.width,
               height: contentsSize.height,
               alignment: Alignment.center,
@@ -68,10 +61,7 @@ class _GameScreenState extends State<GameScreen> {
                     flex: 1,
                     child: UpperSection(),
                   ),
-                  Flexible(
-                    flex: 3,
-                    child: PuzzleSection(),
-                  ),
+                  PuzzleSection(),
                   Flexible(
                     flex: 2,
                     child: BottomSection(),

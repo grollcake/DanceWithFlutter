@@ -34,8 +34,7 @@ class _StartingCountdownState extends State<StartingCountdown> {
   Widget build(BuildContext context) {
     return Center(
       child: DefaultTextStyle(
-        style: TextStyle(
-            fontSize: 160, color: AppStyle.primaryColor, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+        style: TextStyle(fontSize: 160, color: Colors.white, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
         child: AnimatedTextKit(
           animatedTexts: [
             ScaleAnimatedText('2', duration: _animationDuration),

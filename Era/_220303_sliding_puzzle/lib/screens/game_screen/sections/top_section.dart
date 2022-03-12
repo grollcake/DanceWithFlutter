@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_puzzle/controllers/game_controller.dart';
+import 'package:sliding_puzzle/models/enums.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
 
 class TopSection extends StatelessWidget {
@@ -13,7 +14,10 @@ class TopSection extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: IconButton(
         onPressed: () {
-          context.read<GameController>().testShuffle();
+          final gameController = context.read<GameController>();
+          if (gameController.gameStatus == GameStatus.playing) {
+            gameController.testShuffle();
+          }
         },
         icon: Icon(Icons.mode_night, size: 26, color: AppStyle.inactiveTextColor),
       ),

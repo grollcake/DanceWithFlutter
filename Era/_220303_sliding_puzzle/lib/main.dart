@@ -15,6 +15,7 @@ import 'package:sliding_puzzle/sliding_puzzle_app.dart';
 // Done 상단에 lottie 애니메이션 추가
 // Done 이미지로 조각만들기
 // Done (오류) completed 일 때 시간이 초기화됨
+// Done 기본 기능 완료
 // todo 컬러 테마 재설정
 // todo 파워포인트로 기획서 만들기
 // todo   - 슬라이딩 규칙에 대한 자세한 설명 필요

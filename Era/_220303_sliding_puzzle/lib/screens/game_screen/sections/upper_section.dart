@@ -32,7 +32,10 @@ class UpperSection extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(bottom: 20),
         // color: Colors.blueGrey,
-        child: contents,
+        child: AnimatedSwitcher(
+          duration: Duration(milliseconds: 200),
+          child: contents,
+        ),
       ),
     );
   }
@@ -50,20 +53,13 @@ class UpperSection extends StatelessWidget {
   }
 
   Widget buildStartingContents() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          'Get ready',
-          style: TextStyle(fontSize: 20, color: AppStyle.textColor, fontWeight: FontWeight.bold),
-        ),
-      ],
-    );
+    return SizedBox(); // 시작하는 동안에는 아무것도 안 보여주는게 제일 좋겠다.
   }
 
   Widget buildPlayingContents(BuildContext context) {
     return Container(
-      child: Lottie.asset('assets/animations/girl-tapping-phone.json'),
+      // child: Lottie.asset('assets/animations/girl-tapping-phone.json'),
+      child: Lottie.asset('assets/animations/lurking-cat.json'),
     );
   }
 

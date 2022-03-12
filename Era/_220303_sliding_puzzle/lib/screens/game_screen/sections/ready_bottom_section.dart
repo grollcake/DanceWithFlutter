@@ -90,7 +90,7 @@ class ReadyBottomSection extends StatelessWidget {
               gameController.gameImage = image;
             },
             child: Opacity(
-              opacity: image == gameController.gameImage ? 1.0 : 0.5,
+              opacity: image == gameController.gameImage ? 1.0 : 0.3,
               child: AspectRatio(
                 aspectRatio: 1,
                 child: LayoutBuilder(
