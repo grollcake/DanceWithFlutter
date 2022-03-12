@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sliding_puzzle/sliding_puzzle_app.dart';
 
 // Done elapsedTimer stream 초기 값을 00:00 으로 설정하기
@@ -16,6 +17,9 @@ import 'package:sliding_puzzle/sliding_puzzle_app.dart';
 // Done 이미지로 조각만들기
 // Done (오류) completed 일 때 시간이 초기화됨
 // Done 기본 기능 완료
+// Done 가로 회전이 안되게 조치
+// Done 디바이스 높이가 너무 낮은 경우 오류 아이콘 표시
+// todo 사운드 추가
 // todo 컬러 테마 재설정
 // todo 파워포인트로 기획서 만들기
 // todo   - 슬라이딩 규칙에 대한 자세한 설명 필요
@@ -33,5 +37,9 @@ import 'package:sliding_puzzle/sliding_puzzle_app.dart';
 // todo (장기) riverpod로 교체
 
 void main() {
+  // 디바이스 세로 모드만 가능토록 지정
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  // 앱 시작
   runApp(SlidingPuzzleApp());
 }

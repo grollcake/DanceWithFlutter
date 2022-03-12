@@ -32,6 +32,31 @@ class _StartingCountdownState extends State<StartingCountdown> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+        builder: (_, constraints) => Center(
+              child: SizedBox(
+                width: constraints.maxWidth * .7,
+                height: constraints.maxHeight * .7,
+                child: FittedBox(
+                  child: DefaultTextStyle(
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+                    child: AnimatedTextKit(
+                      animatedTexts: [
+                        ScaleAnimatedText('2', duration: _animationDuration),
+                        ScaleAnimatedText('1', duration: _animationDuration),
+                        ScaleAnimatedText('Go', duration: _animationDuration),
+                      ],
+                      pause: Duration.zero,
+                      isRepeatingAnimation: false,
+                      onFinished: () {
+                        final gameController = context.read<GameController>();
+                        gameController.startGame();
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ));
     return Center(
       child: DefaultTextStyle(
         style: TextStyle(fontSize: 160, color: Colors.white, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),

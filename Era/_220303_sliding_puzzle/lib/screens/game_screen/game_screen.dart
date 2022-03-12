@@ -3,6 +3,7 @@ import 'package:sliding_puzzle/screens/game_screen/sections/bottom_section.dart'
 import 'package:sliding_puzzle/screens/game_screen/sections/puzzle_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/top_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/upper_section.dart';
+import 'package:sliding_puzzle/screens/not_supporting/not_supporting_screen.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
 
 class GameScreen extends StatefulWidget {
@@ -35,8 +36,6 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('GameScreen() rebuilded');
-
     Size contentsSize = _calcContentsSize(context);
 
     return Scaffold(
@@ -54,20 +53,22 @@ class _GameScreenState extends State<GameScreen> {
               width: contentsSize.width,
               height: contentsSize.height,
               alignment: Alignment.center,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: UpperSection(),
-                  ),
-                  PuzzleSection(),
-                  Flexible(
-                    flex: 2,
-                    child: BottomSection(),
-                  ),
-                ],
-              ),
+              child: contentsSize.height > 450
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: UpperSection(),
+                        ),
+                        PuzzleSection(),
+                        Flexible(
+                          flex: 2,
+                          child: BottomSection(),
+                        ),
+                      ],
+                    )
+                  : NotSupportingScreen(),
             ),
           ],
         ),
