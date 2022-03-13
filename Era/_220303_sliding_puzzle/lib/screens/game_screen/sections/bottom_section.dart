@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sliding_puzzle/controllers/game_controller.dart';
+import 'package:sliding_puzzle/managers/game_controller.dart';
 import 'package:sliding_puzzle/models/enums.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/completed_bottom_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/playing_bottom_section.dart';

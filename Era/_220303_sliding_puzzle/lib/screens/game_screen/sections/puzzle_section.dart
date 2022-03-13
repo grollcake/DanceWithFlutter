@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sliding_puzzle/controllers/game_controller.dart';
+import 'package:sliding_puzzle/managers/game_controller.dart';
 import 'package:sliding_puzzle/models/enums.dart';
 import 'package:sliding_puzzle/screens/game_screen/widgets/starting_countdown.dart';
 import 'package:sliding_puzzle/screens/game_screen/widgets/puzzle_piece.dart';
@@ -26,9 +26,9 @@ class _PuzzleSectionState extends State<PuzzleSection> {
       aspectRatio: 1,
       child: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppStyle.bgColor,
-        ),
+        // decoration: BoxDecoration(
+        //   color: AppStyle.bgColor,
+        // ),
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             final gameController = context.watch<GameController>();
@@ -67,8 +67,5 @@ class _PuzzleSectionState extends State<PuzzleSection> {
     final gameController = context.read<GameController>();
     int oldPosition = gameController.getPiecePosition(pieceId);
     int? newPosition = gameController.movePiece(pieceId);
-    // if (newPosition != null) {
-    //   debugPrint('PieceMoved: $oldPosition => $newPosition'); // fixme 여기는 삭제해야 돼
-    // }
   }
 }

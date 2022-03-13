@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sliding_puzzle/controllers/game_controller.dart';
+import 'package:sliding_puzzle/managers/game_controller.dart';
 import 'package:sliding_puzzle/models/enums.dart';
 import 'package:sliding_puzzle/screens/game_screen/widgets/playing_info.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
+import 'package:sliding_puzzle/utils/utils.dart';
 
 class PlayingBottomSection extends StatelessWidget {
   const PlayingBottomSection({Key? key}) : super(key: key);
@@ -32,12 +33,9 @@ class PlayingBottomSection extends StatelessWidget {
       aspectRatio: 1,
       child: LayoutBuilder(
         builder: (_, constraints) {
-          return Container(
-            margin: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(constraints.maxHeight * .1),
-              image: DecorationImage(image: AssetImage(imagePath)),
-            ),
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(constraints.maxWidth * .1),
+            child: Image.asset(getPreviewImagePath(imagePath), fit: BoxFit.fill),
           );
         },
       ),

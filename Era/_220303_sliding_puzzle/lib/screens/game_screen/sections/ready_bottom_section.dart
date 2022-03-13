@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_puzzle/common_widgets/primary_button.dart';
-import 'package:sliding_puzzle/controllers/game_controller.dart';
+import 'package:sliding_puzzle/managers/game_controller.dart';
+import 'package:sliding_puzzle/managers/theme_manager.dart';
 import 'package:sliding_puzzle/models/enums.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
+import 'package:sliding_puzzle/utils/utils.dart';
 
 class ReadyBottomSection extends StatelessWidget {
   ReadyBottomSection({Key? key}) : super(key: key);
@@ -26,13 +28,15 @@ class ReadyBottomSection extends StatelessWidget {
   }
 
   Widget buildDimensionSelection(BuildContext context) {
+    final theme = Theme.of(context);
     final gameController = context.watch<GameController>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(_gameDimensions.length, (index) {
         final gameDimension = _gameDimensions[index];
-        final textColor =
-            gameDimension == gameController.puzzleDimension ? AppStyle.textColor : AppStyle.inactiveTextColor;
+        final textColor = gameDimension == gameController.puzzleDimension
+            ? theme.textTheme.bodyText1?.color
+            : theme.textTheme.bodyText2?.color;
         final weight = gameDimension == gameController.puzzleDimension ? FontWeight.w700 : FontWeight.w400;
 
         return GestureDetector(
@@ -99,7 +103,7 @@ class ReadyBottomSection extends StatelessWidget {
                       margin: EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(constraints.maxHeight * .1),
-                        image: DecorationImage(image: AssetImage(image)),
+                        image: DecorationImage(image: AssetImage(getPreviewImagePath(image))),
                       ),
                     );
                   },

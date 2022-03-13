@@ -23,7 +23,6 @@ class GameController with ChangeNotifier {
     _init();
   }
 
-
   /// 테스트 전용 코드
   /// todo delete me
   void testShuffle() {
@@ -62,7 +61,6 @@ class GameController with ChangeNotifier {
     _prepareContents();
     notifyListeners();
   }
-
 
   /// 게임리셋
   void resetGame() async {
@@ -232,11 +230,20 @@ class GameController with ChangeNotifier {
   /// 조각 라벨 또는 이미지 준비
   void _prepareContents() {
     if (_gameMode == GameMode.number) {
+      double fontSize = 0;
+      if (_puzzleDimension == 3) {
+        fontSize = 24;
+      } else if (_puzzleDimension == 4) {
+        fontSize = 18;
+      } else {
+        fontSize = 16;
+      }
+
       _piecesContents = List.generate(
         _piecesCount,
         (index) => Text(
           '${index + 1}',
-          style: TextStyle(fontSize: 20, color: AppStyle.textColor, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: fontSize, color: AppStyle.textColor, fontWeight: FontWeight.bold),
         ),
       );
     } else {
@@ -245,7 +252,6 @@ class GameController with ChangeNotifier {
         verticalCount: _puzzleDimension,
         horizontalSpacing: kPuzzlePieceSpace,
         verticalSpacing: kPuzzlePieceSpace,
-        // fullSize: Size(291.69960474308306, 291.69960474308306), // todo Fixme 여기를 고처야 해
         child: Image.asset(gameImage, fit: BoxFit.cover),
       );
     }
