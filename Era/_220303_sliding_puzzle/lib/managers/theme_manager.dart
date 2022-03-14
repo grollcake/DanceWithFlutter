@@ -1,26 +1,45 @@
 import 'package:flutter/material.dart';
 
 class ThemeManager with ChangeNotifier {
+  static int _themeId = 0; // 0-light, 1-dark
+
+  /// 기본 컬러셋. 0번은 밝은거, 1번은 어두운거
+  static const List<Color> _primaryColors = [Colors.purple, Colors.purple];
+  static const List<Color> _secondaryColors = [Color(0xFF6ECFC8), Color(0xFF6ECFC8)];
+  static const List<Color> _bgColors = [Color(0xFFF9F9F9), Color(0xFF292D3E)];
+  static const List<Color> _accentBgColors = [Colors.green, Colors.green];
+  static const List<Color> _textColors = [Colors.black54, Colors.white];
+  static const List<Color> _inactiveColors = [Colors.black26, Colors.white30];
+  
+  // 현재 컬러셋
+  static Color get primaryColor => _primaryColors[_themeId];
+  static Color get secondaryColor => _secondaryColors[_themeId];
+  static Color get bgColor => _bgColors[_themeId];
+  static Color get accentBgColor => _accentBgColors[_themeId];
+  static Color get textColor => _textColors[_themeId];
+  static Color get inactiveColor => _inactiveColors[_themeId];
+
+  ///
   static ThemeData lightTheme = ThemeData.light().copyWith(
-    backgroundColor: Color(0xFFF9F9F9),
-    scaffoldBackgroundColor: Color(0xFFF9F9F9),
+    backgroundColor: _bgColors[0],
+    scaffoldBackgroundColor: _bgColors[0],
     iconTheme: IconThemeData(
-      color: Colors.black54,
+      color: _inactiveColors[0],
     ),
     textTheme: TextTheme(
-      bodyText1: TextStyle(color: Colors.black54),
-      bodyText2: TextStyle(color: Colors.black26),
+      bodyText1: TextStyle(color: _textColors[0]),
+      bodyText2: TextStyle(color: _textColors[0]),
     ),
   );
   static ThemeData darkTheme = ThemeData.dark().copyWith(
-    backgroundColor: Color(0xFF292D3E),
-    scaffoldBackgroundColor: Color(0xFF292D3E),
+    backgroundColor: _bgColors[1],
+    scaffoldBackgroundColor: _bgColors[1],
     iconTheme: IconThemeData(
-      color: Colors.white30,
+      color: _inactiveColors[1],
     ),
     textTheme: TextTheme(
-      bodyText1: TextStyle(color: Colors.white),
-      bodyText2: TextStyle(color: Colors.white10),
+      bodyText1: TextStyle(color: _textColors[1]),
+      bodyText2: TextStyle(color: _textColors[1]),
     ),
   );
 
@@ -30,8 +49,10 @@ class ThemeManager with ChangeNotifier {
 
   void toggleThemeMode() {
     if (_themeMode == ThemeMode.light) {
+      _themeId = 1;
       _themeMode = ThemeMode.dark;
     } else {
+      _themeId = 0;
       _themeMode = ThemeMode.light;
     }
     notifyListeners();

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:sliding_puzzle/managers/theme_manager.dart';
 import 'package:sliding_puzzle/models/enums.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
 import 'package:sliding_puzzle/settings/constants.dart';
@@ -87,7 +88,7 @@ class GameController with ChangeNotifier {
     notifyListeners();
   }
 
-  /// 게임 레벨 변경
+  /// 게임 난이도 변경
   void setPuzzleDimension(int dimension) {
     _puzzleDimension = dimension;
     _piecesCount = _puzzleDimension * _puzzleDimension - 1;
@@ -243,7 +244,7 @@ class GameController with ChangeNotifier {
         _piecesCount,
         (index) => Text(
           '${index + 1}',
-          style: TextStyle(fontSize: fontSize, color: AppStyle.textColor, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: fontSize, color: ThemeManager.textColor, fontWeight: FontWeight.bold),
         ),
       );
     } else {

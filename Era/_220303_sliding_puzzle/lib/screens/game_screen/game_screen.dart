@@ -39,7 +39,6 @@ class _GameScreenState extends State<GameScreen> {
     Size contentsSize = _calcContentsSize(context);
 
     return Scaffold(
-      // backgroundColor: AppStyle.bgColor,
       body: Container(
         width: double.infinity,
         // 상단 상태바 높이만큼 내리고 시작한다.

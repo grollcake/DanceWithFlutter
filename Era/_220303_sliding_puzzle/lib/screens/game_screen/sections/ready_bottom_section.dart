@@ -4,7 +4,6 @@ import 'package:sliding_puzzle/common_widgets/primary_button.dart';
 import 'package:sliding_puzzle/managers/game_controller.dart';
 import 'package:sliding_puzzle/managers/theme_manager.dart';
 import 'package:sliding_puzzle/models/enums.dart';
-import 'package:sliding_puzzle/settings/app_style.dart';
 import 'package:sliding_puzzle/utils/utils.dart';
 
 class ReadyBottomSection extends StatelessWidget {
@@ -35,8 +34,8 @@ class ReadyBottomSection extends StatelessWidget {
       children: List.generate(_gameDimensions.length, (index) {
         final gameDimension = _gameDimensions[index];
         final textColor = gameDimension == gameController.puzzleDimension
-            ? theme.textTheme.bodyText1?.color
-            : theme.textTheme.bodyText2?.color;
+            ? ThemeManager.textColor
+            : ThemeManager.inactiveColor;
         final weight = gameDimension == gameController.puzzleDimension ? FontWeight.w700 : FontWeight.w400;
 
         return GestureDetector(
@@ -61,7 +60,7 @@ class ReadyBottomSection extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(_gameModes.length, (index) {
         final gameMode = GameMode.values[index];
-        final textColor = gameMode == gameController.gameMode ? AppStyle.textColor : AppStyle.inactiveTextColor;
+        final textColor = gameMode == gameController.gameMode ? ThemeManager.textColor : ThemeManager.inactiveColor;
         final weight = gameMode == gameController.gameMode ? FontWeight.w700 : FontWeight.w400;
 
         return GestureDetector(

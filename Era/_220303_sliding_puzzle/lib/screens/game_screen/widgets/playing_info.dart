@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_puzzle/managers/game_controller.dart';
+import 'package:sliding_puzzle/managers/theme_manager.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
 
 class PlayingInfo extends StatelessWidget {
@@ -19,11 +20,11 @@ class PlayingInfo extends StatelessWidget {
           children: [
             Text(
               'Moves   ',
-              style: TextStyle(fontSize: 17, color: AppStyle.inactiveTextColor),
+              style: TextStyle(fontSize: 17, color: ThemeManager.inactiveColor),
             ),
             Text(
               '$moves',
-              style: TextStyle(fontSize: 18, color: AppStyle.textColor, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, color: ThemeManager.textColor, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -31,14 +32,14 @@ class PlayingInfo extends StatelessWidget {
           children: [
             Text(
               'Time   ',
-              style: TextStyle(fontSize: 17, color: AppStyle.inactiveTextColor),
+              style: TextStyle(fontSize: 17, color: ThemeManager.inactiveColor),
             ),
             StreamBuilder(
               stream: context.select((GameController controller) => controller.elapsedTimeStream),
               initialData: context.select((GameController controller) => controller.elapsedTime),
               builder: (BuildContext context, AsyncSnapshot snapshot) => Text(
                 snapshot.data,
-                style: TextStyle(fontSize: 18, color: AppStyle.textColor, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, color: ThemeManager.textColor, fontWeight: FontWeight.bold),
               ),
             ),
           ],

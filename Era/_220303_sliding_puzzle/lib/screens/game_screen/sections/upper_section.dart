@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_puzzle/managers/game_controller.dart';
+import 'package:sliding_puzzle/managers/theme_manager.dart';
 import 'package:sliding_puzzle/models/enums.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
 
@@ -67,7 +68,7 @@ class UpperSection extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Completed!', style: TextStyle(fontSize: 20, color: AppStyle.textColor, fontWeight: FontWeight.bold)),
+        Text('Completed!', style: TextStyle(fontSize: 20, color: ThemeManager.textColor, fontWeight: FontWeight.bold)),
         Expanded(
           child: Lottie.asset('assets/animations/clapping.json'),
         ),

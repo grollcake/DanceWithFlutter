@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sliding_puzzle/managers/theme_manager.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
 
 class PrimaryButton extends StatelessWidget {
@@ -17,13 +18,13 @@ class PrimaryButton extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 14,
-            color: AppStyle.textColor,
+            color: Colors.white,
             letterSpacing: 2.0,
           ),
         ),
       ),
       style: TextButton.styleFrom(
-        backgroundColor: AppStyle.primaryColor,
+        backgroundColor: ThemeManager.primaryColor,
         minimumSize: Size(100, 46),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),

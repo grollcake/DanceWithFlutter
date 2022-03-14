@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_puzzle/managers/game_controller.dart';
+import 'package:sliding_puzzle/managers/theme_manager.dart';
 import 'package:sliding_puzzle/models/enums.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
 import 'package:sliding_puzzle/settings/constants.dart';
@@ -42,7 +43,7 @@ class PuzzlePiece extends StatelessWidget {
             width: width,
             height: height,
             decoration: BoxDecoration(
-              color: AppStyle.secondaryColor,
+              color: ThemeManager.secondaryColor,
               borderRadius: BorderRadius.circular(width * .1),
             ),
             child: Center(child: content),

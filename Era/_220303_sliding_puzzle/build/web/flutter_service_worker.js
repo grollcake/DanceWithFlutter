@@ -3,13 +3,16 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "54b1144bcb692e453e2d38e204028ecf",
+  "assets/AssetManifest.json": "c933926b1a983a7e214d3321ea04212b",
 "assets/assets/animations/clapping.json": "44fefe0024d864a75cc4878fe5e88206",
 "assets/assets/animations/girl-tapping-phone.json": "0ebfbc9f4a899197e2520d3a9b4ef84a",
 "assets/assets/animations/landscape-to-portrait-view.json": "ad463a98c29c9e6752c87e69e0125751",
 "assets/assets/animations/lurking-cat.json": "d0c16c6b3980c5d61aac0b21d4b74c0f",
+"assets/assets/images/image1-preview.png": "f618a30529441230ea66baf82430a99b",
 "assets/assets/images/image1.png": "760b526e4c5fa5d0b6a589f9e4f98141",
+"assets/assets/images/image2-preview.png": "584b36b2e409846f077cf659072c8896",
 "assets/assets/images/image2.png": "afa6bb47c6896973bf36c5a65b89c3d5",
+"assets/assets/images/image3-preview.png": "1be876ba619779b4c2e19094e4f63ce7",
 "assets/assets/images/image3.png": "3bc0ffe6a3caab53898f3bfb5a6b016b",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81",
@@ -24,9 +27,9 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "beab5d5854846b34829d2428fa1abad4",
-"/": "beab5d5854846b34829d2428fa1abad4",
-"main.dart.js": "7ca25506d565b1770fa24cc57921dcf5",
+"index.html": "9ed43576f1aa20733ea859f3c918e982",
+"/": "9ed43576f1aa20733ea859f3c918e982",
+"main.dart.js": "008333e90460909009531986c967e16f",
 "manifest.json": "aa0306c6618ce0cc88d4b5fca046a7b0",
 "version.json": "c54d1f62d68ad3e2a5a6ef996db66b9c"
 };

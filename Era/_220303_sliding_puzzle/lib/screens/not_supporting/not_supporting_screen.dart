@@ -10,7 +10,6 @@ class NotSupportingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: AppStyle.bgColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

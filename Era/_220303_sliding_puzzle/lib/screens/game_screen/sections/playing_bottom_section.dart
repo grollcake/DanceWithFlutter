@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_puzzle/managers/game_controller.dart';
+import 'package:sliding_puzzle/managers/theme_manager.dart';
 import 'package:sliding_puzzle/models/enums.dart';
 import 'package:sliding_puzzle/screens/game_screen/widgets/playing_info.dart';
 import 'package:sliding_puzzle/settings/app_style.dart';
@@ -48,14 +49,14 @@ class PlayingBottomSection extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text('Got stuck? ', style: TextStyle(fontSize: 14, color: AppStyle.inactiveTextColor)),
+          Text('Got stuck? ', style: TextStyle(fontSize: 14, color: ThemeManager.inactiveColor)),
           TextButton(
             onPressed: () {
               context.read<GameController>().resetGame();
             },
             child: Text(
               'Restart',
-              style: TextStyle(fontSize: 14, color: AppStyle.textColor, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14, color: ThemeManager.textColor, fontWeight: FontWeight.bold),
             ),
           ),
         ],
