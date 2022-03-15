@@ -21,8 +21,8 @@ import 'package:sliding_puzzle/sliding_puzzle_app.dart';
 // Done 디바이스 높이가 너무 낮은 경우 오류 아이콘 표시
 // Done 5 x 5 일때 글자크기를 약간 작게
 // Done 테마 선택 기능
-// todo 더 잘 어울리는 컬러 테마 적용
-// todo 이미지 로딩 속도를 올리기 위해 preview 이미지 사용
+// Done 이미지 로딩 속도를 올리기 위해 preview 이미지 사용
+// Done 더 잘 어울리는 컬러 테마 적용
 // todo 사운드 추가
 // todo 파워포인트로 기획서 만들기
 // todo   - 슬라이딩 규칙에 대한 자세한 설명 필요

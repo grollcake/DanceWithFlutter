@@ -244,7 +244,7 @@ class GameController with ChangeNotifier {
         _piecesCount,
         (index) => Text(
           '${index + 1}',
-          style: TextStyle(fontSize: fontSize, color: ThemeManager.textColor, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: fontSize, color: Colors.white, fontWeight: FontWeight.bold),
         ),
       );
     } else {
