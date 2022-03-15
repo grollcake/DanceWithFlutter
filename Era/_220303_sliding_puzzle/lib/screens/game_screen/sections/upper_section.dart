@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:sliding_puzzle/managers/game_controller.dart';
 import 'package:sliding_puzzle/managers/theme_manager.dart';
 import 'package:sliding_puzzle/models/enums.dart';
-import 'package:sliding_puzzle/settings/app_style.dart';
 
 class UpperSection extends StatelessWidget {
   const UpperSection({Key? key}) : super(key: key);

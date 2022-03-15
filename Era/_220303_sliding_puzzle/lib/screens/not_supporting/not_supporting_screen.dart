@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sliding_puzzle/managers/theme_manager.dart';
-import 'package:sliding_puzzle/screens/game_screen/sections/top_section.dart';
-import 'package:sliding_puzzle/settings/app_style.dart';
 
 class NotSupportingScreen extends StatelessWidget {
   const NotSupportingScreen({Key? key}) : super(key: key);

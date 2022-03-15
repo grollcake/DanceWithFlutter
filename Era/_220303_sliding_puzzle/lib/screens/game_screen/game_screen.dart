@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/bottom_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/puzzle_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/top_section.dart';
 import 'package:sliding_puzzle/screens/game_screen/sections/upper_section.dart';
 import 'package:sliding_puzzle/screens/not_supporting/not_supporting_screen.dart';
-import 'package:sliding_puzzle/settings/app_style.dart';
+
+ScreenshotController screenshotController = ScreenshotController();
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -39,37 +41,40 @@ class _GameScreenState extends State<GameScreen> {
     Size contentsSize = _calcContentsSize(context);
 
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        // 상단 상태바 높이만큼 내리고 시작한다.
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            TopSection(),
-            Container(
-              // color: Colors.purple.shade200,
-              width: contentsSize.width,
-              height: contentsSize.height,
-              alignment: Alignment.center,
-              child: contentsSize.height > 450
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: UpperSection(),
-                        ),
-                        PuzzleSection(),
-                        Flexible(
-                          flex: 2,
-                          child: BottomSection(),
-                        ),
-                      ],
-                    )
-                  : NotSupportingScreen(),
-            ),
-          ],
+      body: Screenshot(
+        controller: screenshotController,
+        child: Container(
+          width: double.infinity,
+          // 상단 상태바 높이만큼 내리고 시작한다.
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              TopSection(),
+              Container(
+                // color: Colors.purple.shade200,
+                width: contentsSize.width,
+                height: contentsSize.height,
+                alignment: Alignment.center,
+                child: contentsSize.height > 450
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: UpperSection(),
+                          ),
+                          PuzzleSection(),
+                          Flexible(
+                            flex: 2,
+                            child: BottomSection(),
+                          ),
+                        ],
+                      )
+                    : NotSupportingScreen(),
+              ),
+            ],
+          ),
         ),
       ),
     );

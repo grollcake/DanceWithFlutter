@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:sliding_puzzle/managers/game_controller.dart';
 import 'package:sliding_puzzle/managers/theme_manager.dart';
 import 'package:sliding_puzzle/models/enums.dart';
-import 'package:sliding_puzzle/settings/app_style.dart';
 import 'package:sliding_puzzle/settings/constants.dart';
 
 class PuzzlePiece extends StatelessWidget {

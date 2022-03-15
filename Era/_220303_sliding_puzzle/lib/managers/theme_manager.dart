@@ -4,8 +4,8 @@ class ThemeManager with ChangeNotifier {
   static int _themeId = 0; // 0-light, 1-dark
 
   /// 기본 컬러셋. 0번은 밝은거, 1번은 어두운거
-  static const List<Color> _primaryColors = [Colors.indigo, Colors.deepOrange];
-  static const List<Color> _secondaryColors = [Color(0xFF6ECFC8), Color(0xFF6ECFC8)];
+  static const List<Color> _primaryColors = [Color(0xFF5C8DF7), Color(0xFF5C8DF7)];
+  static const List<Color> _secondaryColors = [Color(0xFF188581), Color(0xFF00C6C0)];
   static const List<Color> _bgColors = [Color(0xFFF9F9F9), Color(0xFF292D3E)];
   static const List<Color> _accentBgColors = [Colors.green, Colors.green];
   static const List<Color> _textColors = [Colors.black54, Colors.white];

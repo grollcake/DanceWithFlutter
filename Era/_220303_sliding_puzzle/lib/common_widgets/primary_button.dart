@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_puzzle/managers/theme_manager.dart';
-import 'package:sliding_puzzle/settings/app_style.dart';
 
 class PrimaryButton extends StatelessWidget {
   PrimaryButton({Key? key, required this.label, required this.onPressed}) : super(key: key);
