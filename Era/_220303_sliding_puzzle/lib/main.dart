@@ -26,8 +26,11 @@ import 'package:sliding_puzzle/sliding_puzzle_app.dart';
 // Done 더 잘 어울리는 컬러 테마 적용
 // Done (Epic) 게임 종료 후 share 기능 구현
 // Done 중도 포기 시 경고화면 표시
+// todo 게임방법 소개 영상 링크: https://youtu.be/wD9sn5m5Evs?t=25
 // todo (오류) 화면캡쳐 시 글자 색상 테마가 잘 적용되지 않음
 // todo 사운드 추가
+// todo 게임방법 소개 (유튜브 링크)
+// todo 게임 중 완성률을 계산하여 그래프로 표시 (고양이 대체)
 // todo 파워포인트로 기획서 만들기
 // todo   - 슬라이딩 규칙에 대한 자세한 설명 필요
 // Done (Epic) 게임 레이아웃 다시 잡기
