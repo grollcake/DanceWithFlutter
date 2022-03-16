@@ -3,7 +3,8 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "c933926b1a983a7e214d3321ea04212b",
+  "assets/AssetManifest.json": "b3711399172bb2d28a0a62bc89bb3995",
+"assets/assets/animations/canceled-state-illustration.json": "a4be2f9d3d66b0d0b7fcde0cef3ec06a",
 "assets/assets/animations/clapping.json": "44fefe0024d864a75cc4878fe5e88206",
 "assets/assets/animations/girl-tapping-phone.json": "0ebfbc9f4a899197e2520d3a9b4ef84a",
 "assets/assets/animations/landscape-to-portrait-view.json": "ad463a98c29c9e6752c87e69e0125751",
@@ -27,9 +28,9 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "0806404392f531650ca30adb29b3ccd9",
-"/": "0806404392f531650ca30adb29b3ccd9",
-"main.dart.js": "7ac03b590bccc437a957aba41233d27e",
+"index.html": "5c97abe0ed7fb508d5dd926e44acd2dc",
+"/": "5c97abe0ed7fb508d5dd926e44acd2dc",
+"main.dart.js": "dd03fda6886f807a006729030588647b",
 "manifest.json": "aa0306c6618ce0cc88d4b5fca046a7b0",
 "version.json": "c54d1f62d68ad3e2a5a6ef996db66b9c"
 };

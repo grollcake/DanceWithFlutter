@@ -23,7 +23,7 @@ class CompletedBottomSection extends StatelessWidget {
                 label: 'SHARE',
                 onPressed: () async {
                   // 화면 캡처
-                  final screenshot = await screenshotController.capture();
+                  final screenshot = await screenshotController.capture(delay: Duration(milliseconds: 10));
                   debugPrint('captured');
                   // 공유하기
                   if (screenshot != null) {

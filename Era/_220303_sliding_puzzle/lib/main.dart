@@ -21,9 +21,12 @@ import 'package:sliding_puzzle/sliding_puzzle_app.dart';
 // Done 디바이스 높이가 너무 낮은 경우 오류 아이콘 표시
 // Done 5 x 5 일때 글자크기를 약간 작게
 // Done 테마 선택 기능
+// Done (Epic) 이미지 퍼즐 구현
 // Done 이미지 로딩 속도를 올리기 위해 preview 이미지 사용
 // Done 더 잘 어울리는 컬러 테마 적용
 // Done (Epic) 게임 종료 후 share 기능 구현
+// Done 중도 포기 시 경고화면 표시
+// todo (오류) 화면캡쳐 시 글자 색상 테마가 잘 적용되지 않음
 // todo 사운드 추가
 // todo 파워포인트로 기획서 만들기
 // todo   - 슬라이딩 규칙에 대한 자세한 설명 필요
@@ -33,9 +36,7 @@ import 'package:sliding_puzzle/sliding_puzzle_app.dart';
 // todo 게임 아이콘 만들기
 // todo github 레포지토리 분리
 // todo github pages에 배포
-// todo 배경 이미지 지정하기
 // todo 게임 중지 시 alert dialog 띄우기
-// todo (Epic) 이미지 퍼즐 구현
 // todo (Epic) 사용자 앨범 이미지로 퍼즐 구현
 // todo (장기) riverpod로 교체
 

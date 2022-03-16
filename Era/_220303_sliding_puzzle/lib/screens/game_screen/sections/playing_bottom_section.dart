@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:sliding_puzzle/common_widgets/primary_button.dart';
 import 'package:sliding_puzzle/managers/game_controller.dart';
 import 'package:sliding_puzzle/managers/theme_manager.dart';
 import 'package:sliding_puzzle/models/enums.dart';
@@ -50,16 +52,59 @@ class PlayingBottomSection extends StatelessWidget {
         children: [
           Text('Got stuck? ', style: TextStyle(fontSize: 14, color: ThemeManager.inactiveColor)),
           TextButton(
-            onPressed: () {
-              context.read<GameController>().resetGame();
-            },
+            onPressed: () => reallyRestart(context),
             child: Text(
-              'Restart',
+              'Give up',
               style: TextStyle(fontSize: 14, color: ThemeManager.textColor, fontWeight: FontWeight.bold),
             ),
           ),
         ],
       ),
     );
+  }
+
+  void reallyRestart(BuildContext context) async {
+    final bool? seriouslyRestart = await showDialog(
+        context: context,
+        builder: (_) {
+          return Dialog(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Lottie.asset('assets/animations/canceled-state-illustration.json', width: 150),
+                  Text(
+                    'Really?',
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'I belive you can do it',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 50),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      PrimaryButton(
+                          label: 'I CAN',
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          }),
+                      PrimaryButton(
+                          label: 'Give up',
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                          }),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+    if (seriouslyRestart ?? false) {
+      context.read<GameController>().resetGame();
+    }
   }
 }
