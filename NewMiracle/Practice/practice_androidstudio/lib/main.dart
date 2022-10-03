@@ -11,9 +11,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title : 'AppBarTest',
       theme: ThemeData(
-        //primarySwatch: Colors.amber[50],
+        primarySwatch: Colors.red,
       ),
-      home : AppBarTestScaffold()
+      home : AppBarTestScaffold(),
     );
   }
 }
@@ -44,7 +44,66 @@ class AppBarTestScaffold extends StatelessWidget {
         ],
       ),
       drawer: Drawer(
-        child : ListView(),
+        child : ListView(
+          padding : EdgeInsets.zero,
+          children: [
+            UserAccountsDrawerHeader(
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: AssetImage('assets/images.jpg'),
+                  backgroundColor: Colors.white,
+                ),
+                otherAccountsPictures: [
+                   CircleAvatar(
+                     backgroundImage: AssetImage('assets/K982734448_t6.jpg'),
+                     backgroundColor: Colors.white,
+                   ),
+                  // CircleAvatar(
+                  //   backgroundImage: AssetImage('assets/K982734448_t6.jpg'),
+                  //   backgroundColor: Colors.white,
+                  // )
+                ],
+                accountName: Text('BBANKTO'),
+                accountEmail: Text('bbanto@bbanto.com'),
+                onDetailsPressed: (){
+                  print('arrow is clicked');
+                },
+                decoration: BoxDecoration(
+                  color : Colors.red[200],
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(40.0),
+                    bottomRight: Radius.circular(40.0),
+                  )
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home,
+                            color : Colors.grey[850]),
+              title: Text('home'),
+              onTap: (){
+                print('Home is Clicked');
+              },
+              trailing: Icon(Icons.add),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings,
+                  color : Colors.grey[850]),
+              title: Text('Setting'),
+              onTap: (){
+                print('Settings is Clicked');
+              },
+              trailing: Icon(Icons.add),
+            ),
+            ListTile(
+              leading: Icon(Icons.question_answer,
+                  color : Colors.grey[850]),
+              title: Text('Q&A'),
+              onTap: (){
+                print('Q&A is Clicked');
+              },
+              trailing: Icon(Icons.add),
+            ),
+          ],
+        ),
       ),
     );
 
