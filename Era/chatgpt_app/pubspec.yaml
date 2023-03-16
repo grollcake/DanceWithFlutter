@@ -37,6 +37,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   intl: ^0.18.0
   flutter_riverpod: ^2.3.2
+  firebase_core: ^2.7.1
+  http: ^0.13.5
+  chat_gpt_sdk: ^2.0.0
+  chatgpt_completions: ^0.0.4
+  dart_openai: ^1.8.0
+  cloud_firestore: ^4.4.4
+  ulid: ^2.0.0
+  loading_indicator: ^3.1.0
 
 dev_dependencies:
   flutter_test:

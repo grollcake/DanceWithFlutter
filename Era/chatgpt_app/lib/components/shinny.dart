@@ -25,6 +25,7 @@ class Shinny extends StatelessWidget {
             ),
           ),
         ),
+        SizedBox(height: 4),
       ],
     );
   }
