@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ChatHeader extends StatelessWidget {
-  const ChatHeader({Key? key}) : super(key: key);
+class HeaderSection extends StatelessWidget {
+  const HeaderSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

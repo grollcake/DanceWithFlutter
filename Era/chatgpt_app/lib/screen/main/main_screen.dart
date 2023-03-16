@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import '../../components/side_bar/side_bar.dart';
 import '../../components/title_bar/title_bar.dart';
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+class MainScreen extends StatefulWidget {
+  MainScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _MainScreenState extends State<MainScreen> {
   int _menuIndex = 5;
   final List<String> _menuNames = ['친구와 조직도', '채팅', '쪽지', '검색', 'IPT'];
 
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   index: _menuIndex,
                   children: [
                     ...List.generate(_menuNames.length, (index) => NotYetScreen(screenName: '[${_menuNames[index]}]')),
-                    ChatScreen(),
+                    BodySection(),
                   ],
                 ),
               ),

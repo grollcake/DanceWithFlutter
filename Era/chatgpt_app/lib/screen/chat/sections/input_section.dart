@@ -4,16 +4,16 @@ import 'package:chatgpt_app/service/chatgpt_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'send_button.dart';
+import '../components/send_button.dart';
 
-class ChatInput extends ConsumerStatefulWidget {
-  const ChatInput({Key? key}) : super(key: key);
+class InputSection extends ConsumerStatefulWidget {
+  const InputSection({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ChatInput> createState() => _ChatInputState();
+  ConsumerState<InputSection> createState() => _ChatInputState();
 }
 
-class _ChatInputState extends ConsumerState<ChatInput> {
+class _ChatInputState extends ConsumerState<InputSection> {
   late TextEditingController _textEditingController;
   late FocusNode _focusNode;
   final ChatGPTService chatGpt = ChatGPTService();

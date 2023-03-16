@@ -2,9 +2,9 @@ import 'package:chatgpt_app/screen/frame/frame_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 
-import 'screen/home/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,7 @@ class ChatGPTApp extends StatelessWidget {
     return MaterialApp(
       title: 'ChatGPTApp',
       debugShowCheckedModeBanner: false,
-      // home: HomeScreen(),
+      theme: ThemeData(fontFamily: GoogleFonts.roboto().fontFamily),
       home: FrameScreen(),
     );
   }
