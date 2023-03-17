@@ -14,7 +14,7 @@ class FrameScreen extends StatelessWidget {
 
   _buildBody(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth < 370 || constraints.maxHeight < 660) {
+      if (constraints.maxWidth < 37 || constraints.maxHeight < 66) {
         return tooSmallScreen(constraints);
       } else if (constraints.maxWidth < 1100 || constraints.maxHeight < 800) {
         return MainScreen();
