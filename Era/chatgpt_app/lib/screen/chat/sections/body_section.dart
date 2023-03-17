@@ -52,6 +52,11 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
       });
     });
 
+    ref.listen(isReAnswerOpenedProvider, (previous, next) {
+      print('ReAnswer button Open/Close event detected: $next');
+      Timer(Duration(milliseconds: 100), () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent));
+    });
+
     return Stack(
       children: [
         Positioned.fill(
@@ -158,13 +163,7 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                     children: [
                       Expanded(
                         flex: 9,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            chatBubble,
-                          ],
-                        ),
+                        child: chatBubble,
                       ),
                       SizedBox(width: 16),
                       Column(
@@ -195,44 +194,6 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildMyChat(ChatModel chat) {
-    Widget timeString = _buildTimeString(chat);
-    Widget chatBubble = _buildChatBubble(chat);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Spacer(flex: 1),
-          timeString,
-          SizedBox(width: 16),
-          Expanded(flex: 7, child: chatBubble),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTimeString(ChatModel chat) {
-    final hourFormat = NumberFormat('00');
-    final minuteFormat = NumberFormat('00');
-    final secondFormat = NumberFormat('00');
-
-    String amPm = chat.dateTime.hour < 12 ? '오전' : '오후';
-    int hour = chat.dateTime.hour % 12;
-    hour = hour == 0 ? 12 : hour;
-
-    String formattedHour = hourFormat.format(hour);
-    String formattedMinute = minuteFormat.format(chat.dateTime.minute);
-    String formattedSecond = secondFormat.format(chat.dateTime.second);
-
-    final timeString = '$amPm $formattedHour:$formattedMinute';
-    return Text(
-      timeString,
-      style: TextStyle(fontSize: 12, color: Colors.grey),
     );
   }
 
@@ -276,6 +237,44 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
             ),
         ],
       ),
+    );
+  }
+
+  Widget _buildMyChat(ChatModel chat) {
+    Widget timeString = _buildTimeString(chat);
+    Widget chatBubble = _buildChatBubble(chat);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Spacer(flex: 1),
+          timeString,
+          SizedBox(width: 16),
+          Expanded(flex: 7, child: chatBubble),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimeString(ChatModel chat) {
+    final hourFormat = NumberFormat('00');
+    final minuteFormat = NumberFormat('00');
+    final secondFormat = NumberFormat('00');
+
+    String amPm = chat.dateTime.hour < 12 ? '오전' : '오후';
+    int hour = chat.dateTime.hour % 12;
+    hour = hour == 0 ? 12 : hour;
+
+    String formattedHour = hourFormat.format(hour);
+    String formattedMinute = minuteFormat.format(chat.dateTime.minute);
+    String formattedSecond = secondFormat.format(chat.dateTime.second);
+
+    final timeString = '$amPm $formattedHour:$formattedMinute';
+    return Text(
+      timeString,
+      style: TextStyle(fontSize: 12, color: Colors.grey),
     );
   }
 

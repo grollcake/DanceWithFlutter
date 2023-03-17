@@ -6,47 +6,40 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../providers/providers.dart';
 import '../../../service/chatgpt_service.dart';
 
-class AnswerRefresh extends ConsumerStatefulWidget {
+class AnswerRefresh extends ConsumerWidget {
   final ChatModel chat;
   final double size;
 
-  AnswerRefresh({Key? key, required this.chat, required this.size}) : super(key: key);
+  AnswerRefresh({super.key, required this.chat, required this.size});
 
   @override
-  ConsumerState<AnswerRefresh> createState() => _AnswerRefreshState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isReAnswerOpened = ref.watch(isReAnswerOpenedProvider);
 
-class _AnswerRefreshState extends ConsumerState<AnswerRefresh> {
-  bool isExpanded = false;
-  String selectedTone = '';
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       children: [
-        if (isExpanded) Column(
+        if (isReAnswerOpened) Column(
           children: [
-            _buildOption(0),
-            _buildOption(1),
-            _buildOption(2),
+            _buildToneButton(0, ref),
+            _buildToneButton(1, ref),
+            _buildToneButton(2, ref),
           ],
         ),
-        _buildRefreshButton(),
+        _buildOpenCloseButton(ref),
       ],
     );
   }
 
-  Widget _buildRefreshButton() {
+  Widget _buildOpenCloseButton(WidgetRef ref) {
+    final isReAnswerOpened = ref.watch(isReAnswerOpenedProvider);
     return GestureDetector(
       onTap: (){
-        setState(() {
-          isExpanded = !isExpanded;
-        });
+        ref.read(isReAnswerOpenedProvider.notifier).state = !ref.read(isReAnswerOpenedProvider);
       },
 
       child: Container(
-        width: widget.size,
-        height: widget.size,
+        width: size,
+        height: size,
         padding: EdgeInsets.all(4),
         margin: EdgeInsets.only(bottom: 2),
         decoration: BoxDecoration(
@@ -55,25 +48,23 @@ class _AnswerRefreshState extends ConsumerState<AnswerRefresh> {
         ),
         child: Center(
           child: Icon(
-            isExpanded ? Icons.clear : Icons.refresh,
+            isReAnswerOpened ? Icons.clear : Icons.refresh,
             color: Colors.grey,
-            size: widget.size * .6,
+            size: size * .6,
           ),
         ),
       ),
     );
   }
 
-  _buildOption(int choice) {
+  _buildToneButton(int choice, WidgetRef ref) {
     final options = ['창작', '균형', '정확'];
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          selectedTone = options[choice];
-          isExpanded = false;
-        });
-        _refresh();
+          chat.tone = ChatTone.values[choice];
+          ref.read(isReAnswerOpenedProvider.notifier).state =  false;
+        _requestReAnswer(ref);
       },
       child: Padding(
         padding: const EdgeInsets.all(2.0),
@@ -82,16 +73,8 @@ class _AnswerRefreshState extends ConsumerState<AnswerRefresh> {
     );
   }
 
-  void _refresh() {
-    final chat = widget.chat;
+  void _requestReAnswer(WidgetRef ref) {
 
-    if (selectedTone == '창작') {
-      chat.tone = ChatTone.creativity;
-    } else if (selectedTone == '균형') {
-      chat.tone = ChatTone.balance;
-    } else if (selectedTone == '정확') {
-      chat.tone = ChatTone.exact;
-    }
     chat.status = ChatStatus.waiting;
 
     final chatController = ref.read(chatProvider.notifier);
@@ -100,13 +83,13 @@ class _AnswerRefreshState extends ConsumerState<AnswerRefresh> {
     // Shinny 재답변
     final chats = ref.read(chatProvider);
     final ChatGPTService chatGpt = ChatGPTService();
-    chatGpt.answerRefresh(widget.chat, chats).then(
+    chatGpt.answerRefresh(chat, chats).then(
           (answer) {
-        widget.chat.text = answer.content.trim();
-        widget.chat.totalTokens = answer.totalTokens;
-        widget.chat.dateTime = DateTime.now();
-        widget.chat.status = ChatStatus.complete;
-        chatController.updateChat(widget.chat);
+        chat.text = answer.content.trim();
+        chat.totalTokens = answer.totalTokens;
+        chat.dateTime = DateTime.now();
+        chat.status = ChatStatus.complete;
+        chatController.updateChat(chat);
       },
     );
   }
