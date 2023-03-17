@@ -62,24 +62,28 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
         Positioned.fill(
           child: Container(
             padding: EdgeInsets.all(16),
-            child: ListView.builder(
-                controller: _scrollController,
-                itemCount: chats.length,
-                itemBuilder: (context, index) {
-                  final chat = chats[index];
+            child: LayoutBuilder(builder: (context, constraints) {
+              final double edgeMargin = constraints.maxWidth * .10;
 
-                  if (chat.status == ChatStatus.warning) {
-                    return _buildWarning(chat);
-                  }
-                  // My chat
-                  else if (chat.isMine) {
-                    return _buildMyChat(chat);
-                  }
-                  // Shinny's Chat
-                  else {
-                    return _buildShinnyChat(chat);
-                  }
-                }),
+              return ListView.builder(
+                  controller: _scrollController,
+                  itemCount: chats.length,
+                  itemBuilder: (context, index) {
+                    final chat = chats[index];
+
+                    if (chat.status == ChatStatus.warning) {
+                      return _buildWarning(chat);
+                    }
+                    // My chat
+                    else if (chat.isMine) {
+                      return _buildMyChat(chat, edgeMargin);
+                    }
+                    // Shinny's Chat
+                    else {
+                      return _buildShinnyChat(chat, edgeMargin);
+                    }
+                  });
+            }),
           ),
         ),
         if (_showWarning)
@@ -131,7 +135,7 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
     );
   }
 
-  Widget _buildShinnyChat(ChatModel chat) {
+  Widget _buildShinnyChat(ChatModel chat, double edgeMargin) {
     final isCostView = ref.watch(costViewProvider);
 
     Widget timeString = _buildTimeString(chat);
@@ -147,7 +151,7 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
             radius: 16,
           ),
           SizedBox(width: 12),
-          Expanded(
+          Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -161,10 +165,7 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Expanded(
-                        flex: 9,
-                        child: chatBubble,
-                      ),
+                      Flexible(child: chatBubble),
                       SizedBox(width: 16),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -173,7 +174,6 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                           timeString,
                         ],
                       ),
-                      Spacer(flex: 1),
                     ],
                   ),
                 ),
@@ -192,55 +192,63 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
               ],
             ),
           ),
+          SizedBox(width: edgeMargin),
         ],
       ),
     );
   }
 
   Widget _buildChatBubble(ChatModel chat) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: chat.isMine ? Color(0xFFDBE4FB) : Color(0xFFF4F6F8),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: 700
       ),
-      child: Stack(
-        children: [
-          chat.status == ChatStatus.complete
-              ? Text(
-                  chat.text,
-                  style: TextStyle(
-                    fontSize: 14,
-                    height: 1.5,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w500,
-                  ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: chat.isMine ? Color(0xFFDBE4FB) : Color(0xFFF4F6F8),
+        ),
+        child: Stack(
+          children: [
+            chat.status == ChatStatus.complete
+                ? Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Text(
+                      chat.text,
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.5,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                 )
-              : Center(
-                  child: SizedBox(
-                    width: 60,
-                    height: 16,
-                    child: LoadingIndicator(
-                      indicatorType: Indicator.ballBeat,
-                      colors: toneColors,
-                      strokeWidth: 2,
-                      backgroundColor: Colors.transparent,
+                : Center(
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      width: 60,
+                      height: 40,
+                      child: LoadingIndicator(
+                        indicatorType: Indicator.ballBeat,
+                        colors: toneColors,
+                        strokeWidth: 2,
+                        backgroundColor: Colors.transparent,
+                      ),
                     ),
                   ),
-                ),
-          if (chat.name == 'Shinny' && chat.status == ChatStatus.complete)
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: ToneIndicator(tone: chat.tone),
-            ),
-        ],
+            if (chat.name == 'Shinny' && chat.status == ChatStatus.complete)
+              Positioned(
+                right: 5,
+                bottom: 5,
+                child: ToneIndicator(tone: chat.tone),
+              ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildMyChat(ChatModel chat) {
+  Widget _buildMyChat(ChatModel chat, double edgeMargin) {
     Widget timeString = _buildTimeString(chat);
     Widget chatBubble = _buildChatBubble(chat);
     return Padding(
@@ -249,10 +257,10 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Spacer(flex: 1),
+          SizedBox(width: edgeMargin),
           timeString,
-          SizedBox(width: 16),
-          Expanded(flex: 7, child: chatBubble),
+          SizedBox(width: 8),
+          Flexible(child: chatBubble),
         ],
       ),
     );
