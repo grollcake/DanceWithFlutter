@@ -63,7 +63,6 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
           child: Container(
             padding: EdgeInsets.all(16),
             child: LayoutBuilder(builder: (context, constraints) {
-              final double edgeMargin = constraints.maxWidth * .10;
 
               return ListView.builder(
                   controller: _scrollController,
@@ -76,10 +75,12 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                     }
                     // My chat
                     else if (chat.isMine) {
+                      final double edgeMargin = constraints.maxWidth * .10;
                       return _buildMyChat(chat, edgeMargin);
                     }
                     // Shinny's Chat
                     else {
+                      final double edgeMargin = constraints.maxWidth > 500 ? constraints.maxWidth * .1 : 0;
                       return _buildShinnyChat(chat, edgeMargin);
                     }
                   });
@@ -166,7 +167,7 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Flexible(child: chatBubble),
-                      SizedBox(width: 16),
+                      SizedBox(width: 8),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -223,23 +224,21 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                       ),
                     ),
                 )
-                : Center(
-                    child: Container(
-                      padding: EdgeInsets.all(12),
-                      width: 60,
-                      height: 40,
-                      child: LoadingIndicator(
-                        indicatorType: Indicator.ballBeat,
-                        colors: toneColors,
-                        strokeWidth: 2,
-                        backgroundColor: Colors.transparent,
-                      ),
-                    ),
+                : Container(
+                  padding: EdgeInsets.all(12),
+                  width: 60,
+                  height: 40,
+                  child: LoadingIndicator(
+                    indicatorType: Indicator.ballBeat,
+                    colors: toneColors,
+                    strokeWidth: 2,
+                    backgroundColor: Colors.transparent,
                   ),
+                ),
             if (chat.name == 'Shinny' && chat.status == ChatStatus.complete)
               Positioned(
-                right: 5,
-                bottom: 5,
+                right: 3,
+                bottom: 3,
                 child: ToneIndicator(tone: chat.tone),
               ),
           ],

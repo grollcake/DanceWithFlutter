@@ -96,7 +96,7 @@ class FrameScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 12),
-            Text('최소 1100 x 800 필요 (현재: ${constraints.maxWidth.toInt()} x ${constraints.maxHeight.toInt()})',
+            Text('최소 370 x 660 필요 (현재: ${constraints.maxWidth.toInt()} x ${constraints.maxHeight.toInt()})',
                 style: TextStyle(fontSize: 16, color: Colors.black54)),
           ],
         ),

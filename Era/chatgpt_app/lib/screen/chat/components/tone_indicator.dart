@@ -9,11 +9,11 @@ class ToneIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 10,
-      height: 10,
+      width: 7,
+      height: 7,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: toneColors[tone.index].withOpacity(.5),
+        color: toneColors[tone.index].withOpacity(.2),
       ),
     );
   }
