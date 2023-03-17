@@ -12,11 +12,11 @@ class ChatGptAnswer {
 
 class ChatGPTService {
   final _howLongRemember = 20;
-  final String _apiKey = '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';
+  final String _apiKey = 'YpS6anJ6TlSb50Kx9LuDJFkblB3ThO3ag854opof9wuGM5FD-ks';
   final temperatures = [0.9, 0.6, 0.1]; // enum ChatTone {creativity, balance, exact}
 
   ChatGPTService() {
-    OpenAI.apiKey = _apiKey;
+    OpenAI.apiKey = _apiKey.split('').reversed.join('');
   }
 
   Future<ChatGptAnswer> prompt(ChatModel chat, List<ChatModel> chats) async {

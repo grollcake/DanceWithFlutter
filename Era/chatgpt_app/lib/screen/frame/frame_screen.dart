@@ -13,6 +13,16 @@ class FrameScreen extends StatelessWidget {
   }
 
   _buildBody(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth < 1100 || constraints.maxHeight < 800) {
+        return _buildTooSmallScreen(constraints);
+      } else {
+        return _buildNomalContents();
+      }
+    });
+  }
+
+  Widget _buildNomalContents() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
       // alignment: Alignment.center,
@@ -54,6 +64,40 @@ class FrameScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  _buildTooSmallScreen(BoxConstraints constraints) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFB86BF8).withOpacity(.2), Color(0xFF6BB5F8).withOpacity(.2)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset('assets/icons/monitor.png'),
+            SizedBox(height: 24),
+            Text(
+              '화면이 너무 작습니다.\n데스크탑 브라우저를 이용해주세요',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 12),
+            Text('최소 1100 x 800 필요 (현재: ${constraints.maxWidth.toInt()} x ${constraints.maxHeight.toInt()})',
+                style: TextStyle(fontSize: 16, color: Colors.black54)),
+          ],
+        ),
       ),
     );
   }

@@ -16,7 +16,6 @@ class InfoSection extends StatelessWidget {
         Text('S-Talk에 ChatGPT를 적용한다면 어떤 모습일까요?', style: descStyle),
         Text('신한의 챗봇 Shinny는 우리의 업무를 어떻게 도와줄까요?', style: descStyle),
         Text('※ Shinny는 이해를 돕기 위해 임시로 제작한 캐릭터입니다.', style: descStyle.copyWith(fontSize: 14)),
-
         SizedBox(height: 32),
         Text('기능', style: TextStyle(fontSize: 22, color: Colors.black54, fontWeight: FontWeight.bold)),
         SizedBox(height: 16),
