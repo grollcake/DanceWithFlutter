@@ -1,14 +1,19 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:chatgpt_app/constants/styles.dart';
 import 'package:chatgpt_app/model/chat_model.dart';
 import 'package:chatgpt_app/providers/providers.dart';
+import 'package:chatgpt_app/screen/chat/components/answer_refresh.dart';
+import 'package:chatgpt_app/screen/chat/components/tone_indicator.dart';
 import 'package:chatgpt_app/screen/chat/components/warning_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+
+import '../components/common_functions.dart';
 
 class ChatBody extends ConsumerStatefulWidget {
   const ChatBody({Key? key}) : super(key: key);
@@ -72,55 +77,58 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                 }),
           ),
         ),
-        if (_showWarning) Positioned(
-          child: _buildAlertLayer(),
-        ),
+        if (_showWarning)
+          Positioned(
+            child: _buildAlertLayer(),
+          ),
       ],
     );
   }
 
   Widget _buildAlertLayer() {
     return Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-              child: Container(
-                padding: EdgeInsets.all(12),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.pink.withOpacity(.1),
+      padding: const EdgeInsets.all(12.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+          child: Container(
+            padding: EdgeInsets.all(12),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.pink.withOpacity(.1),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset('assets/icons/warning.png'),
+                SizedBox(width: 12),
+                Flexible(
+                  child: Text(
+                    'Shinny는 OpenAI의 ChatGPT를 기반으로 합니다. 질문에 고객정보 등 민감내용이 포함되지 않도록 유의하세요. 사고에 대비하여 모든 대화는 기록됩니다.',
+                  ),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset('assets/icons/warning.png'),
-                    SizedBox(width: 12),
-                    Flexible(
-                      child: Text(
-                        'Shinny는 OpenAI의 ChatGPT를 기반으로 합니다. 질문에 고객정보 등 민감내용이 포함되지 않도록 유의하세요. 사고에 대비하여 모든 대화는 기록됩니다.',
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    GestureDetector(
-                     onTap: (){
-                       setState(() {
-                         _showWarning = false;
-                       });
-                     },
-                     child: Icon(Icons.clear_sharp),
-                    ),
-                  ],
+                SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _showWarning = false;
+                    });
+                  },
+                  child: Icon(Icons.clear_sharp),
                 ),
-              ),
+              ],
             ),
           ),
-        );
+        ),
+      ),
+    );
   }
 
   Widget _buildShinnyChat(ChatModel chat) {
+    final isCostView = ref.watch(costViewProvider);
+
     Widget timeString = _buildTimeString(chat);
     Widget chatBubble = _buildChatBubble(chat);
     return Padding(
@@ -143,19 +151,45 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                   style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      flex: 9,
-                      child: chatBubble,
-                    ),
-                    SizedBox(width: 16),
-                    timeString,
-                    Spacer(flex: 1),
-                  ],
+                IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        flex: 9,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            chatBubble,
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          if (chat.isLastAnswer) AnswerRefresh(chat: chat, size: 24),
+                          timeString,
+                        ],
+                      ),
+                      Spacer(flex: 1),
+                    ],
+                  ),
                 ),
+                if (isCostView && chat.totalTokens > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, top: 4),
+                    child: Row(
+                      children: [
+                        Text(
+                          buildCostString(chat.totalTokens),
+                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
@@ -183,7 +217,6 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
   }
 
   Widget _buildTimeString(ChatModel chat) {
-    // print(chat.dateTime);
     final hourFormat = NumberFormat('00');
     final minuteFormat = NumberFormat('00');
     final secondFormat = NumberFormat('00');
@@ -205,49 +238,48 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
 
   Widget _buildChatBubble(ChatModel chat) {
     return Container(
+      width: double.infinity,
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: chat.isMine ? Color(0xFFDBE4FB) : Color(0xFFF4F6F8),
       ),
-      child: chat.status == ChatStatus.complete
-          ? Text(
-              chat.text,
-              style: TextStyle(
-                fontSize: 14,
-                height: 1.5,
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
-              ),
-            )
-          : Center(
-              child: SizedBox(
-                width: 60,
-                height: 16,
-                child: LoadingIndicator(
-                  indicatorType: Indicator.ballBeat,
-
-                  /// Required, The loading type of the widget
-                  colors: const [Colors.yellow, Colors.green, Colors.blue],
-
-                  /// Optional, The color collections
-                  strokeWidth: 2,
-
-                  /// Optional, The stroke of the line, only applicable to widget which contains line
-                  backgroundColor: Colors.transparent,
-
-                  /// Optional, Background of the widget
-                  // pathBackgroundColor: Colors.black
-
-                  /// Optional, the stroke backgroundColor
+      child: Stack(
+        children: [
+          chat.status == ChatStatus.complete
+              ? Text(
+                  chat.text,
+                  style: TextStyle(
+                    fontSize: 14,
+                    height: 1.5,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              : Center(
+                  child: SizedBox(
+                    width: 60,
+                    height: 16,
+                    child: LoadingIndicator(
+                      indicatorType: Indicator.ballBeat,
+                      colors: toneColors,
+                      strokeWidth: 2,
+                      backgroundColor: Colors.transparent,
+                    ),
+                  ),
                 ),
-              ),
+          if (chat.name == 'Shinny' && chat.status == ChatStatus.complete)
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: ToneIndicator(tone: chat.tone),
             ),
+        ],
+      ),
     );
   }
 
   Widget _buildWarning(ChatModel chat) {
-    print(_buildWarning);
     return Center(
       child: WarningMessage(message: chat.text),
     );

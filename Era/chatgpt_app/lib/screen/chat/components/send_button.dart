@@ -18,7 +18,7 @@ class SendButton extends StatelessWidget {
       onPressed: isActive ? onPressed : null,
       padding: EdgeInsets.all(2),
       icon: Container(
-        padding: EdgeInsets.all(4),
+        padding: EdgeInsets.all(2),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: isActive ? primaryColor.withOpacity(.8) : Colors.grey.shade400,

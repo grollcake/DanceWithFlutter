@@ -37,7 +37,7 @@ class _ChatInputState extends ConsumerState<InputSection> {
 
   @override
   Widget build(BuildContext context) {
-    final chats = ref.read(chatProvider.notifier);
+    final chatController = ref.read(chatProvider.notifier);
 
     void addChat() {
       _focusNode.requestFocus();
@@ -48,14 +48,14 @@ class _ChatInputState extends ConsumerState<InputSection> {
       setState(() {});
 
       // 사용자 질의어 등록
-      chats.addChat(
+      chatController.addChat(
         ChatModel(userSession: '김신한', name: 'Me', isMine: true, text: prompt, dateTime: DateTime.now()),
       );
 
       // 개인정보가 포함됐는지 확인
       RegExp pattern = RegExp(r'(^|[^\d])\d{6}-?\d{7}([^\d]|$)');
       if (pattern.hasMatch(prompt)) {
-        chats.addChat(
+        chatController.addChat(
           ChatModel(
             userSession: '김신한',
             name: 'SYSTEM',
@@ -68,31 +68,36 @@ class _ChatInputState extends ConsumerState<InputSection> {
         return;
       }
 
-      // Shinny 답변 등록
+      // Shinny 응답대기 등록
       final chat = ChatModel(
         userSession: '김신한',
         name: 'Shinny',
         isMine: false,
         text: '',
+        prompt: prompt,
         dateTime: DateTime.now(),
         status: ChatStatus.waiting,
       );
+      chatController.addChat(chat);
 
-      chats.addChat(chat);
-
-      chatGpt.prompt(prompt).then(
-        (response) {
-          chat.text = response.trim();
+      // Shinny 답변 업데이트
+      final chats = ref.read(chatProvider);
+      chatGpt.prompt(chat, chats).then(
+        (answer) {
+          chat.text = answer.content.trim();
+          chat.totalTokens = answer.totalTokens;
           chat.dateTime = DateTime.now();
           chat.status = ChatStatus.complete;
-          chats.updateChat(chat);
+          chatController.updateChat(chat);
         },
       );
     }
 
     return Container(
-      height: 40,
       width: double.infinity,
+      constraints: BoxConstraints(
+        maxHeight: 120,
+      ),
       decoration: BoxDecoration(
         // color: Colors.yellow.shade100,
         border: Border(
@@ -105,7 +110,8 @@ class _ChatInputState extends ConsumerState<InputSection> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             IconButton(
               onPressed: () {},
@@ -116,24 +122,31 @@ class _ChatInputState extends ConsumerState<InputSection> {
               child: TextField(
                 controller: _textEditingController,
                 focusNode: _focusNode,
-                onSubmitted: (text) {
-                  addChat();
-                },
+                keyboardType: TextInputType.text,
+                minLines: 1,
+                maxLines: 5,
+                onSubmitted: (text) => addChat(),
                 onChanged: (text) {
                   setState(() {});
                 },
                 decoration: InputDecoration(
                   isDense: true,
-                  contentPadding: EdgeInsets.only(bottom: 3),
+                  contentPadding: EdgeInsets.only(top: 10, bottom: 16),
                   border: InputBorder.none,
                   hintText: 'Shinny에게 무엇이든 물어보세요',
                   hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
                 ),
+                style: TextStyle(fontSize: 14, height: 1.4),
               ),
             ),
-            SendButton(
-              onPressed: addChat,
-              isActive: _textEditingController.text.isNotEmpty,
+            Container(
+              width: 30,
+              height: 30,
+              margin: EdgeInsets.only(bottom: 5),
+              child: SendButton(
+                onPressed: addChat,
+                isActive: _textEditingController.text.isNotEmpty,
+              ),
             ),
           ],
         ),

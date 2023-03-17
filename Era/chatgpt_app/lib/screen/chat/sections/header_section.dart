@@ -1,4 +1,8 @@
+import 'package:chatgpt_app/screen/chat/components/cost_view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../../components/no_such_function.dart';
 
 class HeaderSection extends StatelessWidget {
   const HeaderSection({Key? key}) : super(key: key);
@@ -32,7 +36,8 @@ class HeaderSection extends StatelessWidget {
             child: Text('AI Bot', style: TextStyle(fontSize: 12, color: Colors.black)),
           ),
           Spacer(),
-          Image.asset('assets/icons/chattoolbars.png'),
+          // Image.asset('assets/icons/chattoolbars.png'),
+          CostView(),
           SizedBox(width: 16),
         ],
       ),
