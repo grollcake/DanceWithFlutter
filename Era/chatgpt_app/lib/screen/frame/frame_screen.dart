@@ -14,15 +14,17 @@ class FrameScreen extends StatelessWidget {
 
   _buildBody(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth < 1100 || constraints.maxHeight < 800) {
-        return _buildTooSmallScreen(constraints);
+      if (constraints.maxWidth < 370 || constraints.maxHeight < 660) {
+        return tooSmallScreen(constraints);
+      } else if (constraints.maxWidth < 1100 || constraints.maxHeight < 800) {
+        return MainScreen();
       } else {
-        return _buildNomalContents();
+        return desktopLayout();
       }
     });
   }
 
-  Widget _buildNomalContents() {
+  Widget desktopLayout() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
       // alignment: Alignment.center,
@@ -68,7 +70,7 @@ class FrameScreen extends StatelessWidget {
     );
   }
 
-  _buildTooSmallScreen(BoxConstraints constraints) {
+  tooSmallScreen(BoxConstraints constraints) {
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
