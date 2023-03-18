@@ -13,7 +13,7 @@ class DeviceTypeHandler extends StatelessWidget {
         final width = constraints.maxWidth;
         final height = constraints.maxHeight;
 
-        if (width < 370 || height < 660) {
+        if (width < 370) {
             deviceType = DeviceType.tiny;
         } else if (width < 600) {
             deviceType = DeviceType.mobile;

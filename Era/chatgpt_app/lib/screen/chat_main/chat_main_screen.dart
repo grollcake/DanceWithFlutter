@@ -17,6 +17,7 @@ class ChatMainScreen extends ConsumerWidget {
     final selectedMenuIndex = ref.watch(selectedMenuProvider);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawer: (deviceType == DeviceType.mobile) ? _buildSideBarMenu(ref) : null,
       body: Column(
         children: [

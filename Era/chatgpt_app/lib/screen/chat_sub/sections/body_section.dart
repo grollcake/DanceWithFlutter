@@ -23,6 +23,8 @@ class ChatBody extends ConsumerStatefulWidget {
 }
 
 class _ChatBodyState extends ConsumerState<ChatBody> {
+  double _beforeListViewHeight = 0;
+  double _relativeOffsetFromBottom = 0;
   late ScrollController _scrollController;
   bool _showWarning = true;
 
@@ -32,6 +34,11 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
     _scrollController = ScrollController();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
+
+    _scrollController.addListener(() {
+      // ListView의 현재 스크롤 포지선을 바닥으로부터의 차이만 저장
+      _relativeOffsetFromBottom = _scrollController.position.maxScrollExtent - _scrollController.offset;
     });
   }
 
@@ -53,7 +60,6 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
     });
 
     ref.listen(isReAnswerOpenedProvider, (previous, next) {
-      print('ReAnswer button Open/Close event detected: $next');
       Timer(Duration(milliseconds: 100), () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent));
     });
 
@@ -63,6 +69,12 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
           child: Container(
             padding: EdgeInsets.all(16),
             child: LayoutBuilder(builder: (context, constraints) {
+              if (_beforeListViewHeight != constraints.maxHeight) {
+                _beforeListViewHeight = constraints.maxHeight;
+                Timer(Duration(milliseconds: 1), (){
+                  _scrollController.jumpTo(_scrollController.position.maxScrollExtent - _relativeOffsetFromBottom);
+                });
+              }
 
               return ListView.builder(
                   controller: _scrollController,
@@ -201,9 +213,7 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
 
   Widget _buildChatBubble(ChatModel chat) {
     return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: 700
-      ),
+      constraints: BoxConstraints(maxWidth: 700),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -213,8 +223,8 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
           children: [
             chat.status == ChatStatus.complete
                 ? Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
                       chat.text,
                       style: TextStyle(
                         fontSize: 14,
@@ -223,18 +233,18 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                )
+                  )
                 : Container(
-                  padding: EdgeInsets.all(12),
-                  width: 60,
-                  height: 40,
-                  child: LoadingIndicator(
-                    indicatorType: Indicator.ballBeat,
-                    colors: toneColors,
-                    strokeWidth: 2,
-                    backgroundColor: Colors.transparent,
+                    padding: EdgeInsets.all(12),
+                    width: 60,
+                    height: 40,
+                    child: LoadingIndicator(
+                      indicatorType: Indicator.ballBeat,
+                      colors: toneColors,
+                      strokeWidth: 2,
+                      backgroundColor: Colors.transparent,
+                    ),
                   ),
-                ),
             if (chat.name == 'Shinny' && chat.status == ChatStatus.complete)
               Positioned(
                 right: 5,
