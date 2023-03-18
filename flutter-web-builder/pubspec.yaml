@@ -3,7 +3,7 @@ version: "0.1.0"
 description: flutter 프로젝트를 웹버전으로 쉽게 생성. 결과물은 build/web/ 경로에 생성된다.
 homepage: https://flutter.ifwind.net
 environment:
-  sdk: '>=2.10.0 <3.0.0'
+  sdk: '>=2.19.0 <3.0.0'
 dependencies: 
   process_run: ^0.12.2+2
 dev_dependencies:

@@ -4,14 +4,14 @@ import 'sections/body_section.dart';
 import 'sections/header_section.dart';
 import 'sections/input_section.dart';
 
-class BodySection extends StatelessWidget {
-  const BodySection({Key? key}) : super(key: key);
+class ChatSubScreen extends StatelessWidget {
+  const ChatSubScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        HeaderSection(),
+        HeaderSection(menuName: 'Shinny'),
         Expanded(
           child: ChatBody(),
         ),

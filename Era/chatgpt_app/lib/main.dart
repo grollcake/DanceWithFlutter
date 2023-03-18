@@ -1,4 +1,4 @@
-import 'package:chatgpt_app/screen/frame/frame_screen.dart';
+import 'package:chatgpt_app/device_type_handler.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +21,7 @@ class ChatGPTApp extends StatelessWidget {
       title: 'ChatGPTApp',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: GoogleFonts.roboto().fontFamily),
-      home: FrameScreen(),
+      home: DeviceTypeHandler(),
     );
   }
 }

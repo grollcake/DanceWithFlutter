@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 
 import '../shinny.dart';
 
-class SideBar extends StatefulWidget {
-  final int menuIndex;
+class SideBarMenu extends StatefulWidget {
+  final int initialSelectedIndex;
   final ValueChanged<int> onChange;
 
-  const SideBar({Key? key, this.menuIndex = 0, required this.onChange}) : super(key: key);
+  const SideBarMenu({Key? key, this.initialSelectedIndex = 0, required this.onChange}) : super(key: key);
 
   @override
-  State<SideBar> createState() => _SideBarState();
+  State<SideBarMenu> createState() => _SideBarMenuState();
 }
 
-class _SideBarState extends State<SideBar> {
+class _SideBarMenuState extends State<SideBarMenu> {
   int _menuIndex = 0;
 
   final List<Widget> _inactiveMenuIcons = [
@@ -37,7 +37,7 @@ class _SideBarState extends State<SideBar> {
   @override
   void initState() {
     super.initState();
-    _menuIndex = widget.menuIndex;
+    _menuIndex = widget.initialSelectedIndex;
   }
 
   @override

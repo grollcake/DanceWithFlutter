@@ -29,7 +29,6 @@ class InfoSection extends StatelessWidget {
         SizedBox(height: 32),
         Text('제약', style: TextStyle(fontSize: 22, color: Colors.black54, fontWeight: FontWeight.bold)),
         SizedBox(height: 16),
-        Text('❌ 반응형 UI가 적용되지 않아 PC에서만 정상 이용 가능', style: descStyle),
         Text('❌ 대화 이력을 유지하지 못함 (접속할 때마다 초기화)', style: descStyle),
       ],
     );

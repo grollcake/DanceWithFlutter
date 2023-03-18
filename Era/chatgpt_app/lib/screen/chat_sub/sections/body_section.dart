@@ -4,16 +4,16 @@ import 'dart:ui';
 import 'package:chatgpt_app/constants/styles.dart';
 import 'package:chatgpt_app/model/chat_model.dart';
 import 'package:chatgpt_app/providers/providers.dart';
-import 'package:chatgpt_app/screen/chat/components/answer_refresh.dart';
-import 'package:chatgpt_app/screen/chat/components/tone_indicator.dart';
-import 'package:chatgpt_app/screen/chat/components/warning_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
+import '../components/answer_refresh.dart';
 import '../components/common_functions.dart';
+import '../components/tone_indicator.dart';
+import '../components/warning_message.dart';
 
 class ChatBody extends ConsumerStatefulWidget {
   const ChatBody({Key? key}) : super(key: key);
@@ -237,8 +237,8 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                 ),
             if (chat.name == 'Shinny' && chat.status == ChatStatus.complete)
               Positioned(
-                right: 3,
-                bottom: 3,
+                right: 5,
+                bottom: 5,
                 child: ToneIndicator(tone: chat.tone),
               ),
           ],
