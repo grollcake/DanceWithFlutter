@@ -17,3 +17,6 @@ final chatProvider = StateNotifierProvider<ChatController, List<ChatModel>>((ref
 ///////////////////////////////////////////////////////////////////////////
 enum DeviceType {mobile, tablet, desktop, tiny}
 DeviceType deviceType = DeviceType.mobile;
+
+///////////////////////////////////////////////////////////////////////////
+final selectedMenuProvider = StateProvider<int>((ref) => 5);

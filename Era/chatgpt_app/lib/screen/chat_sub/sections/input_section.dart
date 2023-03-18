@@ -39,6 +39,10 @@ class _ChatInputState extends ConsumerState<InputSection> {
   Widget build(BuildContext context) {
     final chatController = ref.read(chatProvider.notifier);
 
+    ref.listen(selectedMenuProvider, (previous, next) {
+      if (next == 5) _focusNode.requestFocus();
+    });
+
     void addChat() {
       _focusNode.requestFocus();
       if (_textEditingController.text.isEmpty) return;
