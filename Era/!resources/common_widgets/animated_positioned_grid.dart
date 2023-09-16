@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 각 자식 위젯의 위치는 positions가 바뀔때마다 애니메이션 효과와 함께 동적으로 변경됩니다.
 
 속성(Properties):
-  * crossAxisCount: 그리드의 가로 축에 배치될 아이템의 수입니다.
-  * crossAxisSpacing & mainAxisSpacing: 각각 가로 축과 세로 축에서 아이템들 사이의 간격을 지정합니다.
+  * horizontalItemCount: 그리드의 가로 축에 배치될 아이템의 수입니다.
+  * horizontalSpacingx & horizontalSpacing: 각각 가로 축과 세로 축에서 아이템들 사이의 간격을 지정합니다.
   * childAspectRatio: 아이템의 가로 세로 비율을 지정합니다.
   * children: 그리드에 배치될 위젯들의 목록입니다.
   * positions: 각 아이템의 그리드 내 위치를 지정하는 옵션입니다. 명시되지 않으면 기본적으로 순서대로 위치합니다.
@@ -19,52 +19,52 @@ import 'package:flutter/material.dart';
   * 주어진 positions 목록을 기반으로 각 아이템의 행과 열 위치를 계산합니다.
  */
 
-class PositionedGridView extends StatefulWidget {
-  final int crossAxisCount;
-  final double crossAxisSpacing;
-  final double mainAxisSpacing;
+class AnimatedPositionedGrid extends StatefulWidget {
+  final int horizontalItemCount;
+  final double verticalSpacing;
+  final double horizontalSpacing;
   final double childAspectRatio;
   final List<Widget> children;
   final List<int>? positions;
   final Duration duration;
   final Curve curve;
 
-  const PositionedGridView({
+  const AnimatedPositionedGrid({
     Key? key,
-    required this.crossAxisCount,
+    required this.horizontalItemCount,
     required this.children,
     this.positions,
-    this.crossAxisSpacing = 0.0,
-    this.mainAxisSpacing = 0.0,
+    this.verticalSpacing = 0.0,
+    this.horizontalSpacing = 0.0,
     this.childAspectRatio = 1.0,
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.linear,
   }) : super(key: key);
 
   @override
-  State<PositionedGridView> createState() => _PositionedGridViewState();
+  State<AnimatedPositionedGrid> createState() => _AnimatedPositionedGridState();
 }
 
-class _PositionedGridViewState extends State<PositionedGridView> {
+class _AnimatedPositionedGridState extends State<AnimatedPositionedGrid> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final itemWidth =
-          (constraints.maxWidth - widget.mainAxisSpacing * (widget.crossAxisCount - 1)) / widget.crossAxisCount;
-      final itemHeight = itemWidth * widget.childAspectRatio;
+      final itemWidth = (constraints.maxWidth - widget.horizontalSpacing * (widget.horizontalItemCount - 1)) /
+          widget.horizontalItemCount;
+      final itemHeight = itemWidth / widget.childAspectRatio;
 
       return SizedBox(
-        height: itemHeight * (((widget.children.length - 1) ~/ widget.crossAxisCount) + 1) +
-            widget.mainAxisSpacing * ((widget.children.length - 1) ~/ widget.crossAxisCount),
+        height: itemHeight * (((widget.children.length - 1) ~/ widget.horizontalItemCount) + 1) +
+            widget.horizontalSpacing * ((widget.children.length - 1) ~/ widget.horizontalItemCount),
         child: Stack(
           children: List.generate(
             widget.children.length,
             (index) {
-              int rowNum = (widget.positions?[index] ?? index) ~/ widget.crossAxisCount;
-              int colNum = (widget.positions?[index] ?? index) - rowNum * widget.crossAxisCount;
+              int rowNum = (widget.positions?[index] ?? index) ~/ widget.horizontalItemCount;
+              int colNum = (widget.positions?[index] ?? index) - rowNum * widget.horizontalItemCount;
 
-              double x = itemWidth * colNum + (widget.crossAxisSpacing * colNum);
-              double y = itemHeight * rowNum + (widget.mainAxisSpacing * rowNum);
+              double x = itemWidth * colNum + (widget.verticalSpacing * colNum);
+              double y = itemHeight * rowNum + (widget.horizontalSpacing * rowNum);
 
               return AnimatedPositioned(
                 duration: widget.duration,
